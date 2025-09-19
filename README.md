@@ -7,7 +7,7 @@ The file using this syntax is [index.bs](./index.bs).
 
 [index.bs](./index.bs) is processed to produce an HTML version (`index.html`) by a tool called [Bikeshed](https://github.com/tabatkins/bikeshed), which is run when content is pushed onto the `main` branch or when Pull Requests are made.
 
-# Building locally
+## Building locally
 
 Make sure python is installed on your system. It is recommended to use a dedicated environment, if you haven't done so you can set it up like this:
 
