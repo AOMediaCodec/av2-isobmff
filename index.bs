@@ -23,7 +23,7 @@ TBD
 
 TBD
 
-# CMAF AV1 track format # {#cmaf}
+# CMAF AV2 track format # {#cmaf}
 
 TBD
 
