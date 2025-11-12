@@ -1,0 +1,36 @@
+<pre class='metadata'>
+Title: AV2 Codec ISO Media File Format Binding
+Status: PD
+Text Macro: SPECVERSION v1.0.0
+URL: https://aomediacodec.github.io/av2-isobmff/v1.0.0.html
+Shortname: av2-isobmff
+Editor: TBD
+Editor: TBD
+
+Abstract: This document specifies the storage format for AV2 bitstreams in ISOBMFF tracks as well as in CMAF files.
+Date: 2025-09-19
+Repository: AOMediaCodec/av2-isobmff
+Group: AOM
+Metadata Order: This version, !*, *
+</pre>
+
+
+# Bitstream features overview # {#bitstream-overview}
+
+TBD
+
+# Basic Encapsulation Scheme # {#basic-encapsulation}
+
+TBD
+
+# CMAF AV2 track format # {#cmaf}
+
+TBD
+
+# Common Encryption # {#CommonEncryption}
+
+TBD
+
+# Codecs Parameter String # {#codecsparam}
+
+TBD
