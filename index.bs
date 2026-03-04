@@ -7,17 +7,159 @@ Shortname: av2-isobmff
 Editor: TBD
 Editor: TBD
 
-Abstract: This document specifies the storage format for AV2 bitstreams in ISOBMFF tracks as well as in CMAF files.
+Abstract: This document specifies the storage format for [[!AV2]] bitstreams in [[!ISOBMFF]] tracks as well as in [[!CMAF]] files.
 Date: 2025-09-19
 Repository: AOMediaCodec/av2-isobmff
 Group: AOM
 Metadata Order: This version, !*, *
 </pre>
 
+<pre class="anchors">
+url: https://www.iso.org/standard/68960.html#; spec: ISOBMFF; type: dfn;
+	text: VisualSampleEntry
+	text: Sample Auxiliary Information
 
-# Bitstream features overview # {#bitstream-overview}
+url: https://www.iso.org/standard/68960.html#; spec: ISOBMFF; type: property;
+	text: bitr
+	text: clli
+	text: colr
+	text: ctts
+	text: iso6
+	text: mdcv
+	text: nclx
+	text: pasp
+	text: sgpd
+	text: stsd
+	text: saiz
 
-TBD
+url: https://www.webmproject.org/vp9/mp4/#; spec: VP9; type: property;
+	text: SmDm
+	text: CoLL
+
+url: https://tools.ietf.org/html/rfc6381#; spec: RFC6381; type: property;
+	text: codecs
+
+url: https://aomediacodec.github.io/av2-spec/av2-spec.pdf#page=1; spec: AV2; type: dfn;
+	text: AV2 bitstream
+
+url: https://aomediacodec.github.io/av2-spec/av2-spec.pdf#; spec: AV2; type: dfn;
+	text: OBU
+	text: OBU Header
+	text: Sequence Header OBU
+	text: Temporal Delimiter OBU
+	text: Tile Group OBU
+	text: Metadata OBU
+	text: Padding OBU
+	text: Frame Header OBU
+	text: Layer Configuration Record OBU
+	text: Closed Loop Key OBU
+	text: Open Loop Key OBU
+	text: Switch OBU
+	text: Bridge Frame OBU
+
+url: https://aomediacodec.github.io/av2-spec/av2-spec.pdf#; spec: AV2; type: dfn;
+	text: Closed Random Access
+	text: Open Random Access
+	text: Leading Picture
+
+url: https://aomediacodec.github.io/av2-spec/av2-spec.pdf#; spec: AV2; type: dfn;
+	text: Inter Frame
+	text: Intra-only Frame
+	text: Key Frame
+	text: Switch Frame
+	text: Temporal Unit
+
+url: https://aomediacodec.github.io/av2-spec/av2-spec.pdf#; spec: AV2; type: dfn;
+	text: immediate_output_frame
+	text: show_existing_frame
+	text: obu_type
+	text: obu_tlayer_id
+	text: obu_mlayer_id
+	text: obu_xlayer_id
+	text: obu_has_size_field
+	text: obu_size
+	text: seq_profile
+	text: seq_level_idx
+	text: seq_tier
+	text: high_bitdepth
+	text: twelve_bit
+	text: mono_chrome
+	text: subsampling_x
+	text: subsampling_y
+	text: max_frame_width_minus_1
+	text: max_frame_height_minus_1
+	text: still_picture
+	text: timing_info_present_flag
+	text: initial_display_delay_minus_1
+
+url: https://aomediacodec.github.io/av2-spec/av2-spec.pdf#; spec: AV2; type: dfn
+	text: Low Overhead Bitstream Format
+
+url: https://www.iso.org/standard/71975.html#; spec: CMAF; type: dfn;
+	text: CMAF Video Track
+	text: cmfc
+	text: cmf2
+
+url: https://www.iso.org/standard/68042.html#; spec: CENC; type: dfn;
+	text: BytesOfProtectedData
+	text: BytesOfClearData
+	text: cbcs
+	text: cenc
+	text: cbc1
+	text: cens
+</pre>
+
+<pre class='biblio'>
+{
+	"AV2": {
+		"href": "https://aomediacodec.github.io/av2-spec/av2-spec.pdf",
+		"title": "AV2 Bitstream & Decoding Process Specification",
+		"status": "Standard",
+		"publisher": "AOM"
+	},
+	"ISOBMFF": {
+		"title": "Information technology — Coding of audio-visual objects — Part 12: ISO base media file format",
+		"status": "Standard",
+		"publisher": "ISO",
+		"href": "https://www.iso.org/standard/83102.html"
+	},
+	"CMAF": {
+		"title": "Information technology — Multimedia application format (MPEG-A) — Part 19: Common media application format (CMAF) for segmented media",
+		"status": "Standard",
+		"publisher": "ISO",
+		"href": "https://www.iso.org/standard/71975.html"
+	},
+	"CENC": {
+		"title": "Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files",
+		"status": "Standard",
+		"publisher": "ISO",
+		"href": "https://www.iso.org/standard/68042.html"
+	},
+	"CICP": {
+		"title": "Coding-independent code points for video signal type identification",
+		"status": "Standard",
+		"publisher": "ITU-T",
+		"href": "https://www.itu.int/rec/T-REC-H.273/en"
+	}
+}
+</pre>
+
+Bitstream features overview {#bitstream-overview}
+=================================================
+
+An [=AV2 bitstream=] is composed of a sequence of [=OBUs=] (Open Bitstream Units), grouped into [=Temporal Units=].
+
+OBUs have a 1 or 2 byte header identifying the [=obu_type=] and [=obu_tlayer_id=] (temporal layer), followed by an optional payload whose presence and content depend on the OBU type. When the header extension is present, the header also carries [=obu_mlayer_id=] (embedded layer) and [=obu_xlayer_id=] (extended layer) identifiers. Depending on its type, an OBU can carry configuration information (e.g., a [=Sequence Header OBU=] or [=Layer Configuration Record OBU=]), metadata, or coded video data.
+
+[=Temporal Units=] are processed by a decoder in the order given by the bitstream. Each Temporal Unit is associated with a presentation time. A Temporal Unit may contain multiple coded pictures but typically only one is output. In addition to [=Tile Group OBUs=], AV2 introduces several coded picture types including TIP (Temporally Interpolated Prediction) frames, [=Bridge Frame OBUs=], and frames using the [=show_existing_frame=] mechanism.
+
+Frames carried in Temporal Units may have coding dependencies on frames carried previously in the same Temporal Unit or in previous Temporal Units. Frames that can be decoded without dependencies to previous frames are of two categories: [=Key Frames=] and [=Intra-only Frames=]. Frames that cannot be decoded independently are of three categories: [=Inter Frames=], [=Switch Frames=], and frames with [=show_existing_frame=] set to 1.
+
+A [=Closed Random Access=] point (identified by a [=Closed Loop Key OBU=]) starts a new coded video sequence. All reference frame buffers are invalidated, and all subsequent frames can be decoded. These serve as the primary random access mechanism.
+
+An [=Open Random Access=] point (identified by an [=Open Loop Key OBU=]) allows decoding to be correctly initiated for all subsequent non-leading pictures. [=Leading Pictures=] that follow an Open Random Access point may reference pictures preceding it and are discarded when random access begins at that point.
+
+NOTE: The [[!AV2]] specification supports temporal layers ([=obu_tlayer_id=]), embedded layers ([=obu_mlayer_id=]), and extended layers ([=obu_xlayer_id=]). This version of the specification supports storage of singlestream bitstreams in a single track. Advanced multi-layer, multistream, and layer extraction use cases are not addressed and may be specified in a future version.
 
 # Basic Encapsulation Scheme # {#basic-encapsulation}
 
