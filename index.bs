@@ -16,165 +16,165 @@ Metadata Order: This version, !*, *
 
 <pre class="anchors">
 url: https://www.iso.org/standard/83102.html#; spec: ISOBMFF; type: dfn;
-	text: VisualSampleEntry
-	text: Sample Auxiliary Information
+    text: VisualSampleEntry
+    text: Sample Auxiliary Information
 
 url: https://www.iso.org/standard/83102.html#; spec: ISOBMFF; type: property;
-	text: bitr
-	text: clli
-	text: colr
-	text: ctts
-	text: iso6
-	text: mdcv
-	text: nclx
-	text: pasp
-	text: sgpd
-	text: stsd
-	text: saiz
+    text: bitr
+    text: clli
+    text: colr
+    text: ctts
+    text: iso6
+    text: mdcv
+    text: nclx
+    text: pasp
+    text: sgpd
+    text: stsd
+    text: saiz
 
 url: https://www.webmproject.org/vp9/mp4/#; spec: VP9; type: property;
-	text: SmDm
-	text: CoLL
+    text: SmDm
+    text: CoLL
 
 url: https://tools.ietf.org/html/rfc6381#; spec: RFC6381; type: property;
-	text: codecs
+    text: codecs
 
 url: https://super-adventure-4j2gglm.pages.github.io/#bitstream; spec: AV2; type: dfn;
-	text: AV2 bitstream
+    text: AV2 bitstream
 
 url: https://super-adventure-4j2gglm.pages.github.io/#obu; spec: AV2; type: dfn;
-	text: OBU
+    text: OBU
 
 url: https://super-adventure-4j2gglm.pages.github.io/#obu_header_syntax; spec: AV2; type: dfn;
-	text: OBU Header
+    text: OBU Header
 
 url: https://super-adventure-4j2gglm.pages.github.io/#general_sequence_header_obu_syntax; spec: AV2; type: dfn;
-	text: Sequence Header OBU
+    text: Sequence Header OBU
 
 url: https://super-adventure-4j2gglm.pages.github.io/#temporal-delimiter-obu; spec: AV2; type: dfn;
-	text: Temporal Delimiter OBU
+    text: Temporal Delimiter OBU
 
 url: https://super-adventure-4j2gglm.pages.github.io/#general_tile_group_payload_semantics; spec: AV2; type: dfn;
-	text: Tile Group OBU
+    text: Tile Group OBU
 
 url: https://super-adventure-4j2gglm.pages.github.io/#metadata_short_obu_semantics; spec: AV2; type: dfn;
-	text: Metadata OBU
+    text: Metadata OBU
 
 url: https://super-adventure-4j2gglm.pages.github.io/#general_obu_semantics; spec: AV2; type: dfn;
-	text: Padding OBU
-	text: Frame Header OBU
-	text: Layer Configuration Record OBU
-	text: Closed Loop Key OBU
-	text: Open Loop Key OBU
-	text: Switch OBU
-	text: Bridge Frame OBU
+    text: Padding OBU
+    text: Frame Header OBU
+    text: Layer Configuration Record OBU
+    text: Closed Loop Key OBU
+    text: Open Loop Key OBU
+    text: Switch OBU
+    text: Bridge Frame OBU
 
 url: https://super-adventure-4j2gglm.pages.github.io/#closed-random-access; spec: AV2; type: dfn;
-	text: Closed Random Access
+    text: Closed Random Access
 
 url: https://super-adventure-4j2gglm.pages.github.io/#open-random-access; spec: AV2; type: dfn;
-	text: Open Random Access
+    text: Open Random Access
 
 url: https://super-adventure-4j2gglm.pages.github.io/#leading-picture; spec: AV2; type: dfn;
-	text: Leading Picture
+    text: Leading Picture
 
 url: https://super-adventure-4j2gglm.pages.github.io/#inter-frame; spec: AV2; type: dfn;
-	text: Inter Frame
+    text: Inter Frame
 
 url: https://super-adventure-4j2gglm.pages.github.io/#intra-frame; spec: AV2; type: dfn;
-	text: Intra-only Frame
+    text: Intra-only Frame
 
 url: https://super-adventure-4j2gglm.pages.github.io/#key-frame; spec: AV2; type: dfn;
-	text: Key Frame
+    text: Key Frame
 
 url: https://super-adventure-4j2gglm.pages.github.io/#switch-frame; spec: AV2; type: dfn;
-	text: Switch Frame
+    text: Switch Frame
 
 url: https://super-adventure-4j2gglm.pages.github.io/#temporal-unit; spec: AV2; type: dfn;
-	text: Temporal Unit
+    text: Temporal Unit
 
 url: https://super-adventure-4j2gglm.pages.github.io/#uncompressed_header_semantics; spec: AV2; type: dfn;
-	text: immediate_output_frame
-	text: show_existing_frame
+    text: immediate_output_frame
+    text: show_existing_frame
 
 url: https://super-adventure-4j2gglm.pages.github.io/#obu_header_semantics; spec: AV2; type: dfn;
-	text: obu_type
-	text: obu_tlayer_id
-	text: obu_mlayer_id
-	text: obu_xlayer_id
+    text: obu_type
+    text: obu_tlayer_id
+    text: obu_mlayer_id
+    text: obu_xlayer_id
 
 url: https://super-adventure-4j2gglm.pages.github.io/#general_obu_semantics; spec: AV2; type: dfn;
-	text: obu_has_size_field
-	text: obu_size
+    text: obu_has_size_field
+    text: obu_size
 
 url: https://super-adventure-4j2gglm.pages.github.io/#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
-	text: seq_profile
-	text: seq_level_idx
-	text: seq_tier
-	text: still_picture
-	text: timing_info_present_flag
-	text: max_frame_width_minus_1
-	text: max_frame_height_minus_1
+    text: seq_profile
+    text: seq_level_idx
+    text: seq_tier
+    text: still_picture
+    text: timing_info_present_flag
+    text: max_frame_width_minus_1
+    text: max_frame_height_minus_1
 
 url: https://super-adventure-4j2gglm.pages.github.io/#color_config_semantics; spec: AV2; type: dfn;
-	text: high_bitdepth
-	text: twelve_bit
-	text: mono_chrome
-	text: subsampling_x
-	text: subsampling_y
+    text: high_bitdepth
+    text: twelve_bit
+    text: mono_chrome
+    text: subsampling_x
+    text: subsampling_y
 
 url: https://super-adventure-4j2gglm.pages.github.io/#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
-	text: initial_display_delay_minus_1
+    text: initial_display_delay_minus_1
 
 url: https://super-adventure-4j2gglm.pages.github.io/#general_obu_syntax; spec: AV2; type: dfn
-	text: Low Overhead Bitstream Format
+    text: Low Overhead Bitstream Format
 
 url: https://www.iso.org/standard/71975.html#; spec: CMAF; type: dfn;
-	text: CMAF Video Track
-	text: cmfc
-	text: cmf2
+    text: CMAF Video Track
+    text: cmfc
+    text: cmf2
 
 url: https://www.iso.org/standard/68042.html#; spec: CENC; type: dfn;
-	text: BytesOfProtectedData
-	text: BytesOfClearData
-	text: cbcs
-	text: cenc
-	text: cbc1
-	text: cens
+    text: BytesOfProtectedData
+    text: BytesOfClearData
+    text: cbcs
+    text: cenc
+    text: cbc1
+    text: cens
 </pre>
 
 <pre class='biblio'>
 {
-	"AV2": {
-		"href": "https://super-adventure-4j2gglm.pages.github.io/",
-		"title": "AV2 Bitstream & Decoding Process Specification",
-		"status": "Standard",
-		"publisher": "AOM"
-	},
-	"ISOBMFF": {
-		"title": "Information technology — Coding of audio-visual objects — Part 12: ISO base media file format",
-		"status": "Standard",
-		"publisher": "ISO",
-		"href": "https://www.iso.org/standard/83102.html"
-	},
-	"CMAF": {
-		"title": "Information technology — Multimedia application format (MPEG-A) — Part 19: Common media application format (CMAF) for segmented media",
-		"status": "Standard",
-		"publisher": "ISO",
-		"href": "https://www.iso.org/standard/71975.html"
-	},
-	"CENC": {
-		"title": "Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files",
-		"status": "Standard",
-		"publisher": "ISO",
-		"href": "https://www.iso.org/standard/68042.html"
-	},
-	"CICP": {
-		"title": "Coding-independent code points for video signal type identification",
-		"status": "Standard",
-		"publisher": "ITU-T",
-		"href": "https://www.itu.int/rec/T-REC-H.273/en"
-	}
+    "AV2": {
+        "href": "https://super-adventure-4j2gglm.pages.github.io/",
+        "title": "AV2 Bitstream & Decoding Process Specification",
+        "status": "Standard",
+        "publisher": "AOM"
+    },
+    "ISOBMFF": {
+        "title": "Information technology — Coding of audio-visual objects — Part 12: ISO base media file format",
+        "status": "Standard",
+        "publisher": "ISO",
+        "href": "https://www.iso.org/standard/83102.html"
+    },
+    "CMAF": {
+        "title": "Information technology — Multimedia application format (MPEG-A) — Part 19: Common media application format (CMAF) for segmented media",
+        "status": "Standard",
+        "publisher": "ISO",
+        "href": "https://www.iso.org/standard/71975.html"
+    },
+    "CENC": {
+        "title": "Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files",
+        "status": "Standard",
+        "publisher": "ISO",
+        "href": "https://www.iso.org/standard/68042.html"
+    },
+    "CICP": {
+        "title": "Coding-independent code points for video signal type identification",
+        "status": "Standard",
+        "publisher": "ITU-T",
+        "href": "https://www.itu.int/rec/T-REC-H.273/en"
+    }
 }
 </pre>
 
@@ -197,27 +197,25 @@ NOTE: The [[!AV2]] specification supports temporal layers ([=obu_tlayer_id=]), e
 
 # Basic Encapsulation Scheme # {#basic-encapsulation}
 
-This section described the data structures used to signal encapsulation of [=AV2 Bitstream=] within [[!ISOBMFF]]
+This section describes the basic data structures used to signal encapsulation of [=AV2 bitstreams=] in [[!ISOBMFF]] containers.
 
 ## General Requirements & Brands ## {#general_requirements}
 
-A file conformant to this specification satisfied the following:
-	* It SHALL conform to normative requirements of [[!ISOBMFF]]
-	* It SHALL have `av02` brand among the compatible brands array of the FileTypeBox
-	* It SHALL contain at least one track using an [=AV2SampleEntry=], possibly transformed by encryption as specified in [[#CommonEncryption]]
-    * It SHOULD indicate a structural ISOBMFF brand among the compatible brands array of the FileTypeBox such as 'iso6'
-    * It MAY indicate CMAF brands as specified in [[#av2_cmaf_spec]]
-	* It MAY idicate additional brands not specified in this document provided that the associated requirements do not conflict with those given in this specification.
+A file conformant to this specification satisfies the following:
+- <assert>It SHALL conform to the normative requirements of [[!ISOBMFF]]</assert>
+- <assert>It SHALL have the <dfn value export for="ISOBMFF Brand">av02</dfn> brand among the compatible brands array of the FileTypeBox</assert>
+- <assert>It SHALL contain at least one track using an [=AV2SampleEntry=], possibly transformed by encryption as specified in [[#CommonEncryption]]</assert>
+- <assert>It SHOULD indicate a structural ISOBMFF brand among the compatible brands array of the FileTypeBox, such as 'iso6'</assert>
+- <assert>It MAY indicate CMAF brands as specified in [[#cmaf]]</assert>
+- <assert>It MAY indicate other brands not specified in this document provided that the associated requirements do not conflict with those given in this specification</assert>
 
-Compliant Parsers SHALL support the structures required by the 'iso6' brand and MAY support structures required by further ISOBMFF structural brands.
+Parsers SHALL support the structures required by the <code>'iso6'</code> brand and MAY support structures required by further ISOBMFF structural brands.
 
 
 
 # CMAF AV2 track format # {#cmaf}
 
-## AV2 CMAF Specification ## {#av2_cmaf_spec}
-
-Placeholder
+TBD
 
 # Common Encryption # {#CommonEncryption}
 
