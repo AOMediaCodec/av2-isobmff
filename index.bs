@@ -15,11 +15,11 @@ Metadata Order: This version, !*, *
 </pre>
 
 <pre class="anchors">
-url: https://www.iso.org/standard/68960.html#; spec: ISOBMFF; type: dfn;
+url: https://www.iso.org/standard/83102.html#; spec: ISOBMFF; type: dfn;
 	text: VisualSampleEntry
 	text: Sample Auxiliary Information
 
-url: https://www.iso.org/standard/68960.html#; spec: ISOBMFF; type: property;
+url: https://www.iso.org/standard/83102.html#; spec: ISOBMFF; type: property;
 	text: bitr
 	text: clli
 	text: colr
@@ -197,11 +197,27 @@ NOTE: The [[!AV2]] specification supports temporal layers ([=obu_tlayer_id=]), e
 
 # Basic Encapsulation Scheme # {#basic-encapsulation}
 
-TBD
+This section described the data structures used to signal encapsulation of [=AV2 Bitstream=] within [[!ISOBMFF]]
+
+## General Requirements & Brands ## {#general_requirements}
+
+A file conformant to this specification satisfied the following:
+	* It SHALL conform to normative requirements of [[!ISOBMFF]]
+	* It SHALL have `av02` brand among the compatible brands array of the FileTypeBox
+	* It SHALL contain at least one track using an [=AV2SampleEntry=], possibly transformed by encryption as specified in [[#CommonEncryption]]
+    * It SHOULD indicate a structural ISOBMFF brand among the compatible brands array of the FileTypeBox such as 'iso6'
+    * It MAY indicate CMAF brands as specified in [[#av2_cmaf_spec]]
+	* It MAY idicate additional brands not specified in this document provided that the associated requirements do not conflict with those given in this specification.
+
+Compliant Parsers SHALL support the structures required by the 'iso6' brand and MAY support structures required by further ISOBMFF structural brands.
+
+
 
 # CMAF AV2 track format # {#cmaf}
 
-TBD
+## AV2 CMAF Specification ## {#av2_cmaf_spec}
+
+Placeholder
 
 # Common Encryption # {#CommonEncryption}
 
