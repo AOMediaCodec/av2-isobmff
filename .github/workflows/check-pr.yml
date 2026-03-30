@@ -47,6 +47,7 @@ jobs:
       - name: Generate spec diff
         run: |
           # Install perl dependencies for htmldiff
+          sudo apt-get update -qq && sudo apt-get install -y -qq cpanminus
           sudo cpanm --notest Algorithm::Diff
 
           # Download htmldiff.pl
