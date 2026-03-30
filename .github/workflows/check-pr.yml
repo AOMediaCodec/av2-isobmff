@@ -24,10 +24,39 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Build specification
+      - name: Build specification (PR branch)
         run: |
             bikeshed --version
             bikeshed spec
+            cp index.html pr_index.html
+
+      - name: Build specification (main branch)
+        run: |
+          # Save current branch/commit
+          PR_REF=$(git rev-parse HEAD)
+
+          # Checkout main and build
+          git checkout origin/main -- index.bs
+          bikeshed spec
+          mv index.html main_index.html
+
+          # Restore PR version
+          git checkout $PR_REF -- index.bs
+          mv pr_index.html index.html
+
+      - name: Generate spec diff
+        run: |
+          # Install perl dependencies for htmldiff
+          sudo cpanm --notest Algorithm::Diff
+
+          # Download htmldiff.pl
+          wget -q https://raw.githubusercontent.com/nicedoc/htmldiff/main/htmldiff.pl
+          chmod +x htmldiff.pl
+
+          # Generate diff
+          perl htmldiff.pl main_index.html index.html > diff.html
+
+          echo "Diff generated successfully"
 
       - name: Prepare artifacts for upload
         id: prepare
@@ -35,6 +64,7 @@ jobs:
           # Create dist directory and copy the built specification
           mkdir -p dist
           cp index.html dist/
+          cp diff.html dist/
 
           # Get commit info for the artifact
           COMMIT_SHA=$(git rev-parse --short HEAD)
@@ -68,12 +98,14 @@ jobs:
 
             ### 📦 What's included:
             - \`index.html\` - The compiled specification
+            - \`diff.html\` - Diff view comparing to main branch
 
             ### 📥 How to preview:
             1. Click the "Download Build Artifact" link above
             2. Download the \`av2-isobmff-spec-preview\` artifact
             3. Extract the ZIP file
-            4. Open \`index.html\` in your browser
+            4. Open \`index.html\` to view the specification
+            5. Open \`diff.html\` to see changes from main
 
             ---
             *Built from commit ${commitSha} • Updated: ${new Date().toUTCString()}*`;
