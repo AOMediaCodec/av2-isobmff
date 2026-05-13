@@ -215,10 +215,10 @@ This section describes the basic data structures used to signal encapsulation of
 ## General Requirements & Brands ## {#general_requirements}
 
 A file conformant to this specification satisfies the following:
-- <assert>It SHALL conform to the normative requirements of [[!ISOBMFF]]</assert>
-- <assert>It SHALL have the <dfn value export for="ISOBMFF Brand">av02</dfn> brand among the compatible brands array of the FileTypeBox</assert>
-- <assert>It SHALL contain at least one track using an [=AV2SampleEntry=], possibly transformed by encryption as specified in [[#CommonEncryption]]</assert>
-- <assert>It SHOULD indicate a structural ISOBMFF brand among the compatible brands array of the FileTypeBox, such as 'iso6'</assert>
+- <assert>It shall conform to the normative requirements of [[!ISOBMFF]]</assert>
+- <assert>It shall have the <dfn value export for="ISOBMFF Brand">av02</dfn> brand among the compatible brands array of the FileTypeBox</assert>
+- <assert>It shall contain at least one track using an [=AV2SampleEntry=], possibly transformed by encryption as specified in [[#CommonEncryption]]</assert>
+- <assert>It should indicate a structural ISOBMFF brand among the compatible brands array of the FileTypeBox, such as 'iso6'</assert>
 
 ## AV2 Sample Entry and Configuration ## {#sample-entry-and-config}
 
@@ -228,23 +228,22 @@ The <dfn>AV2SampleEntry</dfn> extends [=VisualSampleEntry=] and signals a track 
 
 ```cpp
 class AV2SampleEntry extends VisualSampleEntry('av02') {
-  AV2CodecConfigurationBox  config;
+  AV2CodecConfigurationBox config;
 }
 ```
 
-An [=AV2SampleEntry=] SHALL contain exactly one [=AV2CodecConfigurationBox=].
+An [=AV2SampleEntry=] shall contain exactly one [=AV2CodecConfigurationBox=].
 
-An [=AV2SampleEntry=] SHALL contain a 'colr' box with the 'nclx' colour type. The values of <code>colour_primaries</code>, <code>transfer_characteristics</code>, <code>matrix_coefficients</code> and <code>full_range_flag</code> carried in that 'colr' box SHALL equal the corresponding effective values of the AV2 bitstream carried by the track.
+An [=AV2SampleEntry=] shall contain a 'colr' box with the 'nclx' colour type. The values of <code>colour_primaries</code>, <code>transfer_characteristics</code>, <code>matrix_coefficients</code> and <code>full_range_flag</code> carried in that 'colr' box should equal the corresponding effective values of the AV2 bitstream carried by the track.
 
-An [=AV2SampleEntry=] MAY contain additional sub-boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'pasp', 'clli', 'mdcv' or 'btrt'.
+An [=AV2SampleEntry=] may contain additional sub-boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'pasp', 'clli', 'mdcv' or 'btrt'.
 
 ### AV2 Codec Configuration Box ### {#av2c}
 
 The <dfn>AV2CodecConfigurationBox</dfn> carries the decoder initialisation data required to decode the AV2 coded video samples of a track.
 
 ```cpp
-aligned(8) class AV2CodecConfigurationBox
-    extends FullBox('av2C', version = 0, flags = 0)
+aligned(8) class AV2CodecConfigurationBox extends FullBox('av2C', version = 0, flags = 0)
 {
   unsigned int(5)  seq_profile_idc;
   unsigned int(5)  seq_level_idx;
@@ -269,23 +268,23 @@ aligned(8) class AV2CodecConfigurationBox
 
 semantics TBD
 
-<code>reserved</code> SHALL be set to 0. Readers SHALL ignore its value.
+<code>reserved</code> shall be set to 0. Readers shall ignore its value.
 
 <code>configOBUs</code> is a byte array carrying one or more OBUs as described in [[#configobus]].
 
 ### configOBUs ### {#configobus}
 
-Each OBU carried in <code>configOBUs</code> SHALL be framed using the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]]: each OBU is preceded by a <code>leb128()</code> <code>num_bytes_in_obu</code> value giving the byte length of the OBU that follows.
+Each OBU carried in <code>configOBUs</code> shall be framed using the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]]: each OBU is preceded by a <code>leb128()</code> <code>num_bytes_in_obu</code> value giving the byte length of the OBU that follows.
 
-<code>configOBUs</code> SHALL contain a [=Sequence Header OBU=] as its first OBU.
+<code>configOBUs</code> shall contain a [=Sequence Header OBU=] as its first OBU.
 
-<code>configOBUs</code> MAY contain additional OBUs whose content is constant for the track's samples, such as static [=Metadata OBUs=].
+<code>configOBUs</code> may contain additional OBUs whose content is constant for the track's samples, such as static [=Metadata OBUs=].
 
-<code>configOBUs</code> SHALL NOT contain any of the following:
+<code>configOBUs</code> shall NOT contain any of the following:
 - a [=Temporal Delimiter OBU=];
 - any OBU carrying coded frame data, including [=Closed Loop Key OBUs=], [=Open Loop Key OBUs=], [=Switch OBUs=], [=Bridge Frame OBUs=], regular or leading tile-group OBUs, and switch-eligible or TIP frame OBUs;
 
-The values of the fields in the [=AV2CodecConfigurationBox=] SHALL equal the corresponding effective values of the fields of the [=Sequence Header OBU=] carried in <code>configOBUs</code>. 
+The values of the fields in the [=AV2CodecConfigurationBox=] shall equal the corresponding effective values of the fields of the [=Sequence Header OBU=] carried in <code>configOBUs</code>. 
 
 # CMAF AV2 track format # {#cmaf}
 
