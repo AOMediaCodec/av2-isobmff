@@ -1,6 +1,6 @@
 <pre class='metadata'>
 Title: AV2 Codec ISO Media File Format Binding
-Status: PD
+Status: WGD
 Text Macro: SPECVERSION v1.0.0
 URL: https://aomediacodec.github.io/av2-isobmff/v1.0.0.html
 Shortname: av2-isobmff
