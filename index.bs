@@ -208,8 +208,6 @@ A [=Closed Random Access=] point (identified by a [=Closed Loop Key OBU=]) start
 
 An [=Open Random Access=] point (identified by an [=Open Loop Key OBU=]) allows decoding to be correctly initiated for all subsequent non-leading pictures. [=Leading frames=] that follow an Open Random Access point may reference pictures preceding it and are discarded when random access begins at that point.
 
-NOTE: The [[!AV2]] specification supports temporal layers ([=obu_tlayer_id=]), embedded layers ([=obu_mlayer_id=]), and extended layers ([=obu_xlayer_id=]). This version of the specification supports storage of singlestream bitstreams in a single track. Advanced multi-layer, multistream, and layer extraction use cases are not addressed and may be specified in a future version.
-
 # Basic Encapsulation Scheme # {#basic-encapsulation}
 
 This section describes the basic data structures used to signal encapsulation of [=AV2 bitstreams=] in [[!ISOBMFF]] containers.
@@ -221,10 +219,6 @@ A file conformant to this specification satisfies the following:
 - <assert>It SHALL have the <dfn value export for="ISOBMFF Brand">av02</dfn> brand among the compatible brands array of the FileTypeBox</assert>
 - <assert>It SHALL contain at least one track using an [=AV2SampleEntry=], possibly transformed by encryption as specified in [[#CommonEncryption]]</assert>
 - <assert>It SHOULD indicate a structural ISOBMFF brand among the compatible brands array of the FileTypeBox, such as 'iso6'</assert>
-- <assert>It MAY indicate CMAF brands as specified in [[#cmaf]]</assert>
-- <assert>It MAY indicate other brands not specified in this document provided that the associated requirements do not conflict with those given in this specification</assert>
-
-Parsers SHALL support the structures required by the <code>'iso6'</code> brand and MAY support structures required by further ISOBMFF structural brands.
 
 ## AV2 Sample Entry and Configuration ## {#sample-entry-and-config}
 
