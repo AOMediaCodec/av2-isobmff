@@ -75,14 +75,14 @@ url: https://super-adventure-4j2gglm.pages.github.io/#closed-random-access; spec
 url: https://super-adventure-4j2gglm.pages.github.io/#open-random-access; spec: AV2; type: dfn;
     text: Open Random Access
 
-url: https://super-adventure-4j2gglm.pages.github.io/#leading-picture; spec: AV2; type: dfn;
-    text: Leading Picture
+url: https://super-adventure-4j2gglm.pages.github.io/#leading-frame; spec: AV2; type: dfn;
+    text: Leading frame
 
 url: https://super-adventure-4j2gglm.pages.github.io/#inter-frame; spec: AV2; type: dfn;
     text: Inter Frame
 
 url: https://super-adventure-4j2gglm.pages.github.io/#intra-frame; spec: AV2; type: dfn;
-    text: Intra-only Frame
+    text: Intra frame
 
 url: https://super-adventure-4j2gglm.pages.github.io/#key-frame; spec: AV2; type: dfn;
     text: Key Frame
@@ -185,13 +185,13 @@ An [=AV2 bitstream=] is composed of a sequence of [=OBUs=] (Open Bitstream Units
 
 OBUs have a 1 or 2 byte header identifying the [=obu_type=] and [=obu_tlayer_id=] (temporal layer), followed by an optional payload whose presence and content depend on the OBU type. When the header extension is present, the header also carries [=obu_mlayer_id=] (embedded layer) and [=obu_xlayer_id=] (extended layer) identifiers. Depending on its type, an OBU can carry configuration information (e.g., a [=Sequence Header OBU=] or [=Layer Configuration Record OBU=]), metadata, or coded video data.
 
-[=Temporal Units=] are processed by a decoder in the order given by the bitstream. Each Temporal Unit is associated with a presentation time. A Temporal Unit may contain multiple coded pictures but typically only one is output. In addition to [=Tile Group OBUs=], [=AV2=] introduces several coded picture types including TIP (Temporally Interpolated Prediction) frames, [=Bridge Frame OBUs=], and frames using the [=show_existing_frame=] mechanism.
+[=Temporal Units=] are processed by a decoder in the order given by the bitstream. Each Temporal Unit is associated with a presentation time. A Temporal Unit may contain multiple coded pictures but typically only one is output. In addition to [=Tile Group OBUs=], [[!AV2]] introduces several coded picture types including TIP (Temporally Interpolated Prediction) frames, [=Bridge Frame OBUs=], and frames using the [=show_existing_frame=] mechanism.
 
-Frames carried in Temporal Units may have coding dependencies on frames carried previously in the same Temporal Unit or in previous Temporal Units. Frames that can be decoded without dependencies to previous frames are of two categories: [=Key Frames=] and [=Intra-only Frames=]. Frames that cannot be decoded independently are of three categories: [=Inter Frames=], [=Switch Frames=], and frames with [=show_existing_frame=] set to 1.
+Frames carried in Temporal Units may have coding dependencies on frames carried previously in the same Temporal Unit or in previous Temporal Units. Frames that can be decoded without dependencies to previous frames are of two categories: [=Key Frames=] and [=Intra frames=]. Frames that cannot be decoded independently are of three categories: [=Inter Frames=], [=Switch Frames=], and frames with [=show_existing_frame=] set to 1.
 
 A [=Closed Random Access=] point (identified by a [=Closed Loop Key OBU=]) starts a new coded video sequence. All reference frame buffers are invalidated, and all subsequent frames can be decoded. These serve as the primary random access mechanism.
 
-An [=Open Random Access=] point (identified by an [=Open Loop Key OBU=]) allows decoding to be correctly initiated for all subsequent non-leading pictures. [=Leading Pictures=] that follow an Open Random Access point may reference pictures preceding it and are discarded when random access begins at that point.
+An [=Open Random Access=] point (identified by an [=Open Loop Key OBU=]) allows decoding to be correctly initiated for all subsequent non-leading pictures. [=Leading frames=] that follow an Open Random Access point may reference pictures preceding it and are discarded when random access begins at that point.
 
 NOTE: The [[!AV2]] specification supports temporal layers ([=obu_tlayer_id=]), embedded layers ([=obu_mlayer_id=]), and extended layers ([=obu_xlayer_id=]). This version of the specification supports storage of singlestream bitstreams in a single track. Advanced multi-layer, multistream, and layer extraction use cases are not addressed and may be specified in a future version.
 
