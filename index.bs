@@ -57,17 +57,35 @@ url: https://super-adventure-4j2gglm.pages.github.io/#temporal-delimiter-obu; sp
 url: https://super-adventure-4j2gglm.pages.github.io/#general_tile_group_payload_semantics; spec: AV2; type: dfn;
     text: Tile Group OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#metadata_short_obu_semantics; spec: AV2; type: dfn;
+url: https://super-adventure-4j2gglm.pages.github.io/#metadata_obu_syntax; spec: AV2; type: dfn;
     text: Metadata OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#general_obu_semantics; spec: AV2; type: dfn;
+url: https://super-adventure-4j2gglm.pages.github.io/#metadata_short_obu_syntax; spec: AV2; type: dfn;
+    text: metadata short OBU syntax
+
+url: https://super-adventure-4j2gglm.pages.github.io/#metadata_group_obu_syntax; spec: AV2; type: dfn;
+    text: metadata group OBU syntax
+
+url: https://super-adventure-4j2gglm.pages.github.io/#padding_obu_syntax; spec: AV2; type: dfn;
     text: Padding OBU
+
+url: https://super-adventure-4j2gglm.pages.github.io/#frame_header_syntax; spec: AV2; type: dfn;
     text: Frame Header OBU
+
+url: https://super-adventure-4j2gglm.pages.github.io/#layer_config_record_obu_semantics; spec: AV2; type: dfn;
     text: Layer Configuration Record OBU
-    text: Closed Loop Key OBU
-    text: Open Loop Key OBU
+
+url: https://super-adventure-4j2gglm.pages.github.io/#switch-frame; spec: AV2; type: dfn;
     text: Switch OBU
+
+url: https://super-adventure-4j2gglm.pages.github.io/#bridge-frame; spec: AV2; type: dfn;
     text: Bridge Frame OBU
+
+url: https://super-adventure-4j2gglm.pages.github.io/#clk; spec: AV2; type: dfn;
+    text: Closed Loop Key OBU
+
+url: https://super-adventure-4j2gglm.pages.github.io/#olk; spec: AV2; type: dfn;
+    text: Open Loop Key OBU
 
 url: https://super-adventure-4j2gglm.pages.github.io/#closed-random-access; spec: AV2; type: dfn;
     text: Closed Random Access
@@ -90,18 +108,27 @@ url: https://super-adventure-4j2gglm.pages.github.io/#key-frame; spec: AV2; type
 url: https://super-adventure-4j2gglm.pages.github.io/#switch-frame; spec: AV2; type: dfn;
     text: Switch Frame
 
-url: https://super-adventure-4j2gglm.pages.github.io/#temporal-unit; spec: AV2; type: dfn;
+url: https://super-adventure-4j2gglm.pages.github.io/#temporal-units; spec: AV2; type: dfn;
     text: Temporal Unit
 
-url: https://super-adventure-4j2gglm.pages.github.io/#uncompressed_header_semantics; spec: AV2; type: dfn;
+url: https://super-adventure-4j2gglm.pages.github.io/#frame_header_info_semantics; spec: AV2; type: dfn;
     text: immediate_output_frame
+
+url: https://super-adventure-4j2gglm.pages.github.io/#sef; spec: AV2; type: dfn;
     text: show_existing_frame
 
-url: https://super-adventure-4j2gglm.pages.github.io/#obu_header_semantics; spec: AV2; type: dfn;
+url: https://super-adventure-4j2gglm.pages.github.io/#obu_header_syntax; spec: AV2; type: dfn;
     text: obu_type
+    text: obu_header_extension_flag
     text: obu_tlayer_id
     text: obu_mlayer_id
     text: obu_xlayer_id
+
+url: https://super-adventure-4j2gglm.pages.github.io/#singlestream; spec: AV2; type: dfn;
+    text: Singlestream
+
+url: https://super-adventure-4j2gglm.pages.github.io/#multistream; spec: AV2; type: dfn;
+    text: Multistream
 
 url: https://super-adventure-4j2gglm.pages.github.io/#general_obu_semantics; spec: AV2; type: dfn;
     text: obu_has_size_field
@@ -181,29 +208,33 @@ url: https://www.iso.org/standard/68042.html#; spec: CENC; type: dfn;
 Bitstream features overview {#bitstream-overview}
 =================================================
 
-An [=AV2 bitstream=] is composed of a sequence of [=OBUs=] (Open Bitstream Units), grouped into [=Temporal Units=]. A [=Temporal Unit=] consists of a [=Temporal Delimiter OBU=] and all following OBUs up to, but not including, the next Temporal Delimiter OBU. Each Temporal Unit is associated with a single presentation time.
+An [=AV2 bitstream=] is composed of a sequence of [=OBUs=] (Open Bitstream Units), grouped into [=Temporal Units=]. A Temporal Unit consists of a [=Temporal Delimiter OBU=] and all following OBUs up to, but not including, the next Temporal Delimiter OBU. Each Temporal Unit is associated with a single presentation time.
 
-Every OBU begins with a 1- or 2-byte header that carries the [=obu_type=] and the temporal layer identifier [=obu_tlayer_id=]. When the OBU header extension is present, two additional layer identifiers are carried: the embedded layer identifier [=obu_mlayer_id=] and the extended layer identifier [=obu_xlayer_id=]. Depending on its type, an OBU can carry configuration information (e.g., a [=Sequence Header OBU=] or [=Layer Configuration Record OBU=]), metadata, or coded video data.
+Every OBU begins with a 1- or 2-byte header that carries the [=obu_type=] and the temporal layer identifier [=obu_tlayer_id=]. When the OBU header extension is present (i.e. when [=obu_header_extension_flag=] is equal to 1 in that header), two additional layer identifiers are carried: the embedded layer identifier [=obu_mlayer_id=] and the extended layer identifier [=obu_xlayer_id=]. Depending on its type, an OBU can carry configuration information (e.g., a [=Sequence Header OBU=] or [=Layer Configuration Record OBU=]), metadata, or coded video data.
 
 A Temporal Unit may contain multiple coded pictures but only one is output. AV2 defines a number of coded-frame OBU types, including [=Closed Loop Key OBUs=], [=Open Loop Key OBUs=], regular and leading tile-group OBUs, [=Switch OBUs=], <code>OBU_RAS_FRAME</code>, [=Bridge Frame OBUs=], and TIP (Temporally Interpolated Prediction) frames.
 
 Frames that can be decoded without reference to other frames are [=Key Frames=] (carried in a [=Closed Loop Key OBU=] or an [=Open Loop Key OBU=]) and [=Intra frames=]. All other coded frames - including [=Inter Frames=], [=Switch Frames=], RAS frames, Bridge frames, TIP frames, and frames with [=show_existing_frame=] equal to 1 - have coding dependencies on other frames in the same or previous Temporal Units.
 
-A [=Closed Random Access=] point, signalled by a [=Closed Loop Key OBU=], starts a new coded video sequence for its extended layer; the layer's reference frame buffers are invalidated and every subsequent frame of that layer can be decoded. This is the primary random-access mechanism.
+A [=Closed Random Access=] is the random access process that applies to an extended layer whose first coded frame is a [=Key Frame=] carried in a [=Closed Loop Key OBU=]. It starts a new coded video sequence for the extended layer; the layer's reference frame buffers are invalidated and every subsequent frame of that layer can be decoded. This is the primary random-access mechanism.
 
-An [=Open Random Access=] point, signalled by an [=Open Loop Key OBU=], does not start a new coded video sequence during sequential decoding; however, when a decoder initiates decoding at that point, the decoding process is treated as if it were the start of a new coded video sequence for the extended layer. [=Leading frames=] that follow an Open Random Access point may reference frames that precede it, and are discarded when decoding begins at the Open Random Access point.
+An [=Open Random Access=] is the random access process that applies to an extended layer whose first coded frame is a [=Key Frame=] carried in an [=Open Loop Key OBU=]. During sequential decoding, an [=Open Random Access=] point does not start a new coded video sequence; however, when a decoder initiates decoding at that point, the decoding process is treated as if it were the start of a new coded video sequence for the extended layer. [=Leading frames=] that follow an [=Open Random Access=] point may reference frames that precede it, and are discarded when decoding begins at the [=Open Random Access=] point.
 
 In addition to Key Frames, AV2 provides two further mechanisms that support random access or stream switching: a RAS frame (<code>OBU_RAS_FRAME</code>) is an inter-predicted frame that uses long-term reference frames and enables random access or switching without inserting a full key frame; a [=Switch Frame=] (<code>OBU_SWITCH</code>) is an inter-predicted frame that enables switching between representations at a given point, typically in adaptive streaming scenarios.
 
-AV2 supports three scalability dimensions: temporal layers (identified by [=obu_tlayer_id=]), embedded layers (identified by [=obu_mlayer_id=]), and extended layers (identified by [=obu_xlayer_id=]). A bitstream with a single non-global value of [=obu_xlayer_id=] is a *singlestream*; a bitstream with multiple non-global values is a *multistream*.
+AV2 supports three scalability dimensions: temporal layers (identified by [=obu_tlayer_id=]), embedded layers (identified by [=obu_mlayer_id=]), and extended layers (identified by [=obu_xlayer_id=]). The reserved [=obu_xlayer_id=] value <code>GLOBAL_XLAYER_ID</code> (equal to 31, as defined in [[!AV2]]) denotes global scope and is used by OBUs that do not belong to any specific extended layer (such as the [=Temporal Delimiter OBU=]). A bitstream that uses a single distinct non-global value of [=obu_xlayer_id=] is a [=Singlestream=]; a bitstream that uses two or more distinct non-global values is a [=Multistream=].
 
-AV2 defines [=Metadata OBUs=] that can carry auxiliary information such as HDR mastering display colour volume, content light level, timecodes and ICC profiles. A separate OBU type carries film grain synthesis parameters; its presence is indicated by the <code>film_grain_params_present</code> flag in the [=Sequence Header OBU=].
+AV2 defines two distinct [=Metadata OBU=] types for carrying metadata: <code>OBU_METADATA_SHORT</code>, using the [=metadata short OBU syntax=], and <code>OBU_METADATA_GROUP</code>, using the [=metadata group OBU syntax=]. A separate OBU type carries film grain synthesis parameters; its presence is indicated by the <code>film_grain_params_present</code> flag in the [=Sequence Header OBU=].
 
 The [=Sequence Header OBU=] also carries the bitstream's profile, level, and - when applicable - tier, as defined in Annex A of [[!AV2]].
 
-The [=Sequence Header OBU=] carries a <code>monotonic_output_order_flag</code> that defines the output mode of the associated coded video sequence. When <code>monotonic_output_order_flag</code> is equal to 1, the output order of coded output frame units equals their decoding order within the coded video sequence, and a systems or application layer can determine each frame's presentation time from the decoding time alone, without parsing any frame headers. When <code>monotonic_output_order_flag</code> is equal to 0, the output order may differ from the decoding order, and the systems or application layer has to derive each frame's presentation time from information signalled per frame.
+The [=Sequence Header OBU=] carries a <code>monotonic_output_order_flag</code> that defines the output mode of the associated coded video sequence.
 
-NOTE: This is a significant difference from AV1, which supports only the monotonic output mode.
+When <code>monotonic_output_order_flag</code> is equal to 1, the output order of coded output frame equals their decoding order within the coded video sequence. Within a sample, the composition time (CTS) of the associated output frame is equal to the sample's decoding time (DTS); the sample may additionally contain hidden frames.
+
+When <code>monotonic_output_order_flag</code> is equal to 0, the output order of coded output frames may differ from their decoding order. The composition time of each sample is then derived from a 'ctts' box that signals the offset between the sample's decoding time (DTS) and the composition time of its associated output frame. As in the monotonic case, a sample may additionally contain hidden frames.
+
+NOTE: Non-monotonic output mode is new in AV2; AV1 supports only the monotonic mode.
 
 # Basic Encapsulation Scheme # {#basic-encapsulation}
 
