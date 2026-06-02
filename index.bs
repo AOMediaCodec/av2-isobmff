@@ -17,7 +17,6 @@ Metadata Order: This version, !*, *
 <pre class="anchors">
 url: https://www.iso.org/standard/83102.html#; spec: ISOBMFF; type: dfn;
     text: VisualSampleEntry
-    text: FullBox
     text: Sample Auxiliary Information
 
 url: https://www.iso.org/standard/83102.html#; spec: ISOBMFF; type: property;
@@ -279,15 +278,17 @@ An [=AV2SampleEntry=] shall contain exactly one [=AV2CodecConfigurationBox=].
 
 An [=AV2SampleEntry=] shall contain a 'colr' box with the 'nclx' colour type. The values of <code>colour_primaries</code>, <code>transfer_characteristics</code>, <code>matrix_coefficients</code> and <code>full_range_flag</code> carried in that 'colr' box should equal the corresponding effective values of the AV2 bitstream carried by the track.
 
-An [=AV2SampleEntry=] may contain additional sub-boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'pasp', 'clli', 'mdcv' or 'btrt'.
+NOTE: An [=AV2SampleEntry=] may contain additional sub-boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'pasp', 'clli', 'mdcv' or 'btrt'.
 
 ### AV2 Codec Configuration Box ### {#av2c}
 
 The <dfn>AV2CodecConfigurationBox</dfn> carries the decoder initialisation data required to decode the AV2 coded video samples of a track.
 
 ```cpp
-aligned(8) class AV2CodecConfigurationBox extends FullBox('av2C', version = 0, flags = 0)
+aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 {
+  unsigned int(8)  configurationVersion = 1;
+
   unsigned int(5)  seq_profile_idc;
   unsigned int(5)  seq_level_idx;
   unsigned int(1)  seq_tier;
