@@ -312,6 +312,8 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 
 semantics TBD
 
+NOTE: In [[!AV2]], <code>chroma_format_idc</code> and <code>bit_depth_idc</code> are coded with <code>uvlc()</code> and therefore have no inherent upper bound, even though [[!AV2]] currently defines only a small number of values for each (4 and 2 respectively). The 3-bit fields used here accommodate all values currently defined by [[!AV2]] with additional headroom for future extensions. If a future revision of [[!AV2]] defines values that do not fit in 3 bits, a new <code>configurationVersion</code> of the [=AV2CodecConfigurationBox=] can be defined.
+
 <code>reserved</code> shall be set to 0. Readers shall ignore its value.
 
 <code>configOBUs</code> is a byte array carrying one or more OBUs as described in [[#configobus]].
