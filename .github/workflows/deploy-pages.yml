@@ -37,7 +37,7 @@ jobs:
         run: pip install -r tools/specbuild/requirements.txt
 
       - name: Install Node dependencies
-        run: cd tools/specbuild && npm install
+        run: cd tools/specbuild && npm install --verbose
 
       - name: Install WeasyPrint system libraries
         run: sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0
