@@ -29,6 +29,12 @@ jobs:
           cache: pip
           cache-dependency-path: tools/specbuild/requirements.txt
 
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: tools/specbuild/package-lock.json
+
       - name: Install Python dependencies
         run: pip install -r tools/specbuild/requirements.txt
 
