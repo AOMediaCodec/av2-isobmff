@@ -31,8 +31,7 @@ jobs:
         run: pip install -r tools/specbuild/requirements.txt
 
       - name: Install Node dependencies
-        run: npm ci
-        working-directory: tools/specbuild
+        run: cd tools/specbuild && npm install
 
       - name: Verify node_modules installed
         run: |

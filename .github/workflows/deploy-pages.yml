@@ -32,15 +32,12 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: "20"
-          cache: npm
-          cache-dependency-path: tools/specbuild/package-lock.json
 
       - name: Install Python dependencies
         run: pip install -r tools/specbuild/requirements.txt
 
       - name: Install Node dependencies
-        run: npm ci
-        working-directory: tools/specbuild
+        run: cd tools/specbuild && npm install
 
       - name: Install WeasyPrint system libraries
         run: sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0
