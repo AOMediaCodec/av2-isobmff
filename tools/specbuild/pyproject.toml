@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "specbuild"
-version = "0.3.3"
+version = "0.3.4"
 description = "A reusable pipeline for building Bikeshed specifications"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -37,11 +37,6 @@ dependencies = [
     "requests>=2.31",
     "tomli>=2.0; python_version < '3.11'",
 ]
-
-[project.urls]
-Homepage = "https://github.com/alexismt73/bikeshed"
-Repository = "https://github.com/alexismt73/bikeshed"
-Issues = "https://github.com/alexismt73/bikeshed/issues"
 
 [project.optional-dependencies]
 pdf = [

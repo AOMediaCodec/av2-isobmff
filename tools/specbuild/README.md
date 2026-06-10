@@ -8,8 +8,8 @@ Designed to work with any Bikeshed-based spec. Ships with a demo *Bicycle Design
 
 ```bash
 # Clone the repository
-git clone https://github.com/alexismt73/bikeshed.git
-cd bikeshed
+git clone <SpecBuild-repo-url>
+cd SpecBuild
 
 # Create and activate a virtual environment
 python3 -m venv venv
