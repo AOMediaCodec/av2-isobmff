@@ -51,14 +51,23 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
 
     changes_made = 0
 
-    # 1. Remove data-original-syntax attributes from SDL tables
+    # 1. Remove Back-to-TOC navigation links — these are navigation aids
+    # injected by SpecBuild that are not part of the spec content and would
+    # cause false-positive diffs.
+    back_to_toc_removed = 0
+    for elem in soup.find_all(class_="back-to-toc-wrapper"):
+        elem.decompose()
+        back_to_toc_removed += 1
+    logging.debug(f"  Removed {back_to_toc_removed} back-to-toc links")
+
+    # 2. Remove data-original-syntax attributes from SDL tables
     # These contain the original syntax with line number markers that change
     for table in soup.find_all("table", class_="sdl-syntax-table"):
         if table.has_attr("data-original-syntax"):
             del table["data-original-syntax"]
             changes_made += 1
 
-    logging.info(f"  Removed data-original-syntax from {changes_made} SDL tables")
+    logging.debug(f"  Removed data-original-syntax from {changes_made} SDL tables")
 
     # 2. Remove bs-line-number attributes from all elements
     # These are Bikeshed line numbers that change even when content doesn't

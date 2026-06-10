@@ -79,7 +79,7 @@ def _specbuild_version() -> str:
             return result.stdout.strip()
     except Exception:
         pass
-    return "0.3.5"
+    return "0.3.6"
 
 
 if TYPE_CHECKING:
@@ -117,7 +117,7 @@ def _run_concurrent_tasks(
     if errors:
         for name, exc in errors:
             logging.error(f"{label} '{name}' failed: {exc}")
-        raise errors[0][1]
+        raise SystemExit(1)
 
 
 # ---------------------------------------------------------------------------
