@@ -133,7 +133,7 @@ def _compile_anchor_no_clone(
                 remove_editor_notes_flag=remove_editor_notes_flag,
                 striped_code_blocks=striped_code_blocks,
             )
-            anchor_html = Path(CONFIG.main_bs_file).with_suffix(".html")
+            anchor_html = Path("index.html")
         else:
             compile_spec(
                 diff_hack=True,
@@ -141,7 +141,7 @@ def _compile_anchor_no_clone(
                 remove_editor_notes_flag=remove_editor_notes_flag,
                 striped_code_blocks=striped_code_blocks,
             )
-            anchor_html = Path(CONFIG.diff_bs_file).with_suffix(".html")
+            anchor_html = Path("index.html")
 
         logging.info("Renumbering annexes in anchor spec")
         renumber_annexes_in_html(anchor_html)
@@ -213,12 +213,9 @@ def _compile_anchor_clone(
 
     if CONFIG.source_format == "asciidoc":
         anchor_html = main_branch_path / "index.html"
-    elif convert_sdl:
-        anchor_bs = main_branch_path / CONFIG.main_bs_file
-        anchor_html = anchor_bs.with_suffix(".html")
     else:
-        anchor_bs = main_branch_path / CONFIG.diff_bs_file
-        anchor_html = anchor_bs.with_suffix(".html")
+        # Bikeshed always writes index.html regardless of main_bs_file.
+        anchor_html = main_branch_path / "index.html"
     anchor_git_dir = main_branch_path / ".git"
 
     # Clone if the directory doesn't contain a git checkout yet
@@ -458,14 +455,8 @@ def diff_spec(
             return anchor_spec_info
 
     # --- Run the diff ---
-    if CONFIG.source_format == "asciidoc":
-        target_html = build_dir / "index.html"
-    elif convert_sdl:
-        target_bs = build_dir / CONFIG.main_bs_file
-        target_html = target_bs.with_suffix(".html")
-    else:
-        target_bs = build_dir / CONFIG.diff_bs_file
-        target_html = target_bs.with_suffix(".html")
+    # Bikeshed always writes index.html — use it for both anchor and target.
+    target_html = build_dir / "index.html"
     diff_file = build_dir / "diff.html"
 
     logging.info("Preprocessing HTML files for diff...")

@@ -79,7 +79,7 @@ def _specbuild_version() -> str:
             return result.stdout.strip()
     except Exception:
         pass
-    return "0.3.4"
+    return "0.3.5"
 
 
 if TYPE_CHECKING:
