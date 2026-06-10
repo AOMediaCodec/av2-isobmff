@@ -1708,15 +1708,19 @@ def _prerender_mathjax(html_content: str, input_html: Path) -> str:
         temp_mathjax_html = input_html.parent / f"{input_html.stem}_mathjax_temp.html"
         temp_mathjax_html.write_text(html_content, encoding="utf-8")
 
-        subprocess.run(
-            [sys.executable, str(mathjax_script), str(temp_mathjax_html), detected_chrome],
-            check=True,
-            capture_output=True,
-        )
-
-        html_content = temp_mathjax_html.read_text(encoding="utf-8")
-        temp_mathjax_html.unlink()
-        print("  MathJax equations pre-rendered")
+        try:
+            subprocess.run(
+                [sys.executable, str(mathjax_script), str(temp_mathjax_html), detected_chrome],
+                check=True,
+                capture_output=True,
+            )
+            html_content = temp_mathjax_html.read_text(encoding="utf-8")
+            print("  MathJax equations pre-rendered")
+        except Exception as exc:
+            print(f"  Warning: Failed to pre-render MathJax: {exc}", file=sys.stderr)
+            print("  Continuing without MathJax pre-rendering (equations may appear as raw LaTeX)")
+        finally:
+            temp_mathjax_html.unlink(missing_ok=True)
     except Exception as exc:
         print(f"  Warning: Failed to pre-render MathJax: {exc}", file=sys.stderr)
         print("  Continuing without MathJax pre-rendering (equations may appear as raw LaTeX)")
@@ -1996,10 +2000,15 @@ def generate_pdf_weasyprint(
         return False
 
     finally:
-        # Keep temp file for debugging (uncomment unlink() for production)
+        # Clean up the temp HTML — it's an internal working file, not
+        # part of the deliverable.  Set SPECBUILD_KEEP_DEBUG=1 to keep it.
+        import os as _os
+
         if temp_html.exists():
-            print(f"Debug: Temporary HTML saved at {temp_html}")
-            # temp_html.unlink()
+            if _os.environ.get("SPECBUILD_KEEP_DEBUG"):
+                print(f"Debug: Temporary HTML kept at {temp_html}")
+            else:
+                temp_html.unlink(missing_ok=True)
 
 
 # ---------------------------------------------------------------------------

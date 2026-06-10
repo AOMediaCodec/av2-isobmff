@@ -39,8 +39,11 @@ class SpecConfig:
     header_file: str = "header.bs"
 
     # Git / Repository
-    repo_url: str = "https://github.com/alexismt73/bikeshed.git"
-    repo_browse_url: str = "https://github.com/alexismt73/bikeshed/tree/"
+    # repo_url is intentionally empty by default.  Set it in specbuild.toml
+    # to enable the clone-based diff strategy.  When empty, the diff pipeline
+    # falls back to auto-detecting the remote URL from `git remote get-url origin`.
+    repo_url: str = ""
+    repo_browse_url: str = ""
     main_branch_clone_dir: str = "downloads/spec-main"
     main_branch: str = "main"
 

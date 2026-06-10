@@ -40,7 +40,7 @@ jobs:
         run: sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0
 
       - name: Build specification with diff
-        run: python tools/specbuild/compile.py --profile publication --diff --diff_viewer --diff_sha origin/${{ github.base_ref }}
+        run: python tools/specbuild/compile.py --profile publication --toc-leaders table --check-sdl-syntax --diff --diff_viewer --diff_sha origin/${{ github.base_ref }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

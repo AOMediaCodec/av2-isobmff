@@ -33,6 +33,20 @@ from specbuild.logsetup import setup_logging  # noqa: E402
 setup_logging("INFO")
 
 
+def _build_node_env() -> dict:
+    """Build a subprocess env with NODE_PATH pointing at PROJECT_ROOT/node_modules."""
+    from specbuild import PROJECT_ROOT
+
+    node_env = dict(os.environ)
+    node_modules = PROJECT_ROOT / "node_modules"
+    if node_modules.exists():
+        existing = node_env.get("NODE_PATH", "")
+        node_env["NODE_PATH"] = (
+            str(node_modules) + os.pathsep + existing if existing else str(node_modules)
+        )
+    return node_env
+
+
 def check_node_and_puppeteer() -> bool:
     """Check if Node.js and puppeteer-core are available."""
     try:
@@ -48,7 +62,7 @@ def check_node_and_puppeteer() -> bool:
             ["node", "-e", 'require("puppeteer-core"); console.log("ok")'],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent,
+            env=_build_node_env(),
         )
         if "ok" in result.stdout:
             logging.info("puppeteer-core is installed")
@@ -185,16 +199,6 @@ const path = require('path');
         # Set NODE_PATH to the build system's node_modules so that
         # `require('puppeteer-core')` resolves correctly regardless of
         # where the temp script was written (e.g. the output directory).
-        from specbuild import PROJECT_ROOT
-
-        node_env = dict(os.environ)
-        node_modules = PROJECT_ROOT / "node_modules"
-        if node_modules.exists():
-            existing = node_env.get("NODE_PATH", "")
-            node_env["NODE_PATH"] = (
-                str(node_modules) + os.pathsep + existing if existing else str(node_modules)
-            )
-
         logging.info("Running Puppeteer to render MathJax...")
         result = subprocess.run(
             ["node", str(temp_script)],
@@ -203,7 +207,7 @@ const path = require('path');
             text=True,
             timeout=60,
             cwd=html_path.parent.parent,
-            env=node_env,
+            env=_build_node_env(),
         )
         if result.stderr:
             for line in result.stderr.strip().split("\n"):

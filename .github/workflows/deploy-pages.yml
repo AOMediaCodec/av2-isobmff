@@ -46,7 +46,7 @@ jobs:
         run: sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0
 
       - name: Build specification
-        run: python tools/specbuild/compile.py --profile publication
+        run: python tools/specbuild/compile.py --profile publication --toc-leaders table --check-sdl-syntax
 
       - name: Prepare Pages artifact
         run: |

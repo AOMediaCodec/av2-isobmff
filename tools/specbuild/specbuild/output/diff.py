@@ -191,6 +191,23 @@ def _compile_anchor_clone(
         "date": None,
     }
 
+    # Resolve the repo URL — use configured value, or fall back to the
+    # current repo's origin remote so consumers don't have to set repo_url.
+    repo_url = CONFIG.repo_url
+    if not repo_url:
+        try:
+            result = subprocess.run(
+                ["git", "remote", "get-url", "origin"],
+                capture_output=True,
+                text=True,
+                timeout=10,
+            )
+            if result.returncode == 0:
+                repo_url = result.stdout.strip()
+                logging.debug(f"Auto-detected repo_url from git remote: {repo_url}")
+        except Exception:
+            pass
+
     main_branch_path = Path(CONFIG.main_branch_clone_dir)
     main_branch_path.mkdir(parents=True, exist_ok=True)
 
@@ -206,9 +223,15 @@ def _compile_anchor_clone(
 
     # Clone if the directory doesn't contain a git checkout yet
     if not anchor_git_dir.exists():
-        logging.info(f"Cloning {CONFIG.repo_url} to {CONFIG.main_branch_clone_dir}")
+        if not repo_url:
+            logging.error(
+                "Cannot clone anchor spec: repo_url is not set and could not be "
+                "auto-detected. Set repo_url in specbuild.toml or use --no_clone."
+            )
+            return anchor_info
+        logging.info(f"Cloning {repo_url} to {CONFIG.main_branch_clone_dir}")
         subprocess.run(
-            ["git", "clone", CONFIG.repo_url, str(main_branch_path)], check=True, timeout=300
+            ["git", "clone", repo_url, str(main_branch_path)], check=True, timeout=300
         )
     else:
         # Fetch latest changes from remote
