@@ -187,3 +187,9 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+av2-isobmff_Spec/
+.specbuild_main.bs
+node_modules/
+
+# SpecBuild build artifacts
+tools/specbuild/node_modules/
