@@ -27,14 +27,14 @@ jobs:
         run: pip install -r tools/specbuild/requirements.txt
 
       - name: Install Node dependencies
-        run: npm install
+        run: npm ci
         working-directory: tools/specbuild
 
       - name: Install WeasyPrint system libraries
         run: sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0
 
-      - name: Build specification
-        run: python tools/specbuild/compile.py --profile publication
+      - name: Build specification with diff
+        run: python tools/specbuild/compile.py --profile publication --diff --diff_viewer --diff_sha origin/${{ github.base_ref }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -62,11 +62,13 @@ jobs:
             ### 📦 What's included
             - \`index.html\` — Compiled specification (HTML)
             - \`av2-isobmff_Spec.pdf\` — PDF output
+            - \`diff.html\` — Changes vs \`${context.payload.pull_request.base.ref}\`
+            - \`diff_viewer.html\` — Three-pane diff viewer
 
             ### 📥 How to preview
             1. Click the "Download Build Artifact" link above
             2. Download the artifact zip
-            3. Extract and open \`index.html\` in your browser
+            3. Extract and open \`index.html\` or \`diff_viewer.html\` in your browser
 
             ---
             *Built from commit ${commitSha} · Updated: ${new Date().toUTCString()}*`;
