@@ -301,7 +301,7 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
   unsigned int(1)  film_grain_params_present;
   unsigned int(1)  seq_initial_display_delay_present_flag;
   unsigned int(4)  seq_initial_display_delay_minus_1;
-  unsigned int(7)  reserved = 0;
+  unsigned int(7)  reserved1 = 0;
 
   unsigned int(16) max_frame_width_minus_1;
   unsigned int(16) max_frame_height_minus_1;
