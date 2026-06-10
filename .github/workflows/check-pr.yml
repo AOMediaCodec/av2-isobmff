@@ -26,8 +26,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: "20"
-          cache: npm
-          cache-dependency-path: tools/specbuild/package-lock.json
 
       - name: Install Python dependencies
         run: pip install -r tools/specbuild/requirements.txt
@@ -36,11 +34,26 @@ jobs:
         run: npm ci
         working-directory: tools/specbuild
 
+      - name: Verify node_modules installed
+        run: |
+          ls tools/specbuild/node_modules/@mpeggroup/mpeg-sdl-parser/package.json
+          ls tools/specbuild/node_modules/puppeteer-core/package.json
+
       - name: Install WeasyPrint system libraries
         run: sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0
 
       - name: Build specification with diff
-        run: python tools/specbuild/compile.py --profile publication --toc-leaders table --check-sdl-syntax --diff --diff_viewer --diff_sha origin/${{ github.base_ref }}
+        env:
+          # Allow git to clone the repo using the built-in token
+          GIT_CONFIG_GLOBAL: /tmp/gitconfig
+        run: |
+          git config --global credential.helper '!f() { echo "username=x-access-token"; echo "password=${{ secrets.GITHUB_TOKEN }}"; }; f'
+          python tools/specbuild/compile.py \
+            --profile publication \
+            --toc-leaders table \
+            --check-sdl-syntax \
+            --diff --diff_viewer \
+            --diff_sha origin/${{ github.base_ref }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
