@@ -50,7 +50,7 @@ jobs:
           python tools/specbuild/compile.py \
             --profile publication \
             --toc-leaders table \
-            --check-sdl-syntax \
+            --strict-sdl-syntax \
             --diff --diff_viewer \
             --diff_sha origin/${{ github.base_ref }}
 
