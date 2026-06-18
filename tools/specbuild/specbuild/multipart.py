@@ -39,6 +39,20 @@ class MultiPartConfig:
 
 _MULTIPART = MultiPartConfig()
 
+# Module-level compiled patterns — compiled once rather than per-call.
+_RE_BARE_PART_NUM = re.compile(r"^\d+$")
+_RE_PART_REF = re.compile(
+    r"(?:(?:see|in|of)\s+)?Part\s+(\d+)(?:\s*,\s*(?:Clause|Section|Annex)\s+[\w.]+)?",
+    re.IGNORECASE,
+)
+_RE_XPART = re.compile(r"\[\[xpart:(\d+)/([^\]|]+)(?:\|([^\]]+))?\]\]")
+_RE_PART_TEXT = re.compile(r"(?:Part\s+)?(\d+)(?:\s*,\s*(.+))?", re.IGNORECASE)
+_CROSS_PART_PATTERNS: list[tuple[re.Pattern[str], str]] = [
+    (re.compile(r"Part\s+(\d+),?\s+Clause\s+([\d.]+)", re.IGNORECASE), "clause"),
+    (re.compile(r"Part\s+(\d+),?\s+Figure\s+([\d.]+)", re.IGNORECASE), "fig"),
+    (re.compile(r"Part\s+(\d+),?\s+Table\s+([\d.]+)", re.IGNORECASE), "table"),
+]
+
 
 def load_multipart_config(config_data: dict[str, Any]) -> MultiPartConfig:
     """Load multi-part configuration from a TOML [standards.multipart] section.
@@ -197,14 +211,14 @@ def resolve_cross_part_reference(
         config = _MULTIPART
 
     # Accept bare numeric string as part number
-    if re.match(r"^\d+$", ref_text.strip()):
+    if _RE_BARE_PART_NUM.match(ref_text.strip()):
         part_num = ref_text.strip()
         for part in config.parts:
             if part.part_number == part_num:
                 return {"part_number": part.part_number, "title": part.title, "path": part.path}
         return None
 
-    m = re.match(r"(?:Part\s+)?(\d+)(?:\s*,\s*(.+))?", ref_text, re.IGNORECASE)
+    m = _RE_PART_TEXT.match(ref_text)
     if not m:
         return None
 
@@ -253,26 +267,11 @@ def resolve_cross_part_text_refs(soup: Any, config: MultiPartConfig | None = Non
     # Build a quick lookup set of known part numbers for fast rejection.
     known_parts = {p.part_number for p in config.parts if p.path}
 
-    _PATTERNS: list[tuple[re.Pattern[str], str]] = [
-        (
-            re.compile(r"Part\s+(\d+),?\s+Clause\s+([\d.]+)", re.IGNORECASE),
-            "clause",
-        ),
-        (
-            re.compile(r"Part\s+(\d+),?\s+Figure\s+([\d.]+)", re.IGNORECASE),
-            "fig",
-        ),
-        (
-            re.compile(r"Part\s+(\d+),?\s+Table\s+([\d.]+)", re.IGNORECASE),
-            "table",
-        ),
-    ]
-
     count = 0
 
     for tag_name in ("p", "li", "td"):
         for container in list(soup.find_all(tag_name)):
-            for pattern, anchor_prefix in _PATTERNS:
+            for pattern, anchor_prefix in _CROSS_PART_PATTERNS:
                 for text_node in list(container.find_all(string=pattern)):
                     parent = text_node.parent
                     if parent and getattr(parent, "name", None) == "a":
@@ -425,13 +424,8 @@ def inject_cross_part_links_soup(
     if not config.parts:
         return 0
 
-    part_pattern = re.compile(
-        r"(?:(?:see|in|of)\s+)?Part\s+(\d+)(?:\s*,\s*(?:Clause|Section|Annex)\s+[\w.]+)?",
-        re.IGNORECASE,
-    )
-
-    # Pattern for [[xpart:N/id]] or [[xpart:N/id|label]]
-    xpart_pattern = re.compile(r"\[\[xpart:(\d+)/([^\]|]+)(?:\|([^\]]+))?\]\]")
+    part_pattern = _RE_PART_REF
+    xpart_pattern = _RE_XPART
 
     count = 0
     outgoing_refs: list[dict[str, str]] = []

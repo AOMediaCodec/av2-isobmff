@@ -188,10 +188,11 @@ def pair_figures(
         # Extract figure number from caption
         m = _FIG_NUM_RE.search(caption) if caption else None
         if m:
-            fig_num = m.group(1).replace("\u2013", "-")
-            figure_id = f"fig-{fig_num}"
+            # Normalize en-dashes and lowercase for ID consistency with xrefmap.py
+            fig_num = m.group(1).replace("\u2013", "-").lower()
+            figure_id = f"figure-{fig_num}"
         else:
-            figure_id = f"fig-{len(figures) + 1}"
+            figure_id = f"figure-{len(figures) + 1}"
 
         figures.append(
             {
@@ -219,7 +220,7 @@ def format_figure_bs(fig: dict) -> str:
     Returns:
         Bikeshed ``<figure>`` markup.
     """
-    fig_id = fig.get("figure_id", "fig-unknown")
+    fig_id = fig.get("figure_id", "figure-unknown")
     caption = fig.get("caption", "")
     image_path = fig.get("image_path")
 

@@ -50,6 +50,20 @@ PROFILES = {
         "syntax_tooltips": True,
         "pwa": True,
     },
+    "publication-html": {
+        # Same as publication but no PDF — for fast HTML iteration during development
+        "_description": "Publication-grade HTML build without PDF (fast dev iteration)",
+        "number_equations": True,
+        "highlight_keywords": True,
+        "validate_refs": True,
+        "check_orphan_refs": True,
+        "revision_history": True,
+        "lof": True,
+        "lot": True,
+        "toc_leaders": "css",
+        "figure_table_tooltips": True,
+        "syntax_tooltips": True,
+    },
     "pdf-draft": {
         # Quick PDF — minimal enhancements
         "_description": "Quick PDF generation with equations only",

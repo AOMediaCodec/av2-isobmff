@@ -44,8 +44,8 @@ _EXCESS_BLANK_LINES_RE = re.compile(r"\n\n\n+")
 # Matches the ``Date: YYYY-MM-DD`` metadata line in the Bikeshed header.
 _HEADER_DATE_RE = re.compile(r"Date:\s*\d{4}-\d{2}-\d{2}")
 
-# Matches a fenced SDL code block (```cpp ... ```) for SDL-to-HTML conversion.
-_SDL_CODE_BLOCK_RE = re.compile(r"```cpp\n(.*?)```", re.DOTALL)
+# Matches fenced SDL code blocks: ```sdl or ```cpp (both used by different specs).
+_SDL_CODE_BLOCK_RE = re.compile(r"```(?:sdl|cpp)\n(.*?)```", re.DOTALL)
 
 
 # ---------------------------------------------------------------------------
@@ -347,7 +347,14 @@ def prepare_bikeshed_files(
         )
 
     if convert_sdl:
-        load_descriptors()
+        # Use spec-specific SDL descriptors config if configured, otherwise
+        # fall back to the specbuild package default.
+        descriptors_cfg: Path | None = None
+        if CONFIG.sdl_descriptors_file:
+            descriptors_cfg = Path(CONFIG.sdl_descriptors_file)
+            if not descriptors_cfg.is_absolute():
+                descriptors_cfg = Path(".") / descriptors_cfg
+        load_descriptors(descriptors_cfg)
         load_symbols_from_spec(directory)
 
     with output_file.open("w", encoding="utf8") as outfile:

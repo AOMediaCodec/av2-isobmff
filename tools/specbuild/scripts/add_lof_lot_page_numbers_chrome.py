@@ -193,7 +193,7 @@ if __name__ == "__main__":
     # Read page map
     page_map = {}
     if page_map_file.exists():
-        with open(page_map_file) as f:
+        with open(page_map_file, encoding="utf-8") as f:
             for line in f:
                 parts = line.strip().split(" -> page ")
                 if len(parts) == 2:

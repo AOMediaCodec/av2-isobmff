@@ -16,11 +16,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 from urllib.parse import quote
-
-if TYPE_CHECKING:
-    pass
 
 RELATON_API = "https://api.relaton.org/api/v1/document"
 

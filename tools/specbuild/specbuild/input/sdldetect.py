@@ -131,7 +131,8 @@ def detect_table_syntax(
 
     Args:
         table:               A python-docx ``Table``.
-        flavor:              ``"h265"``, ``"cmaf"``, or ``"auto"``.
+        flavor:              ``"h265"``, ``"cmaf"``, ``"iso"``, ``"itu-t"``,
+                             or ``"auto"``.
         custom_descriptor_re: Override the descriptor detection regex.
                              When supplied, replaces :data:`SDL_DESCRIPTOR_RE`
                              for the video-coding check.
@@ -141,34 +142,36 @@ def detect_table_syntax(
         ``"isobmff"`` for tables containing ISOBMFF box fields,
         or ``None`` if the table is a plain data table.
     """
-    # CMAF / ISO publication: tables are always data tables.  ISOBMFF SDL
-    # lives in Code (-) paragraphs, not in Word tables.
+    # CMAF: tables are always data tables.  ISOBMFF SDL lives in Code (-)
+    # paragraphs, not in Word tables.
     if flavor == "cmaf":
         return None
 
-    # H.265: use video-coding descriptor detection.
-    if flavor in ("h265", "auto"):
-        check_re = custom_descriptor_re or SDL_DESCRIPTOR_RE
-        # Temporarily patch SDL_DESCRIPTOR_RE if a custom pattern is supplied
-        if custom_descriptor_re is not None:
-            # We can't rebind the module-level const, so check inline
-            if _col_count(table) == 2 and len(table.rows) >= 3:
-                rows = table.rows
-                first_col1 = _cell_text(rows[0].cells[0])
-                first_col2 = _cell_text(rows[0].cells[1])
-                hits = sum(1 for row in rows if check_re.search(_cell_text(row.cells[1])))
-                any_col2 = any(_cell_text(r.cells[1]) for r in rows)
-                if hits >= 2:
-                    return "video_syntax"
-                if "Descriptor" in first_col2 and hits >= 1:
-                    return "video_syntax"
-                if first_col1.rstrip().endswith("{") and any_col2:
-                    return "video_syntax"
-                if hits >= 1 and _FUNC_OPEN_RE.match(first_col1):
-                    return "video_syntax"
-        else:
-            if is_sdl_table(table):
+    # All other flavors — including ``iso`` (e.g. ISO/IEC 23008-2 HEVC FDIS)
+    # and ``itu-t`` (e.g. ITU-T H.265 publication) — use the H.265-style
+    # video-coding descriptor detection.  Both organizations publish the
+    # same standard as parallel text with identical 2-column syntax tables
+    # ("syntax body | Descriptor" with descriptors like ``u(8)``, ``ue(v)``).
+    check_re = custom_descriptor_re or SDL_DESCRIPTOR_RE
+    # Temporarily patch SDL_DESCRIPTOR_RE if a custom pattern is supplied
+    if custom_descriptor_re is not None:
+        # We can't rebind the module-level const, so check inline
+        if _col_count(table) == 2 and len(table.rows) >= 3:
+            rows = table.rows
+            first_col1 = _cell_text(rows[0].cells[0])
+            first_col2 = _cell_text(rows[0].cells[1])
+            hits = sum(1 for row in rows if check_re.search(_cell_text(row.cells[1])))
+            any_col2 = any(_cell_text(r.cells[1]) for r in rows)
+            if hits >= 2:
                 return "video_syntax"
+            if "Descriptor" in first_col2 and hits >= 1:
+                return "video_syntax"
+            if first_col1.rstrip().endswith("{") and any_col2:
+                return "video_syntax"
+            if hits >= 1 and _FUNC_OPEN_RE.match(first_col1):
+                return "video_syntax"
+    elif is_sdl_table(table):
+        return "video_syntax"
 
     return None
 

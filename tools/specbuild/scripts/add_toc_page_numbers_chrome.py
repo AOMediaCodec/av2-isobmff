@@ -297,7 +297,7 @@ def _match_section_on_page(
 def _write_page_map_debug(pdf_path: Path, page_map: dict[str, int]) -> None:
     """Write the section-to-page mapping to a text file for debugging."""
     debug_file = pdf_path.parent / "page_map_debug.txt"
-    with open(debug_file, "w") as f:
+    with open(debug_file, "w", encoding="utf-8") as f:
         for section_id, page_num in sorted(page_map.items(), key=lambda x: x[1]):
             f.write(f"{section_id} -> page {page_num}\n")
     logging.info(f"Saved page map to {debug_file} for debugging")

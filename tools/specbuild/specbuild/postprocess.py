@@ -633,9 +633,22 @@ def _postprocess_html(
     """
     add_toc_links(html_path)
     renumber_annexes_in_html(html_path)
+    if CONFIG.introduction_section_zero:
+        from specbuild.enhancements.introzero import renumber_introduction_as_zero
+
+        renumber_introduction_as_zero(html_path)
     _inject_dark_mode_css(html_path)
     _localize_w3c_css(html_path)
-    _render_latex_to_mathml(html_path)
+    if CONFIG.hevc_equations:
+        from specbuild.enhancements.hevcequations import (
+            fix_operator_tables,
+            process_hevc_equations,
+        )
+
+        process_hevc_equations(html_path)
+        fix_operator_tables(html_path)
+    else:
+        _render_latex_to_mathml(html_path)
 
     if mobile_optimized:
         add_collapsible_sections_in_html(html_path)

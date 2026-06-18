@@ -1001,8 +1001,8 @@ def _extract_mml_et(container_elem: object) -> Element | None:
         et_el = _bs4_mml_to_et(math_bs)
         if et_el is not None and "MathML" in et_el.tag:
             return et_el
-    except Exception:
-        pass
+    except Exception as exc:
+        logging.debug(f"MathML parse failed for element: {exc}")
     return None
 
 

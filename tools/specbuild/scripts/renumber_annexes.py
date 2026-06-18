@@ -970,8 +970,12 @@ def renumber_annexes(html_path: Path, annex_format: str = "prefix") -> None:
     annex_mapping = build_annex_mapping(soup)
 
     if not annex_mapping:
-        logging.debug("No Annex sections found - skipping renumbering")
-        return
+        # No Annex sections: the alphabetic-renumbering transforms are all
+        # no-ops, but figure/table numbering and the ``figure-ref``/``table-ref``
+        # cross-reference text fixups must still run (otherwise HTML cross-refs
+        # render as a bare "Figure"/"Table" while the PDF path numbers them).
+        # Apply the transforms with an empty mapping → numeric numbering only.
+        logging.debug("No Annex sections found - applying numeric numbering only")
 
     html_output = _apply_annex_transforms(soup, annex_mapping, annex_format)
 

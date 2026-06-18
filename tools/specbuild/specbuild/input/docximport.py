@@ -75,30 +75,105 @@ _CONST_DEF_RE = re.compile(r"^([A-Z][A-Z_0-9]+)\s*=\s*(\d+)")
 #: renumber_annexes.py adds its own "Table X.N: " prefix at build time.
 _CAPTION_NUMBER_RE = re.compile(r"^(?:Table|Figure)\s+(?:[A-Z]\.)?\d+(?:[-–.]\d+)?\s*[—–]\s*")
 
+#: Extracts the kind ("table"/"figure") and number from a caption prefix.
+#: Matches the same forms as _CAPTION_NUMBER_RE but captures the number so
+#: an id like ``table-5-1`` or ``figure-c-1`` can be derived for cross-refs.
+_CAPTION_ID_RE = re.compile(
+    r"^(Table|Figure)\s+([A-I]?[\-\.]?\d+(?:[\-–\.]\d+)*)\b",
+    re.IGNORECASE,
+)
+
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
 
+def _is_informal_heading(paragraph) -> bool:
+    """Return True if *paragraph* looks like an informally-styled heading.
+
+    ISO publications sometimes use a bold "Body Text" or "Normal" paragraph
+    as a visual sub-section heading without assigning it a proper Heading N
+    style (e.g. "Publication and versions of this document" in the Introduction).
+    This heuristic promotes those paragraphs to h3 headings.
+
+    Criteria (all must hold):
+    - Short text (≤ 120 chars — longer runs are likely sentences, not titles)
+    - Every non-whitespace run is bold
+    - No sentence-ending punctuation at the end (. ; : → likely a title, not prose)
+    - Style is a generic body style (not already a code/note/dfn type)
+    """
+    text = paragraph.text.strip()
+    if not text or len(text) > 120:
+        return False
+    # Must not end with period/semicolon/colon (would be prose, not title)
+    if text[-1] in (".", ";", ":"):
+        return False
+    runs = [r for r in paragraph.runs if r.text.strip()]
+    if not runs:
+        return False
+    # Every non-whitespace run must be bold
+    return all(bool(r.bold) for r in runs)
+
+
 def _strip_caption_number(text: str) -> str:
     return _CAPTION_NUMBER_RE.sub("", text)
 
 
+def _caption_to_id(text: str) -> str:
+    """Extract a normalized HTML id from a table/figure caption.
+
+    Returns ``"table-5-1"``, ``"figure-c-1"``, etc., matching the IDs
+    produced by xrefmap.py.  Returns ``""`` if no recognizable prefix.
+    """
+    m = _CAPTION_ID_RE.match(text)
+    if not m:
+        return ""
+    kind = m.group(1).lower()
+    # Normalize the number portion: en-dashes → ASCII hyphens, dots → hyphens,
+    # lowercase letters, collapse to a slug.
+    num = m.group(2).replace("–", "-").replace(".", "-").lower()
+    return f"{kind}-{num}"
+
+
 def _apply_run_formatting(text: str, run) -> str:
-    """Apply bold/italic/mono/sub/sup formatting to an already-escaped text fragment."""
+    """Apply bold/italic/mono/sub/sup formatting to an already-escaped text fragment.
+
+    Uses HTML tags rather than markdown asterisks so the result renders
+    correctly inside headings, list items, table cells, and other contexts
+    where Bikeshed/markdown processing of inline `**`/`*` is unreliable.
+
+    Leading and trailing whitespace is stripped from the text BEFORE wrapping
+    in HTML tags and returned separately, so the formatted output never has
+    whitespace *inside* the tag (``<em> NAL units</em>`` → ``<em>NAL units</em>``
+    with the space restored outside the tag by the caller).
+
+    Returns the fully-formatted fragment including surrounding whitespace.
+    """
+    # Preserve surrounding whitespace outside the tag
+    lstrip = len(text) - len(text.lstrip())
+    rstrip = len(text) - len(text.rstrip())
+    leading = text[:lstrip]
+    trailing = text[len(text) - rstrip :] if rstrip else ""
+    core = text[lstrip : len(text) - rstrip if rstrip else None]
+
+    if not core:
+        # Space-only run with formatting — return as plain whitespace; the
+        # formatting on whitespace alone has no semantic meaning.
+        return text
+
     is_mono = run.font and run.font.name and run.font.name in _MONO_FONTS
     if is_mono:
-        text = f"`{text}`"
+        core = f"<code>{core}</code>"
     if run.bold:
-        text = f"**{text}**"
+        core = f"<strong>{core}</strong>"
     if run.italic:
-        text = f"*{text}*"
+        core = f"<em>{core}</em>"
     if run.font and run.font.subscript:
-        text = f"<sub>{text}</sub>"
+        core = f"<sub>{core}</sub>"
     if run.font and run.font.superscript:
-        text = f"<sup>{text}</sup>"
-    return text
+        core = f"<sup>{core}</sup>"
+    return leading + core + trailing
 
 
 def _format_inline(paragraph: Paragraph) -> str:
@@ -109,10 +184,37 @@ def _format_inline(paragraph: Paragraph) -> str:
     preserved.  External HTTP links become ``<a href="…">`` anchors; internal
     Word bookmarks are rendered as plain text (the display text Word computed
     already contains the resolved number, e.g. ``3.1.1``).
+
+    Adjacent runs with identical formatting are coalesced so a phrase like
+    ``"Publication and versions of " + "this document"`` (both bold) becomes
+    one ``<strong>Publication and versions of this document</strong>`` span
+    rather than two separate spans that would produce odd whitespace and
+    redundant tags.
     """
     from docx.text.run import Run as _Run
 
     parts: list[str] = []
+    # Buffer of adjacent runs with the same formatting signature
+    buf_text = ""
+    buf_run = None  # last run in the buffer (provides formatting)
+
+    def _fmt_key(run) -> tuple:
+        """Hashable formatting signature for a run."""
+        font_name = run.font.name if run.font else None
+        return (
+            bool(run.bold),
+            bool(run.italic),
+            bool(run.font and run.font.subscript),
+            bool(run.font and run.font.superscript),
+            font_name in _MONO_FONTS if font_name else False,
+        )
+
+    def _flush_buf():
+        nonlocal buf_text, buf_run
+        if buf_text and buf_run is not None:
+            parts.append(_apply_run_formatting(html_mod.escape(buf_text), buf_run))
+        buf_text = ""
+        buf_run = None
 
     for child in paragraph._element:
         local = child.tag.rpartition("}")[2]
@@ -122,9 +224,15 @@ def _format_inline(paragraph: Paragraph) -> str:
             text = run.text
             if not text:
                 continue
-            parts.append(_apply_run_formatting(html_mod.escape(text), run))
+            if buf_run is not None and _fmt_key(run) == _fmt_key(buf_run):
+                buf_text += text
+            else:
+                _flush_buf()
+                buf_text = text
+                buf_run = run
 
         elif local == "hyperlink":
+            _flush_buf()
             link_text = "".join(t.text or "" for t in child.iter() if t.tag.endswith("}t"))
             if not link_text:
                 continue
@@ -142,21 +250,29 @@ def _format_inline(paragraph: Paragraph) -> str:
             except (KeyError, AttributeError):
                 parts.append(escaped)
 
+    _flush_buf()
     return "".join(parts)
 
 
-def _table_to_html(table: Table, caption: str = "") -> str:
+def _table_to_html(table: Table, caption: str = "", table_id: str = "") -> str:
     """Convert a python-docx data table to an HTML ``<table>`` string.
 
     Handles merged cells via the ``gridSpan`` attribute on ``<w:tcPr>``.
     Caption is embedded as ``<caption>`` inside the table when provided.
+    When *table_id* is non-empty, it is emitted as the ``id`` attribute
+    on the ``<table>`` element so cross-references to ``Table N-M`` resolve.
 
     Header row detection: rows marked with ``<w:tblHeader>`` in their
     ``<w:trPr>`` element are wrapped in ``<thead>`` with ``<th>`` cells.
     All subsequent rows go into ``<tbody>`` with ``<td>`` cells.
     Tables with no header rows emit only ``<tbody>``.
     """
-    lines: list[str] = ['<table class="data">']
+    open_tag = (
+        f'<table class="data" id="{html_mod.escape(table_id, quote=True)}">'
+        if table_id
+        else '<table class="data">'
+    )
+    lines: list[str] = [open_tag]
 
     if caption:
         lines.append(f"  <caption>{html_mod.escape(caption)}</caption>")
@@ -234,10 +350,42 @@ def _table_to_html(table: Table, caption: str = "") -> str:
 
 
 def _extract_metadata(doc: Document) -> dict[str, str]:
-    """Extract document metadata (title, author, date) from core properties."""
+    """Extract document metadata (title, author, date) from core properties.
+
+    ISO publications frequently ship with stale ``core.title`` values left
+    over from prior ITU-T parallel-text edits (e.g. ``ITU-T Rec. H.265
+    (04/2013)`` on a 2025 ISO/IEC 23008-2 FDIS).  When the cover page contains
+    a clearly newer identifier in ``zzCover`` / ``zzSTDTitle`` paragraphs,
+    prefer that.
+    """
     props = doc.core_properties
+    title = props.title or ""
+
+    # Look for an ISO/IEC identifier and human-readable title on the cover page.
+    iso_id: str | None = None
+    iso_title: str | None = None
+    for p in doc.paragraphs[:30]:
+        if p.style.name not in ("zzCover", "zzSTDTitle", "zzCopyright"):
+            continue
+        text = p.text.strip()
+        if not text:
+            continue
+        if iso_id is None and re.match(r"^(?:ISO/IEC|ISO|IEC)\s+[\d\-]+", text):
+            iso_id = text
+        elif iso_title is None and ("—" in text or "—" in text) and len(text) > 30:
+            iso_title = text
+        if iso_id and iso_title:
+            break
+
+    if iso_id and iso_title:
+        # Combine identifier (without ":202X(en)" suffix) and descriptive title
+        clean_id = re.sub(r":[\d\w()]+$", "", iso_id)
+        title = f"{clean_id} - {iso_title}"
+    elif iso_title:
+        title = iso_title
+
     return {
-        "title": props.title or "",
+        "title": title,
         "author": props.author or "",
         "created": str(props.created or ""),
         "modified": str(props.modified or ""),
@@ -529,8 +677,13 @@ def _render_section(
     list_type = ""
     in_dfn_list = False
     in_ref_list = False
+    # Buffer for TermNum paragraph — held until the following Term(s) paragraph
+    # arrives so they can be merged into one <dt> element.
+    pending_dfn_num = ""
     pending_table_caption = ""
+    pending_table_id = ""
     pending_figure_caption = ""
+    pending_figure_id = ""
     pending_figure: dict | None = (
         None  # deferred until caption arrives (ISO: caption after graphic)
     )
@@ -545,7 +698,10 @@ def _render_section(
             code_buffer.clear()
 
     def _close_dfn_list() -> None:
-        nonlocal in_dfn_list
+        nonlocal in_dfn_list, pending_dfn_num
+        if pending_dfn_num:
+            lines.append(f"<dt>{pending_dfn_num}</dt>")
+            pending_dfn_num = ""
         if in_dfn_list:
             lines.append("</dl>")
             lines.append("")
@@ -566,6 +722,24 @@ def _render_section(
         lines.append(format_figure_bs(pending_figure))
         report.total_figures += 1
         pending_figure = None
+
+    def _flush_orphan_caption() -> None:
+        """Emit a caption-only ``<figure>`` for an orphan caption.
+
+        When a ``Figure title`` paragraph is processed but no ``Figure Graphic``
+        ever follows (common in ISO "text-clean" editions where figures are
+        stripped), we still need an id-anchored placeholder so cross-references
+        like ``[Figure 6-1]`` resolve.
+        """
+        nonlocal pending_figure_caption, pending_figure_id
+        if pending_figure_caption and pending_figure_id:
+            lines.append(f'<figure id="{pending_figure_id}">')
+            lines.append(f"  <figcaption>{html_mod.escape(pending_figure_caption)}</figcaption>")
+            lines.append("</figure>")
+            lines.append("")
+            report.total_figures += 1
+        pending_figure_caption = ""
+        pending_figure_id = ""
 
     for elem_type, elem in section["elements"]:
         if elem_type == "paragraph":
@@ -602,6 +776,7 @@ def _render_section(
                 _close_ref_list()
 
             if para_type == "heading":
+                _flush_orphan_caption()
                 h_level = min(info.get("level", 2), 6)
                 h_id = _make_heading_id(text)
                 hashes = "#" * h_level
@@ -614,7 +789,10 @@ def _render_section(
                 bs_eq = format_equation_bs(eq)
                 if bs_eq:
                     lines.append(bs_eq)
-                    if eq.get("has_omml") or eq.get("has_image"):
+                    # Only warn about OMML/embedded extraction when we DIDN'T
+                    # successfully pull a rendered preview image — when we have
+                    # the image, the equation displays correctly.
+                    if (eq.get("has_omml") or eq.get("has_image")) and not eq.get("image_path"):
                         lines.append("")
                         lines.append(
                             '<p class="issue">'
@@ -647,17 +825,32 @@ def _render_section(
                     lines.append("<dl>")
                     in_dfn_list = True
                 inline = _format_inline(elem)
-                lines.append(f"<dt><dfn>{inline}</dfn></dt>")
+                # Merge with preceding TermNum (e.g. "3.7") into one <dt> so
+                # the term number and term name are not split across two <dt>s.
+                if pending_dfn_num:
+                    lines.append(f"<dt>{pending_dfn_num} <dfn>{inline}</dfn></dt>")
+                    pending_dfn_num = ""
+                else:
+                    lines.append(f"<dt><dfn>{inline}</dfn></dt>")
                 report.terms_extracted += 1
 
             elif para_type == "dfn_num":
                 if not in_dfn_list:
                     lines.append("<dl>")
                     in_dfn_list = True
+                # Buffer until the Term(s) paragraph follows so we can combine
+                # them.  If the next paragraph is NOT a dfn, flush standalone.
                 inline = _format_inline(elem)
-                lines.append(f"<dt>{inline}</dt>")
+                if pending_dfn_num:
+                    # Two consecutive dfn_num without dfn — emit the previous one
+                    lines.append(f"<dt>{pending_dfn_num}</dt>")
+                pending_dfn_num = inline
 
             elif para_type == "definition":
+                if pending_dfn_num:
+                    # dfn_num was never followed by a dfn — emit it standalone
+                    lines.append(f"<dt>{pending_dfn_num}</dt>")
+                    pending_dfn_num = ""
                 inline = _format_inline(elem)
                 if in_dfn_list:
                     lines.append(f"<dd>{inline}</dd>")
@@ -690,17 +883,28 @@ def _render_section(
 
             elif para_type == "table_caption":
                 _flush_pending_figure()  # caption didn't follow — emit without one
+                _flush_orphan_caption()  # flush any orphan figure caption first
                 pending_table_caption = _strip_caption_number(text)
+                pending_table_id = _caption_to_id(text)
                 pending_figure_caption = ""
+                pending_figure_id = ""
 
             elif para_type == "figure_caption":
                 caption_text = _strip_caption_number(text)
+                caption_id = _caption_to_id(text)
                 if pending_figure is not None:
                     # Caption arrived after its graphic — emit both together
+                    if caption_id:
+                        pending_figure["figure_id"] = caption_id
                     _flush_pending_figure(caption_text)
                 else:
-                    # Caption arrived before graphic (or no graphic follows)
+                    # If a previous caption was orphaned (no graphic followed it),
+                    # flush it as a caption-only figure so its ID is anchored,
+                    # then store the new caption.
+                    if pending_figure_caption and caption_id != pending_figure_id:
+                        _flush_orphan_caption()
                     pending_figure_caption = caption_text
+                    pending_figure_id = caption_id
                 pending_table_caption = ""
 
             elif para_type == "figure_graphic":
@@ -710,22 +914,25 @@ def _render_section(
                 rid = _extract_image_rid(elem)
                 img_path = images.get(rid) if rid else None
                 if img_path:
-                    fig_id = f"fig-{report.total_figures + 1}"
+                    # Default sequential ID when no caption is found; will be
+                    # overridden by _caption_to_id when the caption arrives.
+                    default_fig_id = f"figure-{report.total_figures + 1}"
                     if pending_figure_caption:
-                        # Caption already seen (before graphic)
+                        # Caption already seen (before graphic) — use its derived ID
                         pending_figure = {
                             "image_path": img_path,
                             "caption": pending_figure_caption,
-                            "figure_id": fig_id,
+                            "figure_id": pending_figure_id or default_fig_id,
                         }
                         pending_figure_caption = ""
+                        pending_figure_id = ""
                         _flush_pending_figure()
                     else:
                         # Defer until next figure_caption paragraph
                         pending_figure = {
                             "image_path": img_path,
                             "caption": "",
-                            "figure_id": fig_id,
+                            "figure_id": default_fig_id,
                         }
 
             elif para_type == "biblio":
@@ -748,8 +955,19 @@ def _render_section(
                 pass
 
             else:
-                # Default: paragraph
-                if text:
+                # Default: paragraph.
+                # Heuristic: a short paragraph where ALL text runs are bold and
+                # the style is a generic body style acts as an informal heading
+                # (common in ISO publications for introduction sub-sections like
+                # "Publication and versions of this document").  Promote it to
+                # ## (h2 in Bikeshed output) — one level below the top-level
+                # # sections so the TOC hierarchy stays valid.
+                if text and _is_informal_heading(elem):
+                    h_id = _make_heading_id(text)
+                    lines.append("")
+                    lines.append(f"## {text} ## {{#{h_id}}}")
+                    lines.append("")
+                elif text:
                     inline = _format_inline(elem)
                     lines.append(inline)
                     lines.append("")
@@ -779,13 +997,17 @@ def _render_section(
             else:
                 # Data table — embed caption inside table, prefer table_caption
                 caption_text = pending_table_caption or pending_figure_caption
+                caption_id = pending_table_id or pending_figure_id
                 pending_table_caption = ""
+                pending_table_id = ""
                 pending_figure_caption = ""
-                lines.append(_table_to_html(elem, caption_text))
+                pending_figure_id = ""
+                lines.append(_table_to_html(elem, caption_text, table_id=caption_id))
 
     # Close any open blocks
     _flush_code()
     _flush_pending_figure()
+    _flush_orphan_caption()
     _close_dfn_list()
     _close_ref_list()
     if in_note:

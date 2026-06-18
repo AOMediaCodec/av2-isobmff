@@ -801,7 +801,7 @@ if __name__ == "__main__":
     toc_depth = _DEFAULT_TOC_DEPTH
     header_file = bikeshed_dir / "00_Header.bs"
     if header_file.exists():
-        with open(header_file) as f:
+        with open(header_file, encoding="utf-8") as f:
             for line in f:
                 match = _TOC_DEPTH_RE.search(line)
                 if match:

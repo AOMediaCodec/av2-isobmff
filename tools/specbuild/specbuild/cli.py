@@ -352,6 +352,13 @@ def build_parser() -> argparse.ArgumentParser:
         "Requires Chrome/Chromium installed on PATH.",
     )
     parser.add_argument(
+        "--no-pdf",
+        dest="no_pdf",
+        action="store_true",
+        help="Skip PDF generation, overriding any --pdf/--weasyprint/--pdfa "
+        "set by a profile. Useful for fast HTML iteration with publication-grade profiles.",
+    )
+    parser.add_argument(
         "--docx",
         action="store_true",
         help="Export specification as a Word document (.docx). "
