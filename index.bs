@@ -170,6 +170,15 @@ url: https://super-adventure-4j2gglm.pages.github.io/#general_obu_syntax; spec: 
 url: https://super-adventure-4j2gglm.pages.github.io/; spec: AV2; type: dfn;
     text: Length delimited bitstream format
 
+url: https://super-adventure-4j2gglm.pages.github.io/#ordering_of_obus_temporal_unit; spec: AV2; type: dfn;
+    text: ordering of OBUs in a temporal unit
+
+url: https://super-adventure-4j2gglm.pages.github.io/#availability_of_hls_obus; spec: AV2; type: dfn;
+    text: availability of HLS OBUs
+
+url: https://super-adventure-4j2gglm.pages.github.io/#ordering_of_obus_extended_layer; spec: AV2; type: dfn;
+    text: coded extended layer unit
+
 url: https://www.iso.org/standard/71975.html#; spec: CMAF; type: dfn;
     text: CMAF Video Track
     text: cmfc
@@ -330,7 +339,41 @@ Each OBU carried in <code>configOBUs</code> shall be framed using the [=Length d
 - a [=Temporal Delimiter OBU=];
 - any OBU carrying coded frame data, including [=Closed Loop Key OBUs=], [=Open Loop Key OBUs=], [=Switch OBUs=], [=Bridge Frame OBUs=], regular or leading tile-group OBUs, and switch-eligible or TIP frame OBUs;
 
-The values of the fields in the [=AV2CodecConfigurationBox=] shall equal the corresponding effective values of the fields of the [=Sequence Header OBU=] carried in <code>configOBUs</code>. 
+The values of the fields in the [=AV2CodecConfigurationBox=] shall equal the corresponding effective values of the fields of the [=Sequence Header OBU=] carried in <code>configOBUs</code>.
+
+## AV2 Sample Format ## {#sample-format}
+
+### General ### {#sample-format-general}
+
+Each AV2 sample carries exactly one [=Temporal Unit=] of the [=AV2 bitstream=]; the sample boundary delimits the temporal unit.
+
+Each [=OBU=] within a sample shall be framed using the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]]: each OBU is preceded by a <code>leb128()</code> <code>num_bytes_in_obu</code> field giving the byte length of the OBU that follows. <a class="figure-ref" href="#figure-sample-tu-mapping">Figure</a> illustrates this mapping.
+
+<figure id="figure-sample-tu-mapping">
+  <img src="images/av2_sample_tu_mapping.svg" alt="Mapping of AV2 temporal units to ISOBMFF track samples" width="800" height="420">
+  <figcaption>Example mapping of AV2 temporal units into the AV2 ISOBMFF sample format.</figcaption>
+</figure>
+
+### OBUs in samples ### {#sample-obus}
+
+The OBUs within a sample shall appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]], with the following constraints:
+
+- a sample should not contain any OBU with <code>obu_type</code> equal to <code>OBU_TEMPORAL_DELIMITER</code>, since the sample boundary already delimits the temporal unit;
+- a sample shall not contain any OBU with <code>obu_type</code> equal to <code>OBU_PADDING</code>; byte-level padding within a track is achieved using ISOBMFF mechanisms (e.g., 'free'/'skip' boxes or sample size signalling);
+- the trailing bits of an OBU carried in a sample should be limited to those required for byte alignment as specified in [[!AV2]]; trailing bits should not be used to pad an OBU beyond byte alignment;
+- a sample shall not contain a [=Sequence Header OBU=]; sequence headers are carried in the <code>configOBUs</code> of the [=AV2CodecConfigurationBox=] of the active [=AV2SampleEntry=];
+- a sample shall not contain a [=Layer Configuration Record OBU=]; layer configuration records are carried in the <code>configOBUs</code> of the active [=AV2SampleEntry=];
+- a sample should not contain any other OBU whose contents do not change for the duration of the active [=AV2SampleEntry=], in order to avoid redundant data; for example, a [=Metadata OBU=] whose contents are constant should be carried in <code>configOBUs</code> rather than repeated in every sample.
+
+The handling of the [=Temporal Delimiter OBU=] depends on how a track's samples are consumed. When the samples are passed to an AV2 decoder API that already treats each sample as one [=Temporal Unit=], a [=Temporal Delimiter OBU=] is not required. When the samples are reconstructed into an [=AV2 bitstream=] in the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]], or into any other carriage that does not itself delimit temporal units, a [=Temporal Delimiter OBU=] (framed with its <code>leb128()</code> length prefix) shall be prepended ahead of each sample's OBUs that does not already start with one.
+
+### Sync sample ### {#sync-sample}
+
+A sample is a sync sample if, for every [=coded extended layer unit=] present in the sample, the first coded frame OBU of that coded extended layer unit has <code>obu_type</code> equal to <code>OBU_CLOSED_LOOP_KEY</code>. Such a sample is a [=Closed Random Access=] point for the carried bitstream and corresponds to a SAP of type 1 or 2 as defined in Annex I of [[!ISOBMFF]].
+
+A sync sample shall be self-sufficient for starting decoding at that point: every OBU referenced by the coded frame OBUs of the sync sample shall be available either by being carried in <code>configOBUs</code> of the active [=AV2SampleEntry=] or by being present in the sync sample itself, as required by the [=availability of HLS OBUs=] in [[!AV2]].
+
+In ISOBMFF terms, sync samples are signalled using the SyncSampleBox ('stss') in unfragmented tracks, or by setting <code>sample_is_non_sync_sample</code> equal to 0 in fragmented tracks. When every sample in a track is a sync sample, the SyncSampleBox is omitted in unfragmented tracks (per [[!ISOBMFF]]); in fragmented tracks, the same is expressed by setting <code>sample_is_non_sync_sample</code> equal to 0 in the default sample flags of the MovieExtendsBox ('trex') or TrackFragmentHeaderBox ('tfhd'), with no per-sample override.
 
 # CMAF AV2 track format # {#cmaf}
 
