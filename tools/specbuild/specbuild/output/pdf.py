@@ -38,6 +38,7 @@ from specbuild.theme import THEME
 from specbuild.utils import (
     chrome_path,
     get_bs4,
+    homebrew_lib_for_dyld,
     inject_css,
     read_html,
     run_helper_script,
@@ -811,7 +812,20 @@ def _pdf_generate_weasyprint(
         logging.info("  - Center-aligned captions")
         logging.info("  - MathJax equations pre-rendered")
 
-        subprocess.run(cmd, check=True, timeout=900)
+        env = None
+        homebrew_lib = homebrew_lib_for_dyld()
+        if homebrew_lib:
+            env = os.environ.copy()
+            existing = env.get("DYLD_FALLBACK_LIBRARY_PATH", "")
+            env["DYLD_FALLBACK_LIBRARY_PATH"] = (
+                f"{homebrew_lib}:{existing}" if existing else str(homebrew_lib)
+            )
+            logging.debug(
+                f"DYLD_FALLBACK_LIBRARY_PATH={env['DYLD_FALLBACK_LIBRARY_PATH']} "
+                "(arm64 Homebrew libs for WeasyPrint)"
+            )
+
+        subprocess.run(cmd, check=True, timeout=900, env=env)
         logging.info("PDF generated successfully with WeasyPrint")
         return True
 
@@ -933,12 +947,33 @@ def _validate_pdf_engines(use_weasyprint: bool, *, optimize_pdf: bool = False) -
             import importlib
 
             importlib.import_module("weasyprint")
-        except (ImportError, OSError):
+        except ImportError:
             logging.warning(
                 "WeasyPrint not available in this process; "
                 "will use subprocess via --x86-python if configured"
             )
             logging.warning("  Install with: pip install weasyprint")
+        except OSError as exc:
+            homebrew_lib = homebrew_lib_for_dyld()
+            if homebrew_lib:
+                logging.warning(
+                    "WeasyPrint installed but its native libs aren't on the "
+                    f"loader path in this process ({exc.__class__.__name__})."
+                )
+                logging.warning(
+                    f"  The PDF subprocess will inject DYLD_FALLBACK_LIBRARY_PATH={homebrew_lib} "
+                    "automatically — no action needed."
+                )
+                logging.warning(
+                    "  For other tools (e.g. running weasyprint directly), add to your shell rc:"
+                )
+                logging.warning(
+                    f"    export DYLD_FALLBACK_LIBRARY_PATH={homebrew_lib}:$DYLD_FALLBACK_LIBRARY_PATH"
+                )
+            else:
+                logging.warning(f"WeasyPrint failed to load native libs: {exc}")
+                logging.warning("  macOS: brew install pango")
+                logging.warning("  Linux: sudo apt-get install libpango-1.0-0 libpangoft2-1.0-0")
 
     # Chrome is needed for MathJax pre-rendering and as PDF fallback
     if not chrome_path():

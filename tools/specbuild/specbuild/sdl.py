@@ -56,8 +56,10 @@ _FUNC_HEADER_PATTERN = re.compile(r"(\w+\s*\([^)]*\)\s*\{?)")
 # Maximum iterations when resolving symbol cross-references
 _MAX_SYMBOL_RESOLVE_ITERATIONS = 10
 
-# Indentation unit: 1 SDL indent level = 4 spaces = 1 em in HTML
+# Indentation unit: 1 SDL indent level = 4 spaces = 1 em in HTML.
+# Overridden at runtime by CONFIG.sdl_indent_spaces and CONFIG.sdl_indent_em.
 _INDENT_SPACES_PER_LEVEL = 4
+_INDENT_EM_PER_LEVEL = 1.0
 
 
 # ---------------------------------------------------------------------------
@@ -184,6 +186,16 @@ def load_descriptors(config_path: Path | None = None) -> None:
         f"Loaded SDL descriptors from {config_path}: "
         f"{len(functions)} functions, {len(keywords)} keywords"
     )
+
+    # Pick up indentation config from SpecConfig
+    global _INDENT_SPACES_PER_LEVEL, _INDENT_EM_PER_LEVEL
+    try:
+        from specbuild.config import CONFIG
+
+        _INDENT_SPACES_PER_LEVEL = CONFIG.sdl_indent_spaces
+        _INDENT_EM_PER_LEVEL = CONFIG.sdl_indent_em
+    except Exception:
+        pass
 
 
 # ---------------------------------------------------------------------------
@@ -480,22 +492,62 @@ def convert_sdl_to_html_table(code_block: str) -> str:
     table_rows: list[str] = []
     table_header: str | None = None
 
-    for line in lines:
+    # Brace-depth mode: when sdl_indent_spaces == 0, compute indentation from
+    # the running brace/bracket depth rather than from leading whitespace.
+    # This handles specs like HEVC whose SDL blocks have no leading whitespace.
+    use_depth_mode = _INDENT_SPACES_PER_LEVEL == 0
+    brace_depth = 0  # tracked across lines in depth mode
+
+    # Tokens that open a new depth level (must be at end of line after stripping)
+    _OPEN_RE = re.compile(r"[{\[]$")
+    # Tokens that close a depth level (line starts with closing bracket/brace)
+    _CLOSE_RE = re.compile(r"^[}\]]")
+    # Implicit single-statement control: if/else if/else/for/while without trailing {
+    # The NEXT line is one level deeper (no brace needed in HEVC spec notation).
+    _IMPLICIT_OPEN_RE = re.compile(
+        r"^(?:if\s*\(.*\)|else\s+if\s*\(.*\)|else\b|for\s*\(.*\)|while\s*\(.*\))$"
+    )
+
+    implicit_indent_pending = 0  # extra depth for next line due to braceless control
+
+    for i, line in enumerate(lines):
         stripped = line.strip()
         if not stripped:
             continue
 
-        indent_level = len(line) - len(line.lstrip())
-        indent_em = indent_level / _INDENT_SPACES_PER_LEVEL
+        if use_depth_mode:
+            # Decrease depth BEFORE rendering closing-bracket lines
+            if _CLOSE_RE.search(stripped):
+                brace_depth = max(0, brace_depth - 1)
+                implicit_indent_pending = 0  # closing brace cancels any pending indent
+            indent_em = (brace_depth + implicit_indent_pending) * _INDENT_EM_PER_LEVEL
+        else:
+            indent_level = len(line) - len(line.lstrip())
+            indent_em = (indent_level / _INDENT_SPACES_PER_LEVEL) * _INDENT_EM_PER_LEVEL
 
         # The first non-empty line becomes the table header
         if table_header is None:
             func_match = _FUNC_HEADER_PATTERN.match(stripped)
             if func_match:
                 table_header = func_match.group(1)
+            if use_depth_mode and _OPEN_RE.search(stripped):
+                brace_depth += 1
             continue
 
         table_rows.append(_build_table_row(stripped, indent_em))
+
+        # Update depth AFTER rendering the current line
+        if use_depth_mode:
+            if _OPEN_RE.search(stripped):
+                # Explicit block open: { or [
+                brace_depth += 1
+                implicit_indent_pending = 0  # explicit brace takes over
+            elif _IMPLICIT_OPEN_RE.match(stripped):
+                # Braceless control statement: indent next line implicitly
+                implicit_indent_pending = 1
+            else:
+                # Regular statement: consume any pending implicit indent
+                implicit_indent_pending = 0
 
     if table_rows:
         header_text = html.escape(table_header) if table_header else "Syntax Structure"

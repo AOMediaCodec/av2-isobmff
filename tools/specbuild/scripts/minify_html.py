@@ -13,17 +13,15 @@ import sys
 from pathlib import Path
 
 
-def minify_html(html_path: Path, aggressive: bool = False) -> bool:
+def minify_html(html_path: Path) -> bool:
     """
     Minify HTML file by removing unnecessary whitespace and comments.
 
     Protected tags (<pre>, <code>, <script>, <style>, <textarea>) are
-    preserved verbatim.  In aggressive mode, additional optional-closing-tag
-    removal may be applied (currently a no-op placeholder).
+    preserved verbatim.
 
     Args:
         html_path: Path to the HTML file to minify
-        aggressive: If True, applies more aggressive minification
 
     Returns:
         True if the file was successfully minified, False otherwise.
@@ -68,12 +66,7 @@ def minify_html(html_path: Path, aggressive: bool = False) -> bool:
     html_content = re.sub(r"<\s+", "<", html_content)
     html_content = re.sub(r"\s+>", ">", html_content)
 
-    if aggressive:
-        # 6. Remove optional closing tags (only in aggressive mode)
-        # This is risky and disabled by default
-        pass
-
-    # 7. Restore protected blocks
+    # 6. Restore protected blocks
     for i, block in enumerate(protected_blocks):
         html_content = html_content.replace(f"__PROTECTED_{i}__", block)
 
@@ -95,10 +88,8 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
     if len(sys.argv) < 2:
-        logging.error("Usage: python minify_html.py <html_file> [--aggressive]")
+        logging.error("Usage: python minify_html.py <html_file>")
         sys.exit(1)
 
     html_file = Path(sys.argv[1])
-    aggressive = "--aggressive" in sys.argv
-
-    minify_html(html_file, aggressive=aggressive)
+    minify_html(html_file)

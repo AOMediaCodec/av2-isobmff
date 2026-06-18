@@ -280,14 +280,23 @@ def number_equations_soup(soup: BeautifulSoup) -> int:
         if not hasattr(elem, "name") or elem.name is None:
             continue
 
-        # Detect numbered h2 headings (same logic as add_table_numbers_for_pdf.py)
+        # Detect numbered h2 headings — read actual secno rather than counting,
+        # so intro-zero shifts (section 0 for Introduction) are reflected correctly.
         if (
             elem.name == "h2"
             and "heading" in elem.get("class", [])
             and "settled" in elem.get("class", [])
             and "no-num" not in elem.get("class", [])
         ):
-            section_number += 1
+            secno_span = elem.find("span", class_="secno")
+            if secno_span:
+                raw = secno_span.get_text(strip=True).rstrip(".")
+                try:
+                    section_number = int(raw.split(".")[0])
+                except ValueError:
+                    section_number += 1
+            else:
+                section_number += 1
             eq_counter = 0
 
         # Strategy 1: Find MathJax-rendered display equations
@@ -355,6 +364,29 @@ def number_equations_soup(soup: BeautifulSoup) -> int:
             tex = _asciimath_to_tex(raw_am)
             am_el["data-asciimath"] = raw_am
             am_el["data-tex"] = tex
+
+        # Strategy 5: HEVC-style <div class="equation"> wrapping <code class="equation-math">,
+        # <pre class="equation-code">, or <span class="equation-text">.
+        # These are produced by hevcequations.py and need auto-numbering.
+        if elem.name == "div" and "equation" in elem.get("class", []):
+            wrapper = elem.find("div", class_="equation-wrapper")
+            if wrapper and not wrapper.find("span", class_="equation-number"):
+                if wrapper.find(["code", "pre", "span"]):
+                    if _apply_equation_number(
+                        wrapper, soup, section_number, eq_counter + 1, eq_map
+                    ):
+                        eq_counter += 1
+                        total_numbered += 1
+        else:
+            for eq_div in elem.find_all("div", class_="equation"):
+                wrapper = eq_div.find("div", class_="equation-wrapper")
+                if wrapper and not wrapper.find("span", class_="equation-number"):
+                    if wrapper.find(["code", "pre", "span"]):
+                        if _apply_equation_number(
+                            wrapper, soup, section_number, eq_counter + 1, eq_map
+                        ):
+                            eq_counter += 1
+                            total_numbered += 1
 
     # Update cross-references: links pointing to #eq-... IDs
     refs_updated = 0

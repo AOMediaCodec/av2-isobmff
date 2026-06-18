@@ -68,12 +68,12 @@ def check_dfn_consistency_soup(soup: object, ctx: BuildContext | None = None) ->
     """
     ids_by_id, links_by_href = resolve_lookup_maps(soup, ctx)
 
-    # Assign a document-order index to every element we care about
+    # Assign a document-order index to every element that has an id.
+    # find_all(id=True) visits only the subset with ids — much faster than
+    # find_all(True) which walks every element in the document.
     order: dict[str, int] = {}
-    for idx, el in enumerate(soup.find_all(True)):
-        el_id = el.get("id")
-        if el_id:
-            order[el_id] = idx
+    for idx, el in enumerate(soup.find_all(id=True)):
+        order[el["id"]] = idx
 
     # --- Collect all definitions ---
     definitions: dict[str, list[str]] = {}  # normalized_term -> [id1, id2, ...]

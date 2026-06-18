@@ -41,23 +41,59 @@ STYLE_MAP: dict[str, dict] = {
     "ANNEX": {"type": "heading", "level": 1, "is_annex": True},
     "Annex": {"type": "heading", "level": 1, "is_annex": True},
     "annex": {"type": "heading", "level": 1, "is_annex": True},
+    # ITU-T H.265 numbered annex styles ("Annex 1" = top-level annex heading)
+    "Annex 1": {"type": "heading", "level": 1, "is_annex": True},
+    "Annex 2": {"type": "heading", "level": 2},
+    "Annex 3": {"type": "heading", "level": 3},
+    "Annex 4": {"type": "heading", "level": 4},
+    "Annex 5": {"type": "heading", "level": 5},
+    "Annex 6": {"type": "heading", "level": 6},
     # Annex sub-heading styles (ITU-T / ISO publication numbering)
     "a2": {"type": "heading", "level": 2},
     "a3": {"type": "heading", "level": 3},
     "a4": {"type": "heading", "level": 4},
     "a5": {"type": "heading", "level": 5},
     "a6": {"type": "heading", "level": 6},
+    # ITU-T H.265 body heading styles (3H0–3H4) — used within multi-layer annexes
+    # as sub-section headings (NOT top-level; main body uses standard Heading 1)
+    "3H0": {"type": "heading", "level": 2},
+    "3H1": {"type": "heading", "level": 3},
+    "3H2": {"type": "heading", "level": 4},
+    "3H3": {"type": "heading", "level": 5},
+    "3H4": {"type": "heading", "level": 6},
     # ITU-T annex body paragraphs (NOT headings)
     "3N0": {"type": "paragraph"},
     "3N": {"type": "paragraph"},
+    # ITU-T H.265 indented body paragraphs (3D = "Description" at indent levels 0–3)
     "3D0": {"type": "paragraph"},
-    "3E0": {"type": "paragraph"},
+    "3D1": {"type": "paragraph"},
+    "3D2": {"type": "paragraph"},
+    "3D3": {"type": "paragraph"},
+    # ITU-T H.265 pseudocode/equation blocks at indent levels 0–5
+    # (3E = "Example"/"Equation" — multi-line pseudocode and formulas)
+    "3E0": {"type": "code"},
+    "3E1": {"type": "code"},
+    "3E2": {"type": "code"},
+    "3E3": {"type": "code"},
+    "3E4": {"type": "equation"},
+    "3E5": {"type": "equation"},
+    # ITU-T H.265 list styles
+    "3L1": {"type": "list_item", "list_type": "bullet", "list_depth": 1},
+    "3U1": {"type": "list_item", "list_type": "bullet", "list_depth": 1},
+    # Equation style variants (tab-indented equation lines)
+    "Equation smaller tabs": {"type": "equation"},
+    # Annex_NoTitle: bibliography / non-titled annex section
+    "Annex_NoTitle": {"type": "paragraph"},
+    "Annex_Ref": {"type": "paragraph"},
+    # table of figures (LOF entries — skip, not content)
+    "table of figures": {"type": "skip"},
     "Pa16": {"type": "paragraph"},
     "enumlev1": {"type": "list_item", "list_type": "bullet", "list_depth": 1},
     # --- Body text ---
     "Body Text": {"type": "paragraph"},
     "Body Text Indent": {"type": "paragraph"},
     "Body Text indent 1": {"type": "paragraph"},
+    "Body Text Indent 211": {"type": "paragraph"},
     "Normal": {"type": "paragraph"},
     "Default": {"type": "paragraph"},
     "normal": {"type": "paragraph"},
@@ -65,6 +101,8 @@ STYLE_MAP: dict[str, dict] = {
     "Formula": {"type": "equation"},
     "Equation": {"type": "equation"},
     "formula": {"type": "equation"},
+    # Typo/corrupted variant of "Formula" seen in some ISO publication source docs
+    "Formu]": {"type": "equation"},
     # --- Code / verbatim ---
     "Code": {"type": "code"},
     "code": {"type": "code"},
@@ -89,15 +127,23 @@ STYLE_MAP: dict[str, dict] = {
     # --- Notes ---
     "Note": {"type": "note"},
     "Note indent": {"type": "note"},
+    "Note indent 2": {"type": "note"},
+    "Note continued": {"type": "note"},
     "note": {"type": "note"},
+    # Word comment / review annotation paragraphs — not part of the spec body
+    "annotation text": {"type": "skip"},
     # --- Lists (bulleted) ---
     "List Continue": {"type": "list_item", "list_type": "bullet", "list_depth": 1},
     "List Continue 1": {"type": "list_item", "list_type": "bullet", "list_depth": 1},
     "List Continue 1 (-)": {"type": "list_item", "list_type": "bullet", "list_depth": 1},
     "List Continue 2": {"type": "list_item", "list_type": "bullet", "list_depth": 2},
+    "List Continue 2 (-)": {"type": "list_item", "list_type": "bullet", "list_depth": 2},
     "List Continue 3": {"type": "list_item", "list_type": "bullet", "list_depth": 3},
+    "List Continue 3 (-)": {"type": "list_item", "list_type": "bullet", "list_depth": 3},
     "List Continue 4": {"type": "list_item", "list_type": "bullet", "list_depth": 4},
     "List Continue 5": {"type": "list_item", "list_type": "bullet", "list_depth": 5},
+    "List Continue 6": {"type": "list_item", "list_type": "bullet", "list_depth": 6},
+    "List Paragraph": {"type": "list_item", "list_type": "bullet", "list_depth": 1},
     "List Bullet": {"type": "list_item", "list_type": "bullet", "list_depth": 1},
     "List Bullet 2": {"type": "list_item", "list_type": "bullet", "list_depth": 2},
     "List Bullet 3": {"type": "list_item", "list_type": "bullet", "list_depth": 3},

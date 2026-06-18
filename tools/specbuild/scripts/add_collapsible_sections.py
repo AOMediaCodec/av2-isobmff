@@ -31,12 +31,16 @@ from specbuild.logsetup import setup_logging  # noqa: E402
 setup_logging("INFO")
 
 
-def add_collapsible_sections(html_path: Path) -> None:
+def add_collapsible_sections(html_path: Path, sections: list[str] | None = None) -> None:
     """
     Add collapsible section functionality to HTML file.
 
     Args:
-        html_path (Path): Path to the HTML file to modify
+        html_path: Path to the HTML file to modify
+        sections: List of top-level section numbers to make collapsible.
+            Defaults to all h2-level sections (any heading with a numeric
+            section number).  Pass an explicit list to restrict to specific
+            sections (e.g. ``["5", "6", "9"]``).
     """
     logging.info(f"Adding collapsible sections to {html_path.name}")
 
@@ -45,11 +49,8 @@ def add_collapsible_sections(html_path: Path) -> None:
 
     soup = BeautifulSoup(html_content, "html.parser")
 
-    # Sections to make collapsible (these are the largest sections with SDL tables)
-    # Section 5: Syntax structures
-    # Section 6: Decoding process
-    # Section 9: Additional tables
-    collapsible_sections = ["5", "6", "9"]
+    # When no explicit list is provided, collapse every numbered top-level section.
+    collapsible_sections: list[str] | None = sections
 
     sections_made_collapsible = 0
 
@@ -73,7 +74,7 @@ def add_collapsible_sections(html_path: Path) -> None:
                 continue
 
         # Check if this is one of our target sections
-        if section_num not in collapsible_sections:
+        if collapsible_sections is not None and section_num not in collapsible_sections:
             continue
 
         # Find all content between this h2 and the next h2 (same level)
@@ -325,13 +326,8 @@ body.mobile-optimized .section-content.collapsed {
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        logging.error(f"Usage: {sys.argv[0]} <html_file>")
-        logging.error("")
-        logging.error("Add collapsible sections to HTML file for mobile optimization.")
-        logging.error(
-            "Detects mobile platforms and collapses large sections to reduce initial DOM load."
-        )
+    if len(sys.argv) < 2:
+        logging.error(f"Usage: {sys.argv[0]} <html_file> [--sections 5,6,9]")
         sys.exit(1)
 
     html_path = Path(sys.argv[1])
@@ -339,5 +335,14 @@ if __name__ == "__main__":
     if not html_path.exists():
         logging.error(f"HTML file not found: {html_path}")
         sys.exit(1)
+
+    # Optional --sections flag: comma-separated list of section numbers
+    _sections = None
+    if "--sections" in sys.argv:
+        idx = sys.argv.index("--sections")
+        if idx + 1 < len(sys.argv):
+            _sections = sys.argv[idx + 1].split(",")
+
+    add_collapsible_sections(html_path, sections=_sections)
 
     add_collapsible_sections(html_path)

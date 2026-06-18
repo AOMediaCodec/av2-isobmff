@@ -64,9 +64,28 @@ class SpecConfig:
     sort_symbols_file: str = ""
     tables_file: str = ""
     sdl_files: tuple[str, ...] = ()
+    # Path to SDL descriptor config, relative to the spec root.
+    # When empty, uses the specbuild package's built-in config/sdl_descriptors.cfg.
+    sdl_descriptors_file: str = ""
+
+    # SDL indentation: how many source spaces equal one indent level (default 4).
+    # When 0, indentation is inferred from brace/bracket depth in the source
+    # (use this for specs whose SDL blocks have no leading whitespace).
+    sdl_indent_spaces: int = 4
+
+    # SDL indent step rendered in the HTML table (em units per level, default 1.0).
+    sdl_indent_em: float = 1.0
 
     # Optional: path to an x86_64 Python for WeasyPrint on Apple Silicon
     x86_python_path: str = "venv_x86/bin/python"
+
+    # When True, renumber the Introduction section as "0" and shift all
+    # subsequent top-level clause numbers down by 1 (ISO/IEC convention).
+    introduction_section_zero: bool = False
+
+    # When True, post-process HEVC-style <div class='equation'>$$ ... $$</div>
+    # blocks: pseudocode → <pre>, pure math → MathML via latex2mathml.
+    hevc_equations: bool = False
 
     # Table of contents depth (1–6; controls DOCX toc-depth and CSS visibility)
     toc_depth: int = 3
