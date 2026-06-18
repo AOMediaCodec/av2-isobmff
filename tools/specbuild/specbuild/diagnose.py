@@ -44,7 +44,20 @@ def _check_import(label: str, module: str, extra: str) -> tuple[str, str, bool, 
     except ImportError:
         return (label, "not installed", False, f"pip install specbuild[{extra}]")
     except (OSError, Exception) as exc:  # noqa: BLE001  # native lib failures (e.g. weasyprint)
-        return (label, f"import error: {type(exc).__name__}", False, "")
+        hint = ""
+        if module == "weasyprint":
+            try:
+                from specbuild.utils import homebrew_lib_for_dyld
+
+                homebrew_lib = homebrew_lib_for_dyld()
+            except ImportError:
+                homebrew_lib = None
+            if homebrew_lib:
+                hint = (
+                    "macOS arm64: add to your shell rc — "
+                    f"export DYLD_FALLBACK_LIBRARY_PATH={homebrew_lib}:$DYLD_FALLBACK_LIBRARY_PATH"
+                )
+        return (label, f"import error: {type(exc).__name__}", False, hint)
     version = getattr(mod, "__version__", "(version unknown)")
     return (label, str(version), True, "")
 

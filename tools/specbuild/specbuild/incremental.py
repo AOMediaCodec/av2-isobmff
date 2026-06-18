@@ -212,7 +212,7 @@ def load_cache() -> dict:
     if not cache_path.exists():
         return {}
     try:
-        with open(cache_path) as f:
+        with open(cache_path, encoding="utf-8") as f:
             return json.load(f)
     except (json.JSONDecodeError, OSError):
         return {}
@@ -236,7 +236,7 @@ def save_cache(source_hash: str, output_dir: str, *, enhancement_hash: str | Non
     if enhancement_hash is not None:
         cache["enhancement_hash"] = enhancement_hash
     try:
-        with open(Path(_CACHE_FILE), "w") as f:
+        with open(Path(_CACHE_FILE), "w", encoding="utf-8") as f:
             json.dump(cache, f, indent=2)
     except OSError as e:
         logging.warning(f"Could not save build cache: {e}")

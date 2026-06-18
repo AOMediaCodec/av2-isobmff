@@ -146,17 +146,15 @@ def validate_bibliography_format_soup(
         headings = _heading_texts(soup)
     heading_texts = [h[0] for h in headings]
 
-    has_normative = any(re.match(re.escape(norm_heading), t, re.IGNORECASE) for t in heading_texts)
-    has_informative = any(
-        re.match(re.escape(info_heading), t, re.IGNORECASE) for t in heading_texts
-    )
+    norm_re = re.compile(re.escape(norm_heading), re.IGNORECASE)
+    info_re = re.compile(re.escape(info_heading), re.IGNORECASE)
+    has_normative = any(norm_re.match(t) for t in heading_texts)
+    has_informative = any(info_re.match(t) for t in heading_texts)
 
     refs_sections = soup.find_all("section")
     has_any_refs = False
     for sec in refs_sections:
-        dls = sec.find_all("dl")
-        ols = sec.find_all("ol")
-        if dls or ols:
+        if sec.find("dl") or sec.find("ol"):
             heading = sec.find(HEADING_RE)
             if heading:
                 text = heading.get_text(strip=True).lower()
@@ -296,9 +294,10 @@ def validate_normative_refs_cited_soup(
     body_text = body.get_text(" ").replace(norm_text, "", 1)
 
     for ref_id in ref_ids:
-        # Match both [ID] and bare ID
-        cited = bool(re.search(rf"\[{re.escape(ref_id)}\]", body_text)) or bool(
-            re.search(rf"\b{re.escape(ref_id)}\b", body_text)
+        # Compile once per ref_id; match both [ID] and bare ID
+        escaped = re.escape(ref_id)
+        cited = bool(re.search(rf"\[{escaped}\]", body_text)) or bool(
+            re.search(rf"\b{escaped}\b", body_text)
         )
         if not cited:
             issues.append(

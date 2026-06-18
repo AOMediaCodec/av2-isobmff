@@ -59,7 +59,9 @@ def _specbuild_version() -> str:
     Resolution order:
     1. ``importlib.metadata`` (works when installed via pip).
     2. Nearest git tag reachable from PROJECT_ROOT (dev / editable installs).
-    3. The hardcoded version in pyproject.toml (last resort).
+    3. ``version`` field parsed from ``pyproject.toml`` (vendored copies
+       extracted via ``git archive``, where there is no ``.git`` to query).
+    4. Literal ``"unknown"`` only if all of the above fail.
     """
     try:
         from importlib.metadata import version as _meta_version
@@ -79,7 +81,17 @@ def _specbuild_version() -> str:
             return result.stdout.strip()
     except Exception:
         pass
-    return "0.3.6"
+    try:
+        import tomllib
+
+        with (specbuild.PROJECT_ROOT / "pyproject.toml").open("rb") as f:
+            data = tomllib.load(f)
+        v = data.get("project", {}).get("version")
+        if v:
+            return str(v)
+    except Exception:
+        pass
+    return "unknown"
 
 
 if TYPE_CHECKING:
@@ -1360,6 +1372,15 @@ def main() -> None:
         parser_defaults = vars(parser.parse_args([]))
         apply_profile(args, args.profile, parser_defaults=parser_defaults)
 
+    # --no-pdf overrides any PDF flags set by a profile (or by the user).
+    if getattr(args, "no_pdf", False):
+        cleared = [k for k in ("pdf", "weasyprint", "pdfa") if getattr(args, k, False)]
+        if cleared:
+            logging.info(f"--no-pdf: skipping PDF generation ({', '.join(cleared)} cleared)")
+        for k in ("pdf", "weasyprint", "pdfa"):
+            if hasattr(args, k):
+                setattr(args, k, False)
+
     # Engine default for PDF generation: WeasyPrint unless --chrome-pdf is set.
     # `args.weasyprint` is the truth-of-which-engine flag throughout the
     # codebase, so we normalize it here once — after profiles have applied
@@ -1367,6 +1388,13 @@ def main() -> None:
     # `pdf=True` without specifying an engine.
     if args.pdf and not getattr(args, "chrome_pdf", False):
         args.weasyprint = True
+
+    # --serve disables PWA generation: a registered service worker would
+    # cache-first every fetch and serve stale HTML/CSS/JS forever, defeating
+    # both the rebuild loop and the livereload signal.
+    if getattr(args, "serve", False) and getattr(args, "pwa", False):
+        logging.info("--serve: disabling --pwa (service worker would block livereload)")
+        args.pwa = False
 
     # Expand --all-checks into individual quality-check flags
     expand_all_checks(args)
@@ -1440,7 +1468,12 @@ def main() -> None:
 
     # --- Watch / Serve mode ---
     if getattr(args, "serve", False):
-        from specbuild.output.livepreview import find_index_html, open_browser, start_server
+        from specbuild.output.livepreview import (
+            find_index_html,
+            notify_reload,
+            open_browser,
+            start_server,
+        )
 
         # Force watch loop on
         args.watch = True
@@ -1476,8 +1509,12 @@ def main() -> None:
                 index = find_index_html(serve_dir)
                 full_url = f"{url}/{index.name}" if index else url
                 logging.info(f"Serving spec at: {full_url}")
+                logging.info("Livereload active — browser will auto-reload on rebuild")
                 open_browser(full_url)
                 _serve_started = True
+            else:
+                # Subsequent rebuild — push reload to connected browsers.
+                notify_reload()
 
         from specbuild.watch import watch_and_rebuild
 

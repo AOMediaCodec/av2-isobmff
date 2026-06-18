@@ -16,8 +16,10 @@ from __future__ import annotations
 
 import logging
 import re
+import shutil
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from specbuild import PROJECT_ROOT
@@ -218,6 +220,23 @@ def _compile_anchor_clone(
         anchor_html = main_branch_path / "index.html"
     anchor_git_dir = main_branch_path / ".git"
 
+    # Resolve the repo URL — use configured value, or fall back to the
+    # current repo's origin remote so consumers don't have to set repo_url.
+    repo_url = CONFIG.repo_url
+    if not repo_url:
+        try:
+            result = subprocess.run(
+                ["git", "remote", "get-url", "origin"],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                timeout=10,
+            )
+            if result.returncode == 0:
+                repo_url = result.stdout.strip()
+        except Exception:
+            pass
+
     # Clone if the directory doesn't contain a git checkout yet
     if not anchor_git_dir.exists():
         if not repo_url:
@@ -227,9 +246,7 @@ def _compile_anchor_clone(
             )
             return anchor_info
         logging.info(f"Cloning {repo_url} to {CONFIG.main_branch_clone_dir}")
-        subprocess.run(
-            ["git", "clone", repo_url, str(main_branch_path)], check=True, timeout=300
-        )
+        subprocess.run(["git", "clone", repo_url, str(main_branch_path)], check=True, timeout=300)
     else:
         # Fetch latest changes from remote
         logging.info(f"Fetching latest changes in {CONFIG.main_branch_clone_dir}")
@@ -321,16 +338,21 @@ def _run_htmldiff_with_preprocessing(
     target_preprocessed = target_html.with_suffix(".preprocessed.html")
 
     try:
-        subprocess.run(
-            [sys.executable, str(preprocess_script), str(anchor_html), str(anchor_preprocessed)],
-            check=True,
-            timeout=120,
-        )
-        subprocess.run(
-            [sys.executable, str(preprocess_script), str(target_html), str(target_preprocessed)],
-            check=True,
-            timeout=120,
-        )
+        # Preprocess anchor and target in parallel — they are independent.
+        def _preprocess(src: Path, dst: Path) -> None:
+            subprocess.run(
+                [sys.executable, str(preprocess_script), str(src), str(dst)],
+                check=True,
+                timeout=120,
+            )
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures = {
+                pool.submit(_preprocess, anchor_html, anchor_preprocessed): "anchor",
+                pool.submit(_preprocess, target_html, target_preprocessed): "target",
+            }
+            for fut in as_completed(futures):
+                fut.result()  # re-raise any CalledProcessError
 
         logging.info(
             f"Running HTML diff tool: "
@@ -339,6 +361,7 @@ def _run_htmldiff_with_preprocessing(
         )
         subprocess.run(
             [
+                "perl",
                 str(PROJECT_ROOT / "htmldiff.pl"),
                 str(anchor_preprocessed),
                 str(target_preprocessed),
@@ -370,7 +393,13 @@ def _run_htmldiff_raw(anchor_html: Path, target_html: Path, diff_file: Path) -> 
     logging.info(f"Running HTML diff tool: {anchor_html} vs {target_html} => {diff_file}")
     try:
         subprocess.run(
-            [str(PROJECT_ROOT / "htmldiff.pl"), str(anchor_html), str(target_html), str(diff_file)],
+            [
+                "perl",
+                str(PROJECT_ROOT / "htmldiff.pl"),
+                str(anchor_html),
+                str(target_html),
+                str(diff_file),
+            ],
             check=True,
             timeout=300,
         )
@@ -429,7 +458,16 @@ def diff_spec(
     if not htmldiff_path.exists():
         logging.error("htmldiff.pl not found and could not be downloaded.")
         return anchor_spec_info
-    htmldiff_path.chmod(_HTMLDIFF_EXECUTABLE_MODE)
+    # chmod is a no-op on Windows; only apply on POSIX systems.
+    if sys.platform != "win32":
+        htmldiff_path.chmod(_HTMLDIFF_EXECUTABLE_MODE)
+    # Perl is required to run htmldiff.pl. macOS 14+ no longer ships Perl.
+    if not shutil.which("perl"):
+        logging.error(
+            "Perl not found — cannot run htmldiff.pl. "
+            "Install Perl (e.g. 'brew install perl' on macOS, 'apt install perl' on Linux)."
+        )
+        return anchor_spec_info
 
     # --- Compile the anchor spec ---
     compile_kwargs = dict(

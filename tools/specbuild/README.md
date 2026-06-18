@@ -1,6 +1,6 @@
 # specbuild
 
-A reusable pipeline for building [Bikeshed](https://speced.github.io/bikeshed/) specifications with PDF generation, HTML diffing, multipage output, standards document support (24 SDO flavors plus custom via TOML), quality assurance, and 90+ configurable features.
+A tool for building [Bikeshed](https://speced.github.io/bikeshed/) specifications with PDF generation, HTML diffing, multipage output, standards document support (24 SDO flavors plus custom via TOML), quality assurance, and 90+ configurable features.
 
 Designed to work with any Bikeshed-based spec. Ships with a demo *Bicycle Design & Assembly Specification* for testing and development.
 

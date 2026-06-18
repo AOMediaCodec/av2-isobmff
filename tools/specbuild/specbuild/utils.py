@@ -465,6 +465,14 @@ def get_chrome_path() -> str | None:
         paths = [
             "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
             "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+            # Per-user install (default on managed Windows machines)
+            str(
+                Path(os.environ.get("LOCALAPPDATA", ""))
+                / "Google"
+                / "Chrome"
+                / "Application"
+                / "chrome.exe"
+            ),
         ]
 
     for path in paths:
@@ -493,6 +501,45 @@ def chrome_path() -> str | None:
         str or None: Path to Chrome executable, or ``None`` if not found.
     """
     return get_chrome_path()
+
+
+@lru_cache(maxsize=1)
+def homebrew_lib_for_dyld() -> Path | None:
+    """Homebrew lib dir on Apple Silicon, when WeasyPrint needs it on PATH.
+
+    On macOS arm64, libgobject/libpango/libharfbuzz live under
+    ``/opt/homebrew/lib`` (or a custom Homebrew prefix), but neither dyld nor
+    cffi searches there by default — so ``import weasyprint`` raises
+    ``OSError: cannot load library 'libgobject-2.0-0'``.  Prepending this dir
+    to ``DYLD_FALLBACK_LIBRARY_PATH`` for the WeasyPrint subprocess fixes the
+    common case without forcing every contributor to edit their shell rc.
+
+    Returns the lib path if injection is warranted; ``None`` on non-arm64
+    macOS, on Linux/Windows, or when the libs are not where we expect.
+    """
+    if sys.platform != "darwin" or platform.machine() != "arm64":
+        return None
+    candidates: list[Path] = []
+    env_prefix = os.environ.get("HOMEBREW_PREFIX")
+    if env_prefix:
+        candidates.append(Path(env_prefix))
+    candidates.append(Path("/opt/homebrew"))
+    for prefix in candidates:
+        lib = prefix / "lib"
+        if (lib / "libgobject-2.0.0.dylib").exists():
+            return lib
+    brew = shutil.which("brew")
+    if brew:
+        try:
+            out = subprocess.run(
+                [brew, "--prefix"], capture_output=True, text=True, timeout=5, check=True
+            ).stdout.strip()
+            lib = Path(out) / "lib"
+            if (lib / "libgobject-2.0.0.dylib").exists():
+                return lib
+        except (subprocess.SubprocessError, OSError):
+            pass
+    return None
 
 
 # ---------------------------------------------------------------------------
