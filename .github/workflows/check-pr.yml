@@ -48,7 +48,7 @@ jobs:
         run: |
           git config --global credential.helper '!f() { echo "username=x-access-token"; echo "password=${{ secrets.GITHUB_TOKEN }}"; }; f'
           python tools/specbuild/compile.py \
-            --profile publication \
+            --profile publication-html \
             --toc-leaders table \
             --strict-sdl-syntax \
             --diff --diff_viewer \
@@ -79,7 +79,6 @@ jobs:
 
             ### 📦 What's included
             - \`index.html\` — Compiled specification (HTML)
-            - \`av2-isobmff_Spec.pdf\` — PDF output
             - \`diff.html\` — Changes vs \`${context.payload.pull_request.base.ref}\`
             - \`diff_viewer.html\` — Three-pane diff viewer
 
