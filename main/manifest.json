@@ -1,0 +1,29 @@
+{
+  "name": "AV2 Codec ISO Media File Format Binding",
+  "short_name": "av2-isobmff",
+  "description": "AV2 Codec ISO Media File Format Binding — offline-capable specification viewer",
+  "start_url": "index.html",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#034575",
+  "background_color": "white",
+  "categories": [
+    "reference",
+    "documentation"
+  ],
+  "icons": [
+    {
+      "src": "images/icon-192x192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "images/icon-512x512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
