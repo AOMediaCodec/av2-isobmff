@@ -44,14 +44,20 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 git config --global user.name  "github-actions[bot]"
 git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+# Authenticated remote URL. A fresh `git clone` does NOT inherit the
+# credentials actions/checkout configured for the main working copy, so we
+# embed the built-in token directly. $GH_TOKEN is the ephemeral GITHUB_TOKEN.
+: "${GH_TOKEN:?GH_TOKEN must be set}"
+REMOTE_URL="https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
+
 # --- Clone (or create) the gh-pages branch into a fresh worktree ----------
 rm -rf "$PAGES_DIR"
-if git ls-remote --exit-code --heads origin "$PAGES_BRANCH" >/dev/null 2>&1; then
+if git ls-remote --exit-code --heads "$REMOTE_URL" "$PAGES_BRANCH" >/dev/null 2>&1; then
   git clone --branch "$PAGES_BRANCH" --single-branch --depth 1 \
-    "https://github.com/${REPO}.git" "$PAGES_DIR"
+    "$REMOTE_URL" "$PAGES_DIR"
 else
   echo "gh-pages branch does not exist yet — creating orphan branch."
-  git clone --depth 1 "https://github.com/${REPO}.git" "$PAGES_DIR"
+  git clone --depth 1 "$REMOTE_URL" "$PAGES_DIR"
   ( cd "$PAGES_DIR"
     git checkout --orphan "$PAGES_BRANCH"
     git rm -rf . >/dev/null 2>&1 || true
