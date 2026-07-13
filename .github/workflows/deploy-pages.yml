@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy main to Pages
 
 on:
   push:
@@ -7,21 +7,24 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write        # push to gh-pages
+  pull-requests: read    # dashboard lists open PRs
 
+# Serialize every write to the gh-pages branch across BOTH workflows so
+# concurrent runs never race on the push.
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: gh-pages-deploy
+  cancel-in-progress: false
 
 jobs:
   build:
-    name: Build specification
+    name: Build & publish main
     runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -43,27 +46,16 @@ jobs:
         run: sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0
 
       - name: Build specification
-        run: python tools/specbuild/compile.py --profile publication --toc-leaders table --check-sdl-syntax --links
-
-      - name: Prepare Pages artifact
         run: |
-          mkdir dist
-          cp -r av2-isobmff_Spec/. dist/
+          python tools/specbuild/compile.py \
+            --profile publication \
+            --toc-leaders table \
+            --check-sdl-syntax \
+            --links
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/
-
-  deploy:
-    name: Deploy to GitHub Pages
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-24.04
-    needs: build
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publish to gh-pages
+        env:
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bash .github/scripts/publish.sh main
