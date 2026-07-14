@@ -357,7 +357,7 @@ def _build_viewer_html(
     <span class="title">Diff Viewer</span>
     <span class="sep"></span>
     <label><input type="checkbox" class="pane-toggle" data-pane="anchor"> Anchor</label>
-    <label><input type="checkbox" class="pane-toggle" data-pane="current" checked> Current</label>
+    <label><input type="checkbox" class="pane-toggle" data-pane="current"> Current</label>
     <label><input type="checkbox" class="pane-toggle" data-pane="diff" checked> Diff</label>
     <span class="sep"></span>
     <label>TOC:
@@ -395,7 +395,7 @@ def _build_viewer_html(
             <div class="pane-header anchor">Anchor (Previous)</div>
             <iframe id="iframe-anchor"></iframe>
         </div>
-        <div class="pane" id="pane-current">
+        <div class="pane hidden" id="pane-current">
             <div class="pane-header current">Current</div>
             <iframe id="iframe-current"></iframe>
         </div>
