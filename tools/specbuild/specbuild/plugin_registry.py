@@ -1479,22 +1479,36 @@ def _out_isodoc_xml(ctx: BuildContext):
 
 @register_output_task(
     name="sts-xml",
-    cli_flags=["--sts-xml"],
+    cli_flags=["--sts-xml", "--validate-sts"],
     description="Export NISO STS XML for ISO document management.",
 )
 def _out_sts_xml(ctx: BuildContext):
     from specbuild.config import STANDARDS
-    from specbuild.output.stsxml import export_sts_xml
+    from specbuild.output.stsxml import export_sts_xml, validate_sts_xml
     from specbuild.standards.metadata import resolve_metadata
 
     meta = ctx.metadata or resolve_metadata(ctx.args, STANDARDS, ctx.soup)
+    out_path = ctx.target_dir / "spec_sts.xml"
     export_sts_xml(
         ctx.html_path,
-        ctx.target_dir / "spec_sts.xml",
+        out_path,
         meta,
         ctx.standards_flavor,
         soup=ctx.soup,
     )
+
+    # Optional validation gate: fail the build if the STS is not DTD-valid.
+    if getattr(ctx.args, "validate_sts", False):
+        errors = validate_sts_xml(out_path)
+        if errors:
+            preview = "\n".join(f"  {e}" for e in errors[:25])
+            extra = f"\n  ... and {len(errors) - 25} more" if len(errors) > 25 else ""
+            raise RuntimeError(
+                f"STS XML failed NISO STS 1.2 DTD validation ({len(errors)} error(s)):\n"
+                f"{preview}{extra}"
+            )
+        logging.info("STS XML is valid against the NISO STS 1.2 interchange DTD.")
+
 
 
 @register_output_task(

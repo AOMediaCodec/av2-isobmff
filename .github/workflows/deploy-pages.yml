@@ -49,6 +49,7 @@ jobs:
         run: |
           python tools/specbuild/compile.py \
             --profile publication \
+            --no-pwa \
             --toc-leaders table \
             --check-sdl-syntax \
             --links

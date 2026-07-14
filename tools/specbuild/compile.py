@@ -611,6 +611,13 @@ def _run_output_phase(
             "cite-macros",
             "errata",
             "doc-relations",
+            # These re-nest the flat heading stream into <section> wrappers in
+            # place (and otherwise mutate out_ctx.soup); running them
+            # concurrently corrupts each other's tree (e.g. truncated IsoDoc
+            # when STS runs alongside). Keep them sequential.
+            "sts-xml",
+            "isodoc-xml",
+            "iso-docx",
         }
         sequential_tasks = [
             (n, fn)
@@ -1380,6 +1387,13 @@ def main() -> None:
         for k in ("pdf", "weasyprint", "pdfa"):
             if hasattr(args, k):
                 setattr(args, k, False)
+
+    # --no-pwa overrides any --pwa set by a profile (or by the user). A
+    # cache-first service worker can mask newer content when the spec is served
+    # from a shared path, so allow a profile's PWA to be turned off explicitly.
+    if getattr(args, "no_pwa", False) and getattr(args, "pwa", False):
+        logging.info("--no-pwa: skipping PWA/service-worker generation")
+        args.pwa = False
 
     # Engine default for PDF generation: WeasyPrint unless --chrome-pdf is set.
     # `args.weasyprint` is the truth-of-which-engine flag throughout the

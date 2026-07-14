@@ -1348,6 +1348,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Generate Progressive Web App files for offline viewing (manifest, service worker).",
     )
     parser.add_argument(
+        "--no-pwa",
+        dest="no_pwa",
+        action="store_true",
+        help="Skip PWA/service-worker generation, overriding any --pwa set by a "
+        "profile. Useful when the spec is served from a shared path where a "
+        "cache-first service worker would mask newer content.",
+    )
+    parser.add_argument(
         "--spec-compare",
         type=str,
         default=None,
@@ -1552,6 +1560,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--sts-xml",
         action="store_true",
         help="Export NISO STS XML for ISO document management.",
+    )
+    std_group.add_argument(
+        "--validate-sts",
+        action="store_true",
+        help="Validate the exported STS XML against the bundled NISO STS 1.2 "
+        "interchange DTD; the build fails if it is invalid (implies --sts-xml).",
     )
     std_group.add_argument(
         "--iso-docx",

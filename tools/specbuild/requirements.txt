@@ -32,6 +32,7 @@ pydyf==0.12.1
 Pygments==2.20.0
 pypdf==6.12.2
 pyphen==0.17.2
+python-docx==1.2.0
 requests==2.33.1
 result==0.17.0
 setuptools==82.0.1

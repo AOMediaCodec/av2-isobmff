@@ -102,7 +102,16 @@ def read_html(html_path: Path) -> BeautifulSoup:
     """
     BS = get_bs4()
     with open(html_path, encoding="utf-8") as f:
-        return BS(f.read(), "html.parser")
+        markup = f.read()
+    # Use a spec-compliant parser so HTML5 table foster-parenting is honored
+    # (the stdlib "html.parser" mis-nests <tr>/<td> in dense tables, which
+    # downstream recursive find_all() then multiplies). Fall back gracefully.
+    for parser in ("lxml", "html5lib", "html.parser"):
+        try:
+            return BS(markup, parser)
+        except Exception:  # noqa: BLE001 - try next available parser
+            continue
+    return BS(markup, "html.parser")
 
 
 def write_html(html_path: Path, soup: BeautifulSoup) -> None:

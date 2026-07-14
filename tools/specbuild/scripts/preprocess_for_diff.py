@@ -199,6 +199,18 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
 
     logging.info(f"  Removed {tooltip_changes} tooltip attributes")
 
+    # 10b. Unwrap RFC 2119/8174 keyword spans (highlight_keywords enhancement).
+    # The <span class="rfc-keyword"> wrappers are injected only into the enhanced
+    # build, never the bare anchor, so these one-sided insertions desync the
+    # word-level diff and cascade into false differences elsewhere. Unwrapping
+    # restores the plain keyword text so both sides match.
+    rfc_keyword_changes = 0
+    for span in soup.find_all("span", class_="rfc-keyword"):
+        span.unwrap()
+        rfc_keyword_changes += 1
+
+    logging.info(f"  Unwrapped {rfc_keyword_changes} rfc-keyword spans")
+
     # 11. Unwrap line-anchor spans in code blocks
     # Line anchors (<span class="code-line">) are a presentation feature;
     # unwrapping them exposes the raw code text for semantic diffing.
@@ -236,22 +248,17 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
 
     logging.info(f"  Normalized whitespace in {code_ws_changes} code block text nodes")
 
-    # 13. Remove injected style/script blocks that are build artifacts
-    # These are enhancement CSS/JS blocks that vary between builds
-    artifact_ids = (
-        "syntax-tooltips-css",
-        "syntax-tooltips-js",
-        "figure-table-tooltips-css",
-        "figure-table-tooltips-js",
-        "toc-bold-primary-only-css",
-        "line-anchors-css",
-        "dark-mode-css",
-    )
+    # 13. Remove injected style/script blocks that are build artifacts.
+    # SpecBuild enhancements inject <style>/<script> blocks whose id ends in
+    # "-css"/"-js" (e.g. rfc-keyword-css, page-numbering-css, content-width-css).
+    # They exist only in the enhanced build, not the bare anchor, so strip them
+    # from both sides. Matching by suffix (rather than a fixed list) keeps new
+    # enhancements from reintroducing false diffs.
     artifact_changes = 0
-    for aid in artifact_ids:
-        elem = soup.find(id=aid)
-        if elem:
-            elem.decompose()
+    for tag in soup.find_all(["style", "script"], id=True):
+        tid = tag.get("id", "")
+        if tid.endswith("-css") or tid.endswith("-js"):
+            tag.decompose()
             artifact_changes += 1
 
     logging.info(f"  Removed {artifact_changes} injected style/script blocks")
@@ -271,6 +278,7 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
         + cell_changes
         + sdl_indent_changes
         + tooltip_changes
+        + rfc_keyword_changes
         + line_anchor_changes
         + code_ws_changes
         + artifact_changes

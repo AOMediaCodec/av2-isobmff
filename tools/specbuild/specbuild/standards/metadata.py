@@ -74,6 +74,19 @@ def _extract_html_metadata(soup: BeautifulSoup) -> dict[str, str]:
             "technical_committee",
         ):
             meta[name_lower] = content
+
+    # Document title: prefer the <h1 id="title"> heading, then <title>.
+    # The STS <title-wrap><main> field is required; without this it is empty.
+    if not meta.get("title_main") and not meta.get("title"):
+        title_text = ""
+        h1 = soup.find("h1", id="title") or soup.find("h1")
+        if h1 is not None:
+            title_text = h1.get_text(" ", strip=True)
+        if not title_text and soup.title and soup.title.string:
+            title_text = soup.title.string.strip()
+        if title_text:
+            meta["title_main"] = title_text
+
     return meta
 
 
