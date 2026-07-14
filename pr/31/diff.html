@@ -1492,7 +1492,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version NORMALIZED" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="fd8dbf1b449e56c360fd92ad2831ead74400f40b" name="revision"/>
+<meta content="96d3be79e1375dc3db4f366551b30492acdd3fb6" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2202,7 +2202,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 }
 </style>
 
-<style type='text/css'>
+<style id="diff-biblio-whitespace-fix">[data-link-type=biblio]{white-space:normal !important;}</style><style type='text/css'>
 :root {
 	--diff-old-bg: #fbb;
 	--diff-chg-bg: #bfb;
@@ -3850,9 +3850,9 @@ coded
 video
 samples.
 </p>
-<pre class="highlight language-cpp"><c- k="">class</c-> <c- nc="">AV2SampleEntry</c-> <c- n="">extends</c-> <c- n="">VisualSampleEntry</c-><c- p="">(</c->'<c- n="">av02</c->'<c- p="">)</c-> <c- p="">{</c->
-  <c- n="">AV2CodecConfigurationBox</c-> <c- n="">config</c-><c- p="">;</c->
-<c- p="">}</c->
+<pre class="highlight language-cpp">class AV2SampleEntry extends VisualSampleEntry('av02') {
+  AV2CodecConfigurationBox config;
+}
 </pre>
 <p>
 An
@@ -3997,24 +3997,24 @@ of
 a
 track.
 </p>
-<pre class="highlight language-cpp"><c- n="">aligned</c-><c- p="">(</c-><c- mi="">8</c-><c- p="">)</c-> <c- k="">class</c-> <c- nc="">AV2CodecConfigurationBox</c-> <c- n="">extends</c-> <c- n="">Box</c-><c- p="">(</c->'<c- n="">av2C</c->'<c- p="">)</c->
-<c- p="">{</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">8</c-><c- p="">)</c->  <c- n="">configurationVersion</c-> <c- o="">=</c-> <c- mi="">1</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">5</c-><c- p="">)</c->  <c- n="">seq_profile_idc</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">5</c-><c- p="">)</c->  <c- n="">seq_level_idx</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">1</c-><c- p="">)</c->  <c- n="">seq_tier</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">3</c-><c- p="">)</c->  <c- n="">chroma_format_idc</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">3</c-><c- p="">)</c->  <c- n="">bit_depth_idc</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">1</c-><c- p="">)</c->  <c- n="">monotonic_output_order_flag</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">1</c-><c- p="">)</c->  <c- n="">still_picture</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">1</c-><c- p="">)</c->  <c- n="">film_grain_params_present</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">1</c-><c- p="">)</c->  <c- n="">seq_initial_display_delay_present_flag</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">4</c-><c- p="">)</c->  <c- n="">seq_initial_display_delay_minus_1</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">7</c-><c- p="">)</c->  <c- n="">reserved1</c-> <c- o="">=</c-> <c- mi="">0</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">16</c-><c- p="">)</c-> <c- n="">max_frame_width_minus_1</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">16</c-><c- p="">)</c-> <c- n="">max_frame_height_minus_1</c-><c- p="">;</c->
-  <c- b="">unsigned</c-> <c- nf="">int</c-><c- p="">(</c-><c- mi="">8</c-><c- p="">)</c->  <c- n="">configOBUs</c-><c- p="">[];</c->
-<c- p="">}</c->
+<pre class="highlight language-cpp">aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
+{
+  unsigned int(8)  configurationVersion = 1;
+  unsigned int(5)  seq_profile_idc;
+  unsigned int(5)  seq_level_idx;
+  unsigned int(1)  seq_tier;
+  unsigned int(3)  chroma_format_idc;
+  unsigned int(3)  bit_depth_idc;
+  unsigned int(1)  monotonic_output_order_flag;
+  unsigned int(1)  still_picture;
+  unsigned int(1)  film_grain_params_present;
+  unsigned int(1)  seq_initial_display_delay_present_flag;
+  unsigned int(4)  seq_initial_display_delay_minus_1;
+  unsigned int(7)  reserved1 = 0;
+  unsigned int(16) max_frame_width_minus_1;
+  unsigned int(16) max_frame_height_minus_1;
+  unsigned int(8)  configOBUs[];
+}
 </pre>
 <p>
 semantics
@@ -4915,53 +4915,58 @@ Normative References
 <a class="self-link" href="#normative">
 </a>
 </h3> <dl> <dt id="biblio-av2">
-<del class="diff-old">[AV2] 
-</del>
-<ins class="diff-chg">[AV2] </dt>
-</ins><dd>
+[AV2]
+</dt>
+<dd>
 <a href="https://super-adventure-4j2gglm.pages.github.io/">
 <cite>
 AV2 Bitstream &amp; Decoding Process Specification
 </cite>
-</a>. Standard. URL: <a href="https://super-adventure-4j2gglm.pages.github.io/">
+</a>. Standard. URL:
+<a href="https://super-adventure-4j2gglm.pages.github.io/">
 https://super-adventure-4j2gglm.pages.github.io/
-<del class="diff-old">[CMAF] 
-</del>
-</a> </dd>
+</a>
+</dd>
 <dt id="biblio-cmaf">
-<ins class="diff-chg">[CMAF] </dt>
-</ins><dd>
+[CMAF]
+</dt>
+<dd>
 <a href="https://www.iso.org/standard/71975.html">
 <cite>
 Information technology — Multimedia application format (MPEG-A) — Part 19: Common media application format (CMAF) for segmented media
 </cite>
-</a>. Standard. URL: <a href="https://www.iso.org/standard/71975.html">
+</a>. Standard. URL:
+<a href="https://www.iso.org/standard/71975.html">
 https://www.iso.org/standard/71975.html
-<del class="diff-old">[ISOBMFF] 
-</del>
-</a> </dd>
+</a>
+</dd>
 <dt id="biblio-isobmff">
-<ins class="diff-chg">[ISOBMFF] </dt>
-</ins><dd>
+[ISOBMFF]
+</dt>
+<dd>
 <a href="https://www.iso.org/standard/83102.html">
 <cite>
 Information technology — Coding of audio-visual objects — Part 12: ISO base media file format
 </cite>
-</a>. Standard. URL: <a href="https://www.iso.org/standard/83102.html">
+</a>. Standard. URL:
+<a href="https://www.iso.org/standard/83102.html">
 https://www.iso.org/standard/83102.html
-<del class="diff-old">[RFC2119] 
-</del>
-</a> </dd>
+</a>
+</dd>
 <dt id="biblio-rfc2119">
-<ins class="diff-chg">[RFC2119] </dt>
-</ins><dd>
-S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119">
+[RFC2119]
+</dt>
+<dd>
+S. Bradner.
+<a href="https://datatracker.ietf.org/doc/html/rfc2119">
 <cite>
 Key words for use in RFCs to Indicate Requirement Levels
 </cite>
-</a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">
+</a>. March 1997. Best Current Practice. URL:
+<a href="https://datatracker.ietf.org/doc/html/rfc2119">
 https://datatracker.ietf.org/doc/html/rfc2119
-</a> </dd>
+</a>
+</dd>
 </dl> <script>
 /* Boilerplate: script-dom-helper */ "use strict"; function query(sel) { return document.querySelector(sel); } function queryAll(sel) { return [...document.querySelectorAll(sel)]; } function iter(obj) { if(!obj) return []; var it = obj[Symbol.iterator]; if(it) return it; return Object.entries(obj); } function mk(tagname, attrs, ...children) { const el = document.createElement(tagname); for(const [k,v] of iter(attrs)) { if(k.slice(0,3) == "_on") { const eventName = k.slice(3); el.addEventListener(eventName, v); } else if(k[0] == "_") { // property, not attribute el[k.slice(1)] = v; } else { if(v === false || v == null) { continue; } else if(v === true) { el.setAttribute(k, ""); continue; } else { el.setAttribute(k, v); } } } append(el, children); return el; } /* Create shortcuts for every known HTML element */ [ "a", "abbr", "acronym", "address", "applet", "area", "article", "aside", "audio", "b", "base", "basefont", "bdo", "big", "blockquote", "body", "br", "button", "canvas", "caption", "center", "cite", "code", "col", "colgroup", "datalist", "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "font", "footer", "form", "frame", "frameset", "head", "header", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "html", "i", "iframe", "img", "input", "ins", "kbd", "label", "legend", "li", "link", "main", "map", "mark", "meta", "meter", "nav", "nobr", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "q", "s", "samp", "script", "section", "select", "small", "source", "span", "strike", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "template", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "u", "ul", "var", "video", "wbr", "xmp", ].forEach(tagname=>
 {
