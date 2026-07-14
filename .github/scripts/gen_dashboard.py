@@ -85,6 +85,40 @@ def render(root: Path, repo: str) -> str:
     main_pdf = "av2-isobmff_Spec.pdf"
     has_main_pdf = (root / "main" / main_pdf).exists()
 
+    # GitHub mark (Octicons mark-github) — inline so it needs no external
+    # asset; inherits the link colour via fill="currentColor".
+    _gh_path = (
+        "M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19"
+        "-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-."
+        "15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28"
+        "-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1."
+        "02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53"
+        "-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1"
+        ".87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46."
+        "55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+    )
+    github_icon = (
+        '<svg class="gh-icon" viewBox="0 0 16 16" width="14" height="14" '
+        f'fill="currentColor" aria-hidden="true"><path d="{_gh_path}"></path></svg>'
+    )
+
+    def card_time(rel: str) -> str:
+        """Render the last-published timestamp for a folder, if recorded.
+
+        publish.sh writes ``<folder>/.published-at`` (UTC) when it publishes a
+        build; file mtimes are unreliable because a fresh gh-pages clone resets
+        them, so the persisted marker is the source of truth.
+        """
+        marker = root / rel / ".published-at"
+        try:
+            ts = marker.read_text(encoding="utf-8").strip() if marker.exists() else ""
+        except OSError:
+            ts = ""
+        if not ts:
+            return ""
+        return f'<span class="card-time" title="Last updated">{html.escape(ts)}</span>'
+
+
     cards = []
     for n in pr_numbers:
         info = meta.get(n, {})
@@ -103,13 +137,13 @@ def render(root: Path, repo: str) -> str:
 
         cards.append(f"""
       <article class="card">
+        {card_time(f"pr/{n}")}
         <h3><a href="./pr/{n}/index.html">PR #{n}: {title}</a> {stale_badge}</h3>
         <p class="meta">{author_line}{branch_line}</p>
         <p class="links">
-          <a href="./pr/{n}/index.html">📄 Spec</a>
-          <a href="./pr/{n}/diff_viewer.html">🔀 Diff viewer</a>
-          <a href="./pr/{n}/diff.html">± Diff</a>
-          <a href="{repo_url}/pull/{n}">🔗 PR #{n}</a>
+          <a href="./pr/{n}/index.html">Spec</a>
+          <a href="./pr/{n}/diff_viewer.html">Diff viewer</a>
+          <a href="{repo_url}/pull/{n}">{github_icon} PR #{n}</a>
         </p>
       </article>""")
 
@@ -117,16 +151,17 @@ def render(root: Path, repo: str) -> str:
         cards.append('<p class="empty">No open pull requests with previews right now.</p>')
 
     pdf_link = (
-        f'\n          <a href="./main/{main_pdf}">📕 PDF</a>' if has_main_pdf else ""
+        f'\n          <a href="./main/{main_pdf}">PDF</a>' if has_main_pdf else ""
     )
     main_card = (
         f"""
       <article class="card main">
+        {card_time("main")}
         <h3><a href="./main/index.html">Main specification</a></h3>
         <p class="meta">Latest build of the <code>main</code> branch</p>
         <p class="links">
-          <a href="./main/index.html">📄 Spec</a>{pdf_link}
-          <a href="{repo_url}">🔗 Repository</a>
+          <a href="./main/index.html">Spec</a>{pdf_link}
+          <a href="{repo_url}">{github_icon} Repository</a>
         </p>
       </article>"""
         if has_main
@@ -150,10 +185,16 @@ def render(root: Path, repo: str) -> str:
     h2 {{ margin-top: 2rem; border-bottom: 1px solid #ccc3; padding-bottom: 0.3rem; }}
     .card {{
       border: 1px solid #8884; border-radius: 10px; padding: 1rem 1.25rem;
-      margin: 1rem 0; background: #8881;
+      margin: 1rem 0; background: #8881; position: relative;
     }}
     .card.main {{ border-color: #3b82f6aa; background: #3b82f611; }}
     .card h3 {{ margin: 0 0 0.35rem; font-size: 1.1rem; }}
+    .card-time {{
+      position: absolute; top: 0.7rem; right: 1rem;
+      color: #999; font-size: 0.72rem; white-space: nowrap;
+    }}
+    .gh-icon {{ vertical-align: -2px; color: #1f2328; }}
+    @media (prefers-color-scheme: dark) {{ .gh-icon {{ color: #e6edf3; }} }}
     .meta {{ margin: 0.2rem 0 0.6rem; color: #777; font-size: 0.9rem; }}
     .links a {{ margin-right: 1rem; text-decoration: none; white-space: nowrap; }}
     .links a:hover {{ text-decoration: underline; }}

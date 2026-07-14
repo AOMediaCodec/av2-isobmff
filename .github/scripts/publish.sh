@@ -66,12 +66,16 @@ else
 fi
 
 # --- Apply the requested change to the tree -------------------------------
+# UTC timestamp recorded in each published folder so the dashboard can show a
+# reliable "last updated" per card (file mtimes reset on gh-pages clone).
+PUBLISHED_AT="$(date -u '+%Y-%m-%d %H:%M UTC')"
 case "$MODE" in
   main)
     echo "Publishing main build -> main/"
     rm -rf "$PAGES_DIR/main"
     mkdir -p "$PAGES_DIR/main"
     cp -R "$BUILD_DIR/." "$PAGES_DIR/main/"
+    printf '%s' "$PUBLISHED_AT" > "$PAGES_DIR/main/.published-at"
     ;;
   pr)
     : "${ARG:?PR number required}"
@@ -79,6 +83,7 @@ case "$MODE" in
     rm -rf "${PAGES_DIR:?}/pr/$ARG"
     mkdir -p "$PAGES_DIR/pr/$ARG"
     cp -R "$BUILD_DIR/." "$PAGES_DIR/pr/$ARG/"
+    printf '%s' "$PUBLISHED_AT" > "$PAGES_DIR/pr/$ARG/.published-at"
     ;;
   pr-delete)
     : "${ARG:?PR number required}"
