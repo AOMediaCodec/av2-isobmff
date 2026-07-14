@@ -175,6 +175,14 @@ def render(root: Path, repo: str) -> str:
     Generated automatically by GitHub Actions ·
     <a href="{repo_url}">{html.escape(repo)}</a>
   </footer>
+
+  <script>
+    // Register the kill-switch worker to evict any stale spec service worker
+    // that a previous (root-served) deployment left registered at scope "/".
+    if ('serviceWorker' in navigator) {{
+      navigator.serviceWorker.register('./sw.js').catch(function () {{}});
+    }}
+  </script>
 </body>
 </html>
 """

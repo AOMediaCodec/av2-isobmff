@@ -93,6 +93,9 @@ esac
 
 # --- Regenerate the root dashboard ----------------------------------------
 touch "$PAGES_DIR/.nojekyll"
+# Kill-switch service worker at the site root: evicts any stale spec worker a
+# previous root-served deployment registered at scope "/". Served as sw.js.
+cp "$SCRIPT_DIR/kill-sw.js" "$PAGES_DIR/sw.js"
 REPO="$REPO" python3 "$SCRIPT_DIR/gen_dashboard.py" "$PAGES_DIR"
 
 # --- Commit & push (with rebase-retry to survive races) -------------------

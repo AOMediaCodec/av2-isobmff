@@ -1,13 +1,16 @@
 """Word document (DOCX) export for compiled specifications.
 
-Converts the compiled HTML specification into a Microsoft Word document
-using pandoc for the core HTML-to-DOCX conversion and python-docx for
-post-processing (metadata, headers/footers, page setup).
+Converts the compiled HTML specification into a native Microsoft Word document
+using python-docx only — no external binaries. The compiled HTML DOM (already
+enriched by SpecBuild with clause/figure/table numbering and resolved
+cross-references) is walked directly into Word paragraphs, tables, figures,
+lists and inline runs, then post-processed (metadata, headers/footers, page
+setup) — the same enrich-once / serialize-many model used by the STS and IsoDoc
+exporters.
 
 Requirements:
 
-- **pandoc** (>= 2.0) must be on the system PATH
-- **python-docx** (pip install python-docx) for post-processing
+- **python-docx** (``pip install python-docx``) — the only dependency.
 
 Usage::
 
@@ -20,7 +23,6 @@ from __future__ import annotations
 import logging
 import re
 import shutil
-import subprocess
 import tempfile
 from pathlib import Path
 
@@ -115,28 +117,6 @@ def _set_cell_shading(cell, qn, fill: str) -> None:
 # ---------------------------------------------------------------------------
 # Pandoc availability check
 # ---------------------------------------------------------------------------
-
-
-def _check_pandoc() -> str | None:
-    """Return the pandoc executable path, or None if not found or version too old."""
-    pandoc = shutil.which("pandoc")
-    if pandoc is None:
-        logging.error(
-            "pandoc not found on PATH. Install pandoc >= 2.0: https://pandoc.org/installing.html"
-        )
-        return None
-
-    try:
-        result = subprocess.run([pandoc, "--version"], capture_output=True, text=True, timeout=5)
-        version_line = result.stdout.split("\n")[0]
-        m = re.search(r"pandoc\s+(\d+)\.", version_line)
-        if m and int(m.group(1)) < 2:
-            logging.error(f"pandoc version too old ({version_line.strip()}). Need >= 2.0")
-            return None
-    except Exception as e:
-        logging.warning(f"Could not verify pandoc version: {e}")
-
-    return pandoc
 
 
 def _check_python_docx() -> bool:
@@ -500,69 +480,395 @@ def preprocess_html_for_docx(html_path: Path, output_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def _run_pandoc(
+def _build_docx_native(
     html_path: Path,
     docx_path: Path,
     *,
     reference_doc: Path | None = None,
+    title: str | None = None,
     toc: bool = True,
     toc_depth: int = 3,
-    pandoc_path: str = "pandoc",
     resource_path: Path | None = None,
 ) -> bool:
-    """Run pandoc to convert HTML to DOCX.
+    """Build a DOCX natively from the (preprocessed) HTML DOM with python-docx.
+
+    Walks the enriched HTML — which already carries SpecBuild's clause/figure/
+    table numbering and resolved cross-references — into Word headings,
+    paragraphs, tables, figures, lists and inline runs. No external tools.
 
     Args:
-        html_path: Input HTML file.
+        html_path: Input (preprocessed) HTML file.
         docx_path: Output DOCX file.
-        reference_doc: Optional Word template for styles.
-        toc: Whether to generate a table of contents.
-        pandoc_path: Path to the pandoc executable.
-        resource_path: Directory for resolving relative paths (images, CSS).
+        reference_doc: Optional Word template supplying base styles.
+        title: Document title (emitted as the Title paragraph).
+        toc: Whether to insert a Table of Contents field.
+        toc_depth: TOC heading depth.
+        resource_path: Directory for resolving relative image paths.
 
     Returns:
-        True if conversion succeeded.
+        True on success, False if python-docx is unavailable or the build fails.
     """
-    cmd = [
-        pandoc_path,
-        str(html_path),
-        "-f",
-        "html+tex_math_dollars+tex_math_single_backslash",
-        "-t",
-        "docx",
-        "-o",
-        str(docx_path),
-        "--wrap=none",
-    ]
-
-    if toc:
-        cmd.extend(["--toc", f"--toc-depth={toc_depth}"])
-
-    if reference_doc and reference_doc.exists():
-        cmd.extend(["--reference-doc", str(reference_doc)])
-
-    if resource_path:
-        cmd.extend(["--resource-path", str(resource_path)])
-
-    logging.info(f"Running pandoc: {' '.join(cmd[:6])}...")
     try:
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=120,
-        )
-        if result.stderr:
-            for line in result.stderr.strip().split("\n"):
-                if line.strip():
-                    logging.debug(f"pandoc: {line}")
-        return True
-    except subprocess.CalledProcessError as e:
-        logging.error(f"pandoc conversion failed: {e}")
-        if e.stderr:
-            logging.error(f"pandoc stderr: {e.stderr[:500]}")
+        from docx import Document
+    except ImportError:
+        logging.error("python-docx not available; cannot generate DOCX. Install python-docx.")
         return False
+
+    from specbuild.utils import get_bs4
+
+    try:
+        BS = get_bs4()
+        soup = BS(html_path.read_text(encoding="utf-8"), "html.parser")
+    except Exception:
+        logging.error("Failed to parse HTML for DOCX build", exc_info=True)
+        return False
+
+    try:
+        doc = Document(str(reference_doc)) if reference_doc and reference_doc.exists() else Document()
+        writer = _DocxWriter(doc, base_dir=resource_path or html_path.parent)
+        writer.build(soup, title=title, toc=toc, toc_depth=toc_depth)
+        doc.save(str(docx_path))
+        return True
+    except Exception:
+        logging.error("Native DOCX build failed", exc_info=True)
+        return False
+
+
+# Block-level HTML tags handled directly by the writer (others recurse).
+_BLOCK_TAGS = frozenset(
+    {
+        "section",
+        "div",
+        "p",
+        "ul",
+        "ol",
+        "dl",
+        "table",
+        "figure",
+        "pre",
+        "blockquote",
+        "aside",
+        "details",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+    }
+)
+_HEADING_TAGS = frozenset({"h1", "h2", "h3", "h4", "h5", "h6"})
+# Inline tags producing character formatting.
+_BOLD_TAGS = frozenset({"strong", "b", "dfn"})
+_ITALIC_TAGS = frozenset({"em", "i", "var", "cite"})
+_MONO_TAGS = frozenset({"code", "tt", "kbd", "samp"})
+
+
+class _DocxWriter:
+    """Render an enriched-HTML soup into a python-docx ``Document``."""
+
+    def __init__(self, doc, base_dir: Path) -> None:
+        self.doc = doc
+        self.base_dir = base_dir
+
+    # -- entry ---------------------------------------------------------------
+    def build(self, soup, *, title: str | None, toc: bool, toc_depth: int) -> None:
+        if title:
+            try:
+                self.doc.add_heading(title, level=0)
+            except Exception:
+                self.doc.add_paragraph(title)
+        if toc:
+            self._add_toc(toc_depth)
+        body = soup.find("main") or soup.find("body") or soup
+        self._render_blocks(body)
+
+    # -- block dispatch ------------------------------------------------------
+    def _render_blocks(self, container) -> None:
+        from bs4 import NavigableString, Tag
+
+        for child in getattr(container, "children", []):
+            if isinstance(child, NavigableString):
+                text = str(child).strip()
+                if text:
+                    self.doc.add_paragraph(text)
+                continue
+            if not isinstance(child, Tag):
+                continue
+            name = child.name
+            if name in _HEADING_TAGS:
+                self._render_heading(child)
+            elif name == "p":
+                self._render_paragraph(child)
+            elif name in ("ul", "ol"):
+                self._render_list(child, ordered=(name == "ol"), level=0)
+            elif name == "dl":
+                self._render_dl(child)
+            elif name == "table":
+                self._render_table(child)
+            elif name == "figure":
+                self._render_figure(child)
+            elif name == "pre":
+                self._render_pre(child)
+            elif name in ("section", "div", "blockquote", "aside", "details"):
+                # Transparent wrappers — recurse into their children.
+                self._render_blocks(child)
+            # Unknown/inline-only blocks: ignore (scripts/styles stripped earlier).
+
+    # -- headings ------------------------------------------------------------
+    def _render_heading(self, el) -> None:
+        level = int(el.name[1])
+        text = el.get_text(" ", strip=True)
+        if not text:
+            return
+        # Word built-in heading styles go to level 9; clamp.
+        para = self.doc.add_heading(level=min(level, 9))
+        self._render_inline(para, el)
+        # add_heading() created an empty run-less paragraph; if inline produced
+        # nothing, fall back to plain text.
+        if not para.runs:
+            para.add_run(text)
+
+    # -- paragraphs ----------------------------------------------------------
+    def _render_paragraph(self, el) -> None:
+        if not el.get_text(strip=True) and not el.find("img"):
+            return
+        para = self.doc.add_paragraph()
+        self._render_inline(para, el)
+
+    # -- lists ---------------------------------------------------------------
+    def _render_list(self, el, *, ordered: bool, level: int) -> None:
+        from bs4 import Tag
+
+        style = "List Number" if ordered else "List Bullet"
+        if level > 0:
+            style = f"{style} {level + 1}"
+        for li in el.find_all("li", recursive=False):
+            para = self.doc.add_paragraph(style=self._safe_style(style, ordered, level))
+            self._render_inline(para, li, skip_nested_lists=True)
+            for sub in li.find_all(["ul", "ol"], recursive=False):
+                self._render_list(sub, ordered=(sub.name == "ol"), level=level + 1)
+            # Block children inside <li> (e.g. nested <p>, <table>) — render after.
+            for blk in li.find_all(["p", "table", "figure", "pre"], recursive=False):
+                if blk.name == "p":
+                    self._render_paragraph(blk)
+                elif blk.name == "table":
+                    self._render_table(blk)
+                elif blk.name == "figure":
+                    self._render_figure(blk)
+                elif blk.name == "pre":
+                    self._render_pre(blk)
+            _ = Tag  # silence unused in some linters
+
+    def _safe_style(self, style: str, ordered: bool, level: int):
+        """Return *style* if present in the document, else a safe fallback."""
+        try:
+            _ = self.doc.styles[style]
+            return style
+        except KeyError:
+            return "List Number" if ordered else "List Bullet"
+
+    # -- definition lists ----------------------------------------------------
+    def _render_dl(self, el) -> None:
+        nodes = el.find_all(["dt", "dd"], recursive=False)
+        pending_terms: list = []
+        for node in nodes:
+            if node.name == "dt":
+                pending_terms.append(node)
+            else:  # dd
+                term_text = " ".join(t.get_text(" ", strip=True) for t in pending_terms).strip()
+                pending_terms = []
+                para = self.doc.add_paragraph()
+                if term_text:
+                    run = para.add_run(term_text + "  ")
+                    run.bold = True
+                self._render_inline(para, node)
+
+    # -- preformatted --------------------------------------------------------
+    def _render_pre(self, el) -> None:
+        text = el.get_text()
+        para = self.doc.add_paragraph(style=self._safe_style("No Spacing", False, 0))
+        run = para.add_run(text)
+        run.font.name = "Courier New"
+
+    # -- figures -------------------------------------------------------------
+    def _render_figure(self, el) -> None:
+        from docx.shared import Inches
+
+        img = el.find("img")
+        if img is not None:
+            src = img.get("src", "")
+            if src and not src.startswith(("http://", "https://", "data:")):
+                img_path = (self.base_dir / src).resolve()
+                if img_path.exists():
+                    try:
+                        self.doc.add_picture(str(img_path), width=Inches(6.0))
+                    except Exception:
+                        logging.debug("Could not embed image %s", img_path)
+        cap = el.find("figcaption")
+        if cap is not None and cap.get_text(strip=True):
+            para = self.doc.add_paragraph()
+            run = para.add_run(cap.get_text(" ", strip=True))
+            run.italic = True
+            run.font.size = self._pt(9)
+
+    # -- tables --------------------------------------------------------------
+    def _render_table(self, el) -> None:
+        cap = el.find("caption")
+        if cap is not None and cap.get_text(strip=True):
+            para = self.doc.add_paragraph()
+            run = para.add_run(cap.get_text(" ", strip=True))
+            run.bold = True
+            run.font.size = self._pt(9)
+
+        # Gather rows from thead+tbody (or the table directly), non-recursively.
+        rows = []
+        for grp in el.find_all(["thead", "tbody", "tfoot"], recursive=False):
+            rows.extend(grp.find_all("tr", recursive=False))
+        rows.extend(el.find_all("tr", recursive=False))
+        if not rows:
+            return
+        ncols = max(len(r.find_all(["td", "th"], recursive=False)) for r in rows)
+        if ncols == 0:
+            return
+
+        table = self.doc.add_table(rows=0, cols=ncols)
+        try:
+            table.style = "Table Grid"
+        except KeyError:
+            pass
+        for tr in rows:
+            cells = tr.find_all(["td", "th"], recursive=False)
+            row_cells = table.add_row().cells
+            for i, cell in enumerate(cells):
+                if i >= ncols:
+                    break
+                tc = row_cells[i]
+                # Reuse the auto-created empty paragraph.
+                para = tc.paragraphs[0]
+                self._render_inline(para, cell)
+                if cell.name == "th":
+                    for run in para.runs:
+                        run.bold = True
+
+    # -- inline runs ---------------------------------------------------------
+    def _render_inline(self, para, el, *, skip_nested_lists: bool = False) -> None:
+        self._emit_inline(para, el, bold=False, italic=False, mono=False,
+                          skip_nested_lists=skip_nested_lists)
+
+    def _emit_inline(self, para, node, *, bold, italic, mono, skip_nested_lists=False) -> None:
+        from bs4 import NavigableString, Tag
+
+        for child in getattr(node, "children", []):
+            if isinstance(child, NavigableString):
+                text = str(child)
+                if text:
+                    run = para.add_run(text)
+                    run.bold = bold or None
+                    run.italic = italic or None
+                    if mono:
+                        run.font.name = "Courier New"
+                continue
+            if not isinstance(child, Tag):
+                continue
+            name = child.name
+            if name in ("script", "style"):
+                continue
+            if skip_nested_lists and name in ("ul", "ol"):
+                continue
+            if name in ("p", "table", "figure", "pre") and skip_nested_lists:
+                continue  # block children of <li> handled separately
+            if name == "br":
+                para.add_run().add_break()
+                continue
+            if name == "img":
+                continue  # images handled at figure level
+            if name == "a":
+                self._emit_link(para, child, bold=bold, italic=italic, mono=mono)
+                continue
+            nb = bold or (name in _BOLD_TAGS)
+            ni = italic or (name in _ITALIC_TAGS)
+            nm = mono or (name in _MONO_TAGS)
+            self._emit_inline(para, child, bold=nb, italic=ni, mono=nm,
+                              skip_nested_lists=skip_nested_lists)
+
+    def _emit_link(self, para, a, *, bold, italic, mono) -> None:
+        """Emit an <a> as a hyperlink (internal bookmark or external URL)."""
+        href = a.get("href", "")
+        text = a.get_text(" ", strip=True)
+        if not text:
+            return
+        try:
+            if href.startswith("#"):
+                self._add_internal_hyperlink(para, href[1:], text)
+                return
+            if href.startswith(("http://", "https://", "mailto:")):
+                self._add_external_hyperlink(para, href, text)
+                return
+        except Exception:
+            pass  # fall back to styled text
+        run = para.add_run(text)
+        run.bold = bold or None
+        run.italic = italic or None
+
+    def _add_internal_hyperlink(self, para, anchor: str, text: str) -> None:
+        from docx.oxml.ns import qn
+
+        hyperlink = _make_oxml_element("w:hyperlink", {"w:anchor": anchor})
+        run = _make_oxml_element("w:r")
+        rpr = _make_oxml_element("w:rPr")
+        rstyle = _make_oxml_element("w:rStyle", {"w:val": "Hyperlink"})
+        rpr.append(rstyle)
+        run.append(rpr)
+        wt = _make_oxml_element("w:t")
+        wt.text = text
+        wt.set(qn("xml:space"), "preserve")
+        run.append(wt)
+        hyperlink.append(run)
+        para._p.append(hyperlink)
+
+    def _add_external_hyperlink(self, para, url: str, text: str) -> None:
+        part = para.part
+        r_id = part.relate_to(
+            url,
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink",
+            is_external=True,
+        )
+        from docx.oxml.ns import qn
+
+        hyperlink = _make_oxml_element("w:hyperlink", {qn("r:id"): r_id})
+        run = _make_oxml_element("w:r")
+        rpr = _make_oxml_element("w:rPr")
+        rstyle = _make_oxml_element("w:rStyle", {"w:val": "Hyperlink"})
+        rpr.append(rstyle)
+        run.append(rpr)
+        wt = _make_oxml_element("w:t")
+        wt.text = text
+        wt.set(qn("xml:space"), "preserve")
+        run.append(wt)
+        hyperlink.append(run)
+        para._p.append(hyperlink)
+
+    # -- table of contents ---------------------------------------------------
+    def _add_toc(self, depth: int) -> None:
+        para = self.doc.add_paragraph()
+        run = para.add_run()
+        fld_begin = _make_oxml_element("w:fldChar", {"w:fldCharType": "begin"})
+        instr = _make_oxml_element("w:instrText", {"xml:space": "preserve"})
+        instr.text = f'TOC \\o "1-{depth}" \\h \\z \\u'
+        fld_sep = _make_oxml_element("w:fldChar", {"w:fldCharType": "separate"})
+        fld_end = _make_oxml_element("w:fldChar", {"w:fldCharType": "end"})
+        r = run._r
+        r.append(fld_begin)
+        r.append(instr)
+        r.append(fld_sep)
+        r.append(fld_end)
+
+    def _pt(self, size: int):
+        from docx.shared import Pt
+
+        return Pt(size)
+
 
 
 # ---------------------------------------------------------------------------
@@ -874,7 +1180,7 @@ def generate_docx(
     The conversion pipeline:
 
     1. Preprocess the HTML (strip web-only elements, fix paths)
-    2. Run pandoc for the core HTML → DOCX conversion
+    2. Build the DOCX natively from the HTML DOM with python-docx
     3. Post-process with python-docx (metadata, headers, footers, page setup)
 
     Args:
@@ -892,18 +1198,17 @@ def generate_docx(
     Returns:
         Path to the generated DOCX file, or ``None`` on failure.
     """
-    pandoc_path = _check_pandoc()
-    if pandoc_path is None:
+    if not _check_python_docx():
+        logging.error("python-docx is required for DOCX export. Install with: pip install python-docx")
         return None
 
     if not html_path.exists():
         logging.error(f"HTML file not found: {html_path}")
         return None
 
-    has_docx = _check_python_docx()
     doc_title = title or CONFIG.spec_full_name
 
-    logging.info(f"Generating Word document from {html_path.name}")
+    logging.info(f"Generating Word document from {html_path.name} (native python-docx)")
 
     # Step 1: Preprocess HTML
     with tempfile.TemporaryDirectory() as tmp_dir:
@@ -911,32 +1216,31 @@ def generate_docx(
         preprocessed = tmp / "preprocessed.html"
         preprocess_html_for_docx(html_path, preprocessed)
 
-        # Step 2: Run pandoc (use --resource-path so pandoc resolves
-        # images/CSS relative to the original HTML location).
+        # Step 2: Build the DOCX natively from the (enriched) HTML DOM. Resolve
+        # relative image paths against the original HTML location.
         tmp_docx = tmp / "output.docx"
-        success = _run_pandoc(
+        success = _build_docx_native(
             preprocessed,
             tmp_docx,
             reference_doc=reference_doc,
+            title=doc_title,
             toc=toc,
             toc_depth=toc_depth,
-            pandoc_path=pandoc_path,
             resource_path=html_path.parent,
         )
         if not success:
             return None
 
         # Step 3: Post-process with python-docx
-        if has_docx:
-            _postprocess_docx(
-                tmp_docx,
-                title=doc_title,
-                branch=branch,
-                sha=sha,
-                date=date,
-                organization=organization,
-                page_size=page_size,
-            )
+        _postprocess_docx(
+            tmp_docx,
+            title=doc_title,
+            branch=branch,
+            sha=sha,
+            date=date,
+            organization=organization,
+            page_size=page_size,
+        )
 
         # Move to final location
         shutil.copy2(tmp_docx, output_path)

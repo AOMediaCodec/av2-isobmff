@@ -54,7 +54,9 @@ jobs:
         run: |
           git config --global credential.helper '!f() { echo "username=x-access-token"; echo "password=${{ secrets.GITHUB_TOKEN }}"; }; f'
           python tools/specbuild/compile.py \
-            --profile publication-html \
+            --profile publication \
+            --no-pdf \
+            --no-pwa \
             --toc-leaders table \
             --strict-sdl-syntax \
             --diff --diff_viewer \

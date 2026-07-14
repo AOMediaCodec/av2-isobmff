@@ -204,7 +204,7 @@ _VIEWER_JS = """\
     var tocModeSelect = document.getElementById('toc-mode');
     var syncIndicator = document.getElementById('sync-indicator');
 
-    var syncEnabled = true;
+    var syncEnabled = false;
     var isSyncing = false;
     var activeSection = null;
 
@@ -356,7 +356,7 @@ def _build_viewer_html(
 <div class="toolbar">
     <span class="title">Diff Viewer</span>
     <span class="sep"></span>
-    <label><input type="checkbox" class="pane-toggle" data-pane="anchor" checked> Anchor</label>
+    <label><input type="checkbox" class="pane-toggle" data-pane="anchor"> Anchor</label>
     <label><input type="checkbox" class="pane-toggle" data-pane="current" checked> Current</label>
     <label><input type="checkbox" class="pane-toggle" data-pane="diff" checked> Diff</label>
     <span class="sep"></span>
@@ -368,8 +368,8 @@ def _build_viewer_html(
         </select>
     </label>
     <span class="sep"></span>
-    <label><input type="checkbox" id="sync-toggle" checked> Sync scroll</label>
-    <span class="sync-indicator" id="sync-indicator">Scroll sync: ON</span>
+    <label><input type="checkbox" id="sync-toggle"> Sync scroll</label>
+    <span class="sync-indicator" id="sync-indicator">Scroll sync: OFF</span>
 </div>
 
 <!-- Hidden TOC data stores -->
@@ -391,7 +391,7 @@ def _build_viewer_html(
 
     <!-- Three spec panes -->
     <div class="panes">
-        <div class="pane" id="pane-anchor">
+        <div class="pane hidden" id="pane-anchor">
             <div class="pane-header anchor">Anchor (Previous)</div>
             <iframe id="iframe-anchor"></iframe>
         </div>
