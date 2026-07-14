@@ -149,10 +149,14 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
 
     logging.info(f"  Removed {id_changes} auto-generated IDs")
 
-    # 8. Normalize whitespace in table cells to avoid spurious diffs
-    # SDL tables can have different whitespace that doesn't affect content
+    # 8. Normalize whitespace in table cells and definition list entries to
+    # avoid spurious diffs. SDL tables can have different whitespace that
+    # doesn't affect content, and reference entries (<dt>/<dd>, e.g. "[AV2]"
+    # and its citation) pick up trailing newlines in the bare anchor but not
+    # the enhanced build after HTML reserialization — whitespace-only
+    # differences htmldiff would otherwise flag.
     cell_changes = 0
-    for cell in soup.find_all(["td", "th"]):
+    for cell in soup.find_all(["td", "th", "dt", "dd"]):
         # Normalize all text nodes within the cell, preserving tag structure
         cell_modified = False
         for text_node in cell.find_all(string=True):
@@ -165,6 +169,24 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
             cell_changes += 1
 
     logging.info(f"  Normalized whitespace in {cell_changes} table cells")
+
+    # 8b. Override the bibliography-link white-space rule for the diff view.
+    # Bikeshed's default stylesheet sets `[data-link-type=biblio]
+    # { white-space: pre }`. htmldiff emits word-per-line output, so it leaves
+    # literal newlines inside citation links (`<a>...[AV2]...</a>`) that `pre`
+    # then renders as broken, one-token-per-line references. Normalizing the
+    # input whitespace does not help — htmldiff re-inserts the newlines — so we
+    # inject a CSS override into <head>, which htmldiff preserves into diff.html.
+    # (print.css already does the same for print media.)
+    biblio_changes = 0
+    head = soup.find("head")
+    if head is not None:
+        override = soup.new_tag("style", id="diff-biblio-whitespace-fix")
+        override.string = "[data-link-type=biblio]{white-space:normal !important;}"
+        head.append(override)
+        biblio_changes = 1
+
+    logging.info(f"  Injected biblio white-space override: {biblio_changes}")
 
     # 9. Normalize SDL table inline indentation styles
     # The padding-left value can vary between builds depending on source
@@ -224,6 +246,22 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
 
     logging.info(f"  Unwrapped {line_anchor_changes} line-anchor spans")
 
+    # 11b. Unwrap Bikeshed syntax-highlight tokens (<c- ...> elements) in code.
+    # Bikeshed wraps each highlighted token as e.g. `<c- b="">unsigned</c->`,
+    # but the diff anchor is built with the highlight fence stripped
+    # (hack_bs_for_diff), so its code is plain text with no tokens. htmldiff
+    # cannot align tokenized-vs-plain code, so it misses real code changes and
+    # emits spurious whitespace diffs. Unwrapping the tokens on both sides
+    # reduces code to plain text so genuine edits (e.g. a changed field width
+    # or an added struct member) diff correctly. The diff view loses code
+    # colouring, but the Current pane (not preprocessed) keeps it.
+    c_token_changes = 0
+    for token in soup.find_all("c-"):
+        token.unwrap()
+        c_token_changes += 1
+
+    logging.info(f"  Unwrapped {c_token_changes} syntax-highlight tokens")
+
     # 12. Normalize code block leading whitespace
     # Auto-indent changes indentation but not semantic content.
     # Collapse all leading whitespace in code lines to a single space.
@@ -276,10 +314,12 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
         + version_changes
         + id_changes
         + cell_changes
+        + biblio_changes
         + sdl_indent_changes
         + tooltip_changes
         + rfc_keyword_changes
         + line_anchor_changes
+        + c_token_changes
         + code_ws_changes
         + artifact_changes
     )
