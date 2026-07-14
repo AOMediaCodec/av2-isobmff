@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
@@ -1492,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="789800b669cb6ec22674bffbd3888db786229dea" name="revision"/>
+<meta content="a0b9443ccd3ed25394bc72705c2d7fab6a4b5c99" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2201,7 +2200,735 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     c-[ss] { color: #664400 } /* Literal.String.Symbol */
 }
 </style>
-<body class="h-entry" style="page: body-pages;">
+<style id="dark-mode-css">
+/* Dark Mode Support
+   Three modes: light (default), dark, auto (follows OS preference).
+   Works by redefining the CSS custom properties from custom.css. */
+
+/* ── Dark theme variable overrides ──────────────────────────────── */
+
+[data-theme="dark"] {
+  --color-text:         #e0e0e0;
+  --color-body:         #d4d4d4;
+  --color-meta:         #b0b0b0;
+  --color-muted:        #999;
+  --color-accent:       #5ba3d9;
+  --color-link:         #6cb6ff;
+
+  --border-color:       #444;
+  --border-light:       #3a3a3a;
+  --border-subtle:      #333;
+  --border-medium:      #555;
+
+  --bg-code:            #1e1e1e;
+  --bg-header:          #2a2a2a;
+  --bg-white:           #252525;
+
+  --hl-name:            #6cb6ff;
+  --hl-keyword:         #f472b6;
+  --hl-number:          #f59e0b;
+  --hl-punctuation:     #aaa;
+  --hl-comment:         #6a9955;
+  --hl-descriptor:      #6cb6ff;
+
+  /* Bikeshed boilerplate variables */
+  --text:               #e0e0e0;
+  --bg:                 #1a1a1a;
+  --a-normal-text:      #6cb6ff;
+  --a-normal-underline: #4a7ab5;
+  --a-visited-text:     #b48eff;
+  --a-visited-underline:#7a5ab5;
+  --a-hover-bg:         rgba(100, 180, 255, 0.1);
+  --tocnav-normal-text: #999;
+  --tocnav-normal-bg:   #1a1a1a;
+  --tocnav-hover-bg:    #252525;
+  --tocsidebar-text:    #d4d4d4;
+  --tocsidebar-bg:      #222;
+  --tocsidebar-shadow:  rgba(0, 0, 0, 0.4);
+  --tocsidebar-heading-text: #999;
+  --toclink-text:       #d4d4d4;
+  --toclink-underline:  #5ba3d9;
+  --toclink-visited-text: #b48eff;
+  --toclink-visited-underline: #7a5ab5;
+}
+
+/* Auto mode: apply dark variables when OS prefers dark */
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] {
+    --color-text:         #e0e0e0;
+    --color-body:         #d4d4d4;
+    --color-meta:         #b0b0b0;
+    --color-muted:        #999;
+    --color-accent:       #5ba3d9;
+    --color-link:         #6cb6ff;
+
+    --border-color:       #444;
+    --border-light:       #3a3a3a;
+    --border-subtle:      #333;
+    --border-medium:      #555;
+
+    --bg-code:            #1e1e1e;
+    --bg-header:          #2a2a2a;
+    --bg-white:           #252525;
+
+    --hl-name:            #6cb6ff;
+    --hl-keyword:         #f472b6;
+    --hl-number:          #f59e0b;
+    --hl-punctuation:     #aaa;
+    --hl-comment:         #6a9955;
+    --hl-descriptor:      #6cb6ff;
+
+    /* Bikeshed boilerplate variables */
+    --text:               #e0e0e0;
+    --bg:                 #1a1a1a;
+    --a-normal-text:      #6cb6ff;
+    --a-normal-underline: #4a7ab5;
+    --a-visited-text:     #b48eff;
+    --a-visited-underline:#7a5ab5;
+    --a-hover-bg:         rgba(100, 180, 255, 0.1);
+    --tocnav-normal-text: #999;
+    --tocnav-normal-bg:   #1a1a1a;
+    --tocnav-hover-bg:    #252525;
+    --tocsidebar-text:    #d4d4d4;
+    --tocsidebar-bg:      #222;
+    --tocsidebar-shadow:  rgba(0, 0, 0, 0.4);
+    --tocsidebar-heading-text: #999;
+    --toclink-text:       #d4d4d4;
+    --toclink-underline:  #5ba3d9;
+    --toclink-visited-text: #b48eff;
+    --toclink-visited-underline: #7a5ab5;
+  }
+}
+
+/* ── Body and page background ───────────────────────────────────── */
+
+[data-theme="dark"] body,
+[data-theme="dark"] {
+  background-color: #1a1a1a;
+  color: var(--color-body);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] body,
+  [data-theme="auto"] {
+    background-color: #1a1a1a;
+    color: var(--color-body);
+  }
+}
+
+/* ── Bikeshed boilerplate overrides ─────────────────────────────── */
+/* Override inline styles and boilerplate that don't use CSS variables */
+
+[data-theme="dark"] .head,
+[data-theme="dark"] .head h1 {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] a {
+  color: var(--color-link);
+}
+
+[data-theme="dark"] a:visited {
+  color: #b48eff;
+}
+
+[data-theme="dark"] h1, [data-theme="dark"] h2,
+[data-theme="dark"] h3, [data-theme="dark"] h4,
+[data-theme="dark"] h5, [data-theme="dark"] h6 {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] p,
+[data-theme="dark"] li,
+[data-theme="dark"] dd,
+[data-theme="dark"] dt {
+  color: var(--color-body);
+}
+
+/* Tables */
+[data-theme="dark"] table {
+  color: var(--color-body);
+}
+
+[data-theme="dark"] td,
+[data-theme="dark"] th {
+  border-color: var(--border-color);
+  color: var(--color-body);
+}
+
+[data-theme="dark"] thead th {
+  background-color: var(--bg-header);
+  border-bottom-color: var(--border-medium);
+}
+
+[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* Code */
+[data-theme="dark"] pre,
+[data-theme="dark"] code {
+  color: var(--color-body);
+}
+
+[data-theme="dark"] pre.highlight {
+  background-color: var(--bg-code);
+  border-color: var(--border-light);
+  border-left-color: var(--color-accent);
+}
+
+@media screen {
+  [data-theme="dark"] code {
+    background-color: var(--bg-code);
+  }
+}
+
+/* TOC */
+[data-theme="dark"] #toc,
+[data-theme="dark"] .toc {
+  color: var(--color-body);
+}
+
+[data-theme="dark"] #toc a {
+  color: var(--color-link);
+}
+
+/* Inline notes, issues, examples (Bikeshed generates these) */
+[data-theme="dark"] .note,
+[data-theme="dark"] .advisement,
+[data-theme="dark"] details.note {
+  background-color: #1e2a1e;
+  border-color: #4a7a4a;
+  color: var(--color-body);
+}
+
+[data-theme="dark"] .issue {
+  background-color: #2a1e1e;
+  border-color: #7a4a4a;
+  color: var(--color-body);
+}
+
+[data-theme="dark"] .example {
+  background-color: #1e1e2a;
+  border-color: #4a4a7a;
+  color: var(--color-body);
+}
+
+/* Definition lists and terms */
+[data-theme="dark"] dfn {
+  color: var(--color-text);
+}
+
+/* Horizontal rules */
+[data-theme="dark"] hr {
+  border-color: var(--border-color);
+}
+
+/* ── Auto mode: duplicate overrides for prefers-color-scheme ──── */
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] .head,
+  [data-theme="auto"] .head h1 { color: var(--color-text); }
+  [data-theme="auto"] a { color: var(--color-link); }
+  [data-theme="auto"] a:visited { color: #b48eff; }
+  [data-theme="auto"] h1, [data-theme="auto"] h2,
+  [data-theme="auto"] h3, [data-theme="auto"] h4,
+  [data-theme="auto"] h5, [data-theme="auto"] h6 { color: var(--color-text); }
+  [data-theme="auto"] p,
+  [data-theme="auto"] li,
+  [data-theme="auto"] dd,
+  [data-theme="auto"] dt { color: var(--color-body); }
+  [data-theme="auto"] table { color: var(--color-body); }
+  [data-theme="auto"] td,
+  [data-theme="auto"] th { border-color: var(--border-color); color: var(--color-body); }
+  [data-theme="auto"] thead th { background-color: var(--bg-header); border-bottom-color: var(--border-medium); }
+  [data-theme="auto"] .table-striped tbody tr:nth-of-type(odd) { background-color: rgba(255,255,255,0.04); }
+  [data-theme="auto"] pre,
+  [data-theme="auto"] code { color: var(--color-body); }
+  [data-theme="auto"] pre.highlight { background-color: var(--bg-code); border-color: var(--border-light); border-left-color: var(--color-accent); }
+  [data-theme="auto"] code { background-color: var(--bg-code); }
+  [data-theme="auto"] #toc,
+  [data-theme="auto"] .toc { color: var(--color-body); }
+  [data-theme="auto"] #toc a { color: var(--color-link); }
+  [data-theme="auto"] .note,
+  [data-theme="auto"] .advisement,
+  [data-theme="auto"] details.note { background-color: #1e2a1e; border-color: #4a7a4a; color: var(--color-body); }
+  [data-theme="auto"] .issue { background-color: #2a1e1e; border-color: #7a4a4a; color: var(--color-body); }
+  [data-theme="auto"] .example { background-color: #1e1e2a; border-color: #4a4a7a; color: var(--color-body); }
+  [data-theme="auto"] dfn { color: var(--color-text); }
+  [data-theme="auto"] hr { border-color: var(--border-color); }
+}
+
+/* ── Theme toggle button ────────────────────────────────────────── */
+
+@media screen {
+  #dark-mode-toggle {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 2rem;
+    background: var(--bg-white, #fff);
+    color: var(--color-muted, #666);
+    font-size: 0.75rem;
+    font-family: system-ui, -apple-system, sans-serif;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  #dark-mode-toggle:hover {
+    border-color: var(--color-accent, #034575);
+    color: var(--color-text, #000);
+  }
+
+  #dark-mode-toggle .dm-icon {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  #dark-mode-toggle .dm-label {
+    font-weight: 500;
+  }
+}
+
+/* Hide toggle in print */
+@media print {
+  #dark-mode-toggle {
+    display: none !important;
+  }
+}
+
+</style>
+<style id="rfc-keyword-css">
+/* RFC 2119 Keyword Highlighting */
+.rfc-keyword {
+  font-weight: bold;
+  font-variant: small-caps;
+  font-size: 0.95em;
+  color: #1a1a1a;
+  letter-spacing: 0.02em;
+}
+</style><style id="figure-table-tooltips-css">/* Figure & Table Tooltip Preview Styling */
+
+@media screen {
+  /* ── Shared base ──────────────────────────────────────────────── */
+
+  #fig-tooltip,
+  #tbl-tooltip {
+    position: absolute;
+    z-index: 10001;
+    padding: 0.6em 0.9em;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.15s, transform 0.15s;
+    font-size: 0.9em;
+    line-height: 1.4;
+  }
+
+  #fig-tooltip.visible,
+  #tbl-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Figure tooltip ───────────────────────────────────────────── */
+
+  #fig-tooltip {
+    max-width: 360px;
+    text-align: center;
+  }
+
+  .fig-tooltip-image {
+    max-width: 320px;
+    max-height: 200px;
+    width: auto;
+    height: auto;
+    display: block;
+    margin: 0 auto 0.4em;
+    border-radius: 3px;
+  }
+
+  .fig-tooltip-caption {
+    font-size: 0.85em;
+    color: #555;
+    border-top: 1px solid #eee;
+    padding-top: 0.4em;
+  }
+
+  /* ── Table tooltip ────────────────────────────────────────────── */
+
+  #tbl-tooltip {
+    max-width: 500px;
+    overflow: hidden;
+  }
+
+  .tbl-tooltip-caption {
+    font-weight: 600;
+    font-size: 0.88em;
+    color: #034575;
+    margin-bottom: 0.4em;
+  }
+
+  .tbl-tooltip-preview {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8em;
+  }
+
+  .tbl-tooltip-preview th,
+  .tbl-tooltip-preview td {
+    padding: 0.25em 0.5em;
+    border: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+  }
+
+  .tbl-tooltip-preview thead th {
+    background: #f0f0f0;
+    font-weight: 600;
+  }
+
+  .tbl-tooltip-ellipsis {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    border: none !important;
+    padding-top: 0.3em !important;
+  }
+
+  /* Subtle highlight on figure/table reference links */
+  a.figure-ref,
+  a.table-ref {
+    border-bottom: 1px dashed currentColor;
+    text-decoration: none;
+  }
+
+  a.figure-ref:hover,
+  a.table-ref:hover {
+    background-color: rgba(3, 69, 117, 0.06);
+    border-bottom-style: solid;
+  }
+
+  /* ── Dark mode ────────────────────────────────────────────────── */
+
+  [data-theme="dark"] #fig-tooltip,
+  [data-theme="dark"] #tbl-tooltip {
+    background: #2a2a2a;
+    border-color: #555;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    color: #e0e0e0;
+  }
+
+  [data-theme="dark"] .fig-tooltip-caption {
+    color: #aaa;
+    border-top-color: #444;
+  }
+
+  [data-theme="dark"] .tbl-tooltip-caption {
+    color: #6cb6ff;
+  }
+
+  [data-theme="dark"] .tbl-tooltip-preview th,
+  [data-theme="dark"] .tbl-tooltip-preview td {
+    border-color: #444;
+  }
+
+  [data-theme="dark"] .tbl-tooltip-preview thead th {
+    background: #333;
+  }
+
+  [data-theme="dark"] a.figure-ref:hover,
+  [data-theme="dark"] a.table-ref:hover {
+    background-color: rgba(91, 163, 217, 0.12);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    [data-theme="auto"] #fig-tooltip,
+    [data-theme="auto"] #tbl-tooltip {
+      background: #2a2a2a;
+      border-color: #555;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      color: #e0e0e0;
+    }
+
+    [data-theme="auto"] .fig-tooltip-caption { color: #aaa; border-top-color: #444; }
+    [data-theme="auto"] .tbl-tooltip-caption { color: #6cb6ff; }
+    [data-theme="auto"] .tbl-tooltip-preview th,
+    [data-theme="auto"] .tbl-tooltip-preview td { border-color: #444; }
+    [data-theme="auto"] .tbl-tooltip-preview thead th { background: #333; }
+    [data-theme="auto"] a.figure-ref:hover,
+    [data-theme="auto"] a.table-ref:hover { background-color: rgba(91, 163, 217, 0.12); }
+  }
+}
+
+@media print {
+  #fig-tooltip,
+  #tbl-tooltip {
+    display: none !important;
+  }
+}
+</style><script id="figure-table-tooltips-js">/* Figure & Table Tooltip Previews
+   Shows a preview when hovering over figure-ref and table-ref links. */
+
+(function () {
+  "use strict";
+
+  var FIG_TOOLTIP_ID = "fig-tooltip";
+  var TBL_TOOLTIP_ID = "tbl-tooltip";
+  var SHOW_DELAY = 250;
+  var HIDE_DELAY = 150;
+
+  var figTooltip = null;
+  var tblTooltip = null;
+  var showTimer = null;
+  var hideTimer = null;
+  var activeTooltip = null;
+
+  function getOrCreate(id) {
+    var el = document.getElementById(id);
+    if (!el) {
+      el = document.createElement("div");
+      el.id = id;
+      el.setAttribute("role", "tooltip");
+      document.body.appendChild(el);
+      el.addEventListener("mouseenter", function () { clearTimeout(hideTimer); });
+      el.addEventListener("mouseleave", function () { scheduleHide(); });
+    }
+    return el;
+  }
+
+  function position(tip, anchor) {
+    var rect = anchor.getBoundingClientRect();
+    var top = rect.top + window.scrollY - tip.offsetHeight - 8;
+    var left = rect.left + window.scrollX + rect.width / 2 - tip.offsetWidth / 2;
+    left = Math.max(8, Math.min(left, window.innerWidth - tip.offsetWidth - 8));
+    if (top < window.scrollY + 8) {
+      top = rect.bottom + window.scrollY + 8;
+    }
+    tip.style.top = top + "px";
+    tip.style.left = left + "px";
+  }
+
+  function hideActive() {
+    if (activeTooltip) {
+      activeTooltip.classList.remove("visible");
+      activeTooltip = null;
+    }
+  }
+
+  function scheduleHide() {
+    clearTimeout(showTimer);
+    hideTimer = setTimeout(hideActive, HIDE_DELAY);
+  }
+
+  /* ── Figure tooltip ──────────────────────────────────────────── */
+
+  function showFigure(anchor) {
+    clearTimeout(hideTimer);
+    hideActive();
+
+    var href = anchor.getAttribute("href");
+    if (!href || !href.startsWith("#")) return;
+
+    var figEl = document.getElementById(href.slice(1));
+    if (!figEl) return;
+
+    // Find the figure element (target might be the figure or inside it)
+    var figure = figEl.tagName === "FIGURE" ? figEl : figEl.closest("figure");
+    if (!figure) return;
+
+    var tip = getOrCreate(FIG_TOOLTIP_ID);
+    tip.innerHTML = "";
+
+    // Clone the image (thumbnail)
+    var img = figure.querySelector("img, svg");
+    if (img) {
+      var imgClone = img.cloneNode(true);
+      imgClone.className = "fig-tooltip-image";
+      imgClone.removeAttribute("width");
+      imgClone.removeAttribute("height");
+      tip.appendChild(imgClone);
+    }
+
+    // Caption text
+    var figcaption = figure.querySelector("figcaption");
+    if (figcaption) {
+      var cap = document.createElement("div");
+      cap.className = "fig-tooltip-caption";
+      cap.textContent = figcaption.textContent.trim();
+      tip.appendChild(cap);
+    }
+
+    activeTooltip = tip;
+    tip.classList.add("visible");
+    requestAnimationFrame(function () { position(tip, anchor); });
+  }
+
+  /* ── Table tooltip ───────────────────────────────────────────── */
+
+  function showTable(anchor) {
+    clearTimeout(hideTimer);
+    hideActive();
+
+    var href = anchor.getAttribute("href");
+    if (!href || !href.startsWith("#")) return;
+
+    var targetEl = document.getElementById(href.slice(1));
+    if (!targetEl) return;
+
+    // Find the table element
+    var table = targetEl.tagName === "TABLE" ? targetEl : targetEl.closest("table");
+    if (!table) {
+      // Caption ID might be on the caption itself
+      table = targetEl.parentElement;
+      if (!table || table.tagName !== "TABLE") return;
+    }
+
+    var tip = getOrCreate(TBL_TOOLTIP_ID);
+    tip.innerHTML = "";
+
+    // Caption
+    var caption = table.querySelector("caption");
+    if (caption) {
+      var cap = document.createElement("div");
+      cap.className = "tbl-tooltip-caption";
+      cap.textContent = caption.textContent.trim();
+      tip.appendChild(cap);
+    }
+
+    // Clone first few rows as preview
+    var preview = document.createElement("table");
+    preview.className = "tbl-tooltip-preview";
+
+    var thead = table.querySelector("thead");
+    if (thead) {
+      preview.appendChild(thead.cloneNode(true));
+    }
+
+    var tbody = table.querySelector("tbody");
+    if (tbody) {
+      var previewBody = document.createElement("tbody");
+      var rows = tbody.querySelectorAll("tr");
+      var maxRows = Math.min(rows.length, 3);
+      for (var i = 0; i < maxRows; i++) {
+        previewBody.appendChild(rows[i].cloneNode(true));
+      }
+      if (rows.length > 3) {
+        var ellipsis = document.createElement("tr");
+        var td = document.createElement("td");
+        td.colSpan = 20;
+        td.className = "tbl-tooltip-ellipsis";
+        td.textContent = "\u2026 " + (rows.length - 3) + " more rows";
+        ellipsis.appendChild(td);
+        previewBody.appendChild(ellipsis);
+      }
+      preview.appendChild(previewBody);
+    }
+
+    tip.appendChild(preview);
+
+    activeTooltip = tip;
+    tip.classList.add("visible");
+    requestAnimationFrame(function () { position(tip, anchor); });
+  }
+
+  /* ── Event delegation ────────────────────────────────────────── */
+
+  function init() {
+    document.addEventListener("mouseover", function (e) {
+      var figLink = e.target.closest("a.figure-ref");
+      var tblLink = e.target.closest("a.table-ref");
+      if (!figLink && !tblLink) return;
+
+      clearTimeout(hideTimer);
+      var link = figLink || tblLink;
+      var handler = figLink ? showFigure : showTable;
+      showTimer = setTimeout(function () { handler(link); }, SHOW_DELAY);
+    });
+
+    document.addEventListener("mouseout", function (e) {
+      var link = e.target.closest("a.figure-ref, a.table-ref");
+      if (!link) return;
+      scheduleHide();
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script><style id="toc-bold-primary-only-css">
+/* TOC: only bold top-level entries */
+.toc > li li { font-weight: normal; }
+.toc > li[data-level]:not([data-level="1"]) { font-weight: normal; }
+</style><style id="content-width-css">
+@media screen {
+  body {
+    max-width: 60em;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+}
+</style><style id="page-numbering-css">
+/* Page Numbering — Dual (roman front-matter, arabic body) */
+
+/* Front matter: lowercase roman numerals using built-in page counter */
+@page front-matter {
+  @bottom-right {
+    content: "Page " counter(page, lower-roman);
+    font-size: 9pt;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #666;
+  }
+}
+
+/* Body pages: arabic numerals using custom bodypage counter.
+   The built-in page counter cannot be reliably reset, so we use a
+   separate counter that starts at 0 on <main> and increments per
+   body page. */
+@page body-pages {
+  counter-increment: bodypage;
+  @bottom-right {
+    content: "Page " counter(bodypage);
+    font-size: 9pt;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #666;
+  }
+}
+
+/* Suppress page number on cover/first page */
+@page :first {
+  @bottom-left {
+    content: none;
+  }
+  @bottom-center {
+    content: none;
+  }
+  @bottom-right {
+    content: none;
+  }
+}
+</style><style>.links-banner a:hover { background: #e2e8f0; border-color: #cbd5e0; transform: translateY(-1px); }}</style></head><body class="h-entry" style="page: body-pages;">
 <div class="head" style="page: front-matter;">
 <p data-fill-with="logo"><a class="logo" href="https://www.aomedia.org/" style="width: 200px">
 <img alt="AOM" height="60" src="https://aomedia.org/assets/images/aomedia-logo-rgb.svg" width="200"/>
@@ -2209,17 +2936,17 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </p>
 <h1 class="no-ref p-name" id="title">AV2 Codec ISO Media File Format Binding</h1>
 <h2 class="heading no-num no-ref no-toc settled" id="profile-and-date"><span class="content">Working Group Draft,
-    <time class="dt-updated" datetime="2026-07-13">13 July 2026</time></span></h2>
+    <time class="dt-updated" datetime="2026-07-14">14 July 2026</time></span></h2>
 <div data-fill-with="spec-metadata">
 <dl>
 <dt>This version:
-     <dd><a class="u-url" href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html">https://aomediacodec.github.io/av2-isobmff/v1.0.0.html</a>
-<dt>Issue Tracking:
-     <dd><a href="https://github.com/AOMediaCodec/av2-isobmff/issues/">GitHub</a>
-<dt class="editor">Editors:
-     <dd class="editor h-card p-author vcard"><span class="fn p-name">TBD</span>
+     </dt><dd><a class="u-url" href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html">https://aomediacodec.github.io/av2-isobmff/v1.0.0.html</a>
+</dd><dt>Issue Tracking:
+     </dt><dd><a href="https://github.com/AOMediaCodec/av2-isobmff/issues/">GitHub</a>
+</dd><dt class="editor">Editors:
+     </dt><dd class="editor h-card p-author vcard"><span class="fn p-name">TBD</span>
 <dd class="editor h-card p-author vcard"><span class="fn p-name">TBD</span>
-</dd></dd></dt></dd></dt></dd></dt></dl>
+</dd></dd></dl>
 </div>
 <div data-fill-with="warning">
 <details class="annoying-warning" open="">
@@ -2228,10 +2955,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </details>
 </div>
 <p class="copyright" data-fill-with="copyright">
-<p>Copyright 2026, <a href="https://aomedia.org">Alliance for Open Media</a></p>
+</p><p>Copyright 2026, <a href="https://aomedia.org">Alliance for Open Media</a></p>
 <p>Licensing information is available at <a href="https://www.aomedia.org/license/">https://www.aomedia.org/license/</a></p>
 <p>The MATERIALS ARE PROVIDED “AS IS.” The Alliance for Open Media, its members, and its contributors expressly disclaim any warranties (express, implied, or otherwise), including implied warranties of merchantability, non-infringement, fitness for a particular purpose, or title, related to the materials. The entire risk as to implementing or otherwise using the materials is assumed by the implementer and user. IN NO EVENT WILL THE ALLIANCE FOR OPEN MEDIA, ITS MEMBERS, OR CONTRIBUTORS BE LIABLE TO ANY OTHER PARTY FOR LOST PROFITS OR ANY FORM OF INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER FROM ANY CAUSES OF ACTION OF ANY KIND WITH RESPECT TO THIS DELIVERABLE OR ITS GOVERNING AGREEMENT, WHETHER BASED ON BREACH OF CONTRACT, TORT (INCLUDING NEGLIGENCE), OR OTHERWISE, AND WHETHER OR NOT THE OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
-</p>
 <hr title="Separator for header"/>
 </div><div class="links-banner" style="background: white; color: #333; padding: 15px 20px; margin: 20px 0; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-family: Arial, Helvetica, sans-serif;"><div style="font-size: 14px; font-weight: 600; margin-bottom: 10px; color: #555;">Quick Links</div><div style="display: flex; gap: 10px; flex-wrap: wrap;"><a href="av2-isobmff_Spec.pdf" style="background: #f7fafc; color: #2d3748; padding: 6px 14px; border-radius: 4px; border: 1px solid #e2e8f0; text-decoration: none; font-weight: 500; font-size: 13px; display: inline-block; transition: all 0.2s;">📄 PDF Version</a></div></div>
 <div class="p-summary" data-fill-with="abstract" style="page: front-matter;">
@@ -2243,35 +2969,35 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 <h2 class="no-num no-ref no-toc" id="contents">Table of Contents</h2>
 <ol class="toc">
 <li><a href="#bitstream-overview"><span class="secno">1</span> <span class="content">Bitstream features overview</span></a>
-<li>
+</li><li>
 <a href="#basic-encapsulation"><span class="secno">2</span> <span class="content">Basic Encapsulation Scheme</span></a>
 <ol class="toc">
 <li><a href="#general_requirements"><span class="secno">2.1</span> <span class="content">General Requirements &amp; Brands</span></a>
-<li>
+</li><li>
 <a href="#sample-entry-and-config"><span class="secno">2.2</span> <span class="content">AV2 Sample Entry and Configuration</span></a>
 <ol class="toc">
 <li><a href="#av2-sample-entry"><span class="secno">2.2.1</span> <span class="content">AV2 Sample Entry</span></a>
-<li><a href="#av2c"><span class="secno">2.2.2</span> <span class="content">AV2 Codec Configuration Box</span></a>
-<li><a href="#configobus"><span class="secno">2.2.3</span> <span class="content">configOBUs</span></a>
-</li></li></li></ol>
-</li></li></ol>
-<li><a href="#cmaf"><span class="secno">3</span> <span class="content">CMAF AV2 track format</span></a>
-<li><a href="#CommonEncryption"><span class="secno">4</span> <span class="content">Common Encryption</span></a>
-<li><a href="#codecsparam"><span class="secno">5</span> <span class="content">Codecs Parameter String</span></a>
-<li><a href="#conformance"><span class="secno"></span> <span class="content">
+</li><li><a href="#av2c"><span class="secno">2.2.2</span> <span class="content">AV2 Codec Configuration Box</span></a>
+</li><li><a href="#configobus"><span class="secno">2.2.3</span> <span class="content">configOBUs</span></a>
+</li></ol>
+</li></ol>
+</li><li><a href="#cmaf"><span class="secno">3</span> <span class="content">CMAF AV2 track format</span></a>
+</li><li><a href="#CommonEncryption"><span class="secno">4</span> <span class="content">Common Encryption</span></a>
+</li><li><a href="#codecsparam"><span class="secno">5</span> <span class="content">Codecs Parameter String</span></a>
+</li><li><a href="#conformance"><span class="secno"></span> <span class="content">
     Conformance</span></a>
-<li>
+</li><li>
 <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
 <ol class="toc">
 <li><a href="#index-defined-here"><span class="secno"></span> <span class="content">Terms defined by this specification</span></a>
-<li><a href="#index-defined-elsewhere"><span class="secno"></span> <span class="content">Terms defined by reference</span></a>
-</li></li></ol>
-<li>
+</li><li><a href="#index-defined-elsewhere"><span class="secno"></span> <span class="content">Terms defined by reference</span></a>
+</li></ol>
+</li><li>
 <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
 <ol class="toc">
 <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
 </li></ol>
-</li></li></li></li></li></li></li></li></ol>
+</li></ol>
 </nav>
 <main>
 <h2 class="heading settled" data-level="1" id="bitstream-overview"><span class="secno">1. </span><span class="content">Bitstream features overview</span><a class="self-link" href="#bitstream-overview"></a></h2>
@@ -2295,10 +3021,10 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 <p>A file conformant to this specification satisfies the following:</p>
 <ul>
 <li data-md=""><span id="assert-5b490a1a">It shall conform to the normative requirements of <a data-link-type="biblio" href="#biblio-isobmff" title="Information technology — Coding of audio-visual objects — Part 12: ISO base media file format">[ISOBMFF]</a></span>
-<li data-md=""><span id="assert-cdd73538">It shall have the <dfn class="css dfn-paneled" data-dfn-for="ISOBMFF Brand" data-dfn-type="value" data-export="" id="valdef-isobmff-brand-av02">av02</dfn> brand among the compatible brands array of the FileTypeBox</span>
-<li data-md=""><span id="assert-d4002cde">It shall contain at least one track using an <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry">AV2SampleEntry</a>, possibly transformed by encryption as specified in <a href="#CommonEncryption">§ 4 Common Encryption</a></span>
-<li data-md=""><span id="assert-b3381823">It should indicate a structural ISOBMFF brand among the compatible brands array of the FileTypeBox, such as <a class="css property" data-link-type="property" data-refhint-key="b81babf4" href="https://www.iso.org/standard/83102.html#" id="ref-for-something①">iso6</a></span>
-</li></li></li></li></ul>
+</li><li data-md=""><span id="assert-cdd73538">It shall have the <dfn class="css dfn-paneled" data-dfn-for="ISOBMFF Brand" data-dfn-type="value" data-export="" id="valdef-isobmff-brand-av02">av02</dfn> brand among the compatible brands array of the FileTypeBox</span>
+</li><li data-md=""><span id="assert-d4002cde">It shall contain at least one track using an <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry">AV2SampleEntry</a>, possibly transformed by encryption as specified in <a href="#CommonEncryption">§ 4 Common Encryption</a></span>
+</li><li data-md=""><span id="assert-b3381823">It should indicate a structural ISOBMFF brand among the compatible brands array of the FileTypeBox, such as <a class="css property" data-link-type="property" data-refhint-key="b81babf4" href="https://www.iso.org/standard/83102.html#" id="ref-for-something①">iso6</a></span>
+</li></ul>
 <h3 class="heading settled" data-level="2.2" id="sample-entry-and-config"><span class="secno">2.2. </span><span class="content">AV2 Sample Entry and Configuration</span><a class="self-link" href="#sample-entry-and-config"></a></h3>
 <h4 class="heading settled" data-level="2.2.1" id="av2-sample-entry"><span class="secno">2.2.1. </span><span class="content">AV2 Sample Entry</span><a class="self-link" href="#av2-sample-entry"></a></h4>
 <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport="" id="av2sampleentry">AV2SampleEntry</dfn> extends <a data-link-type="dfn" data-refhint-key="ec5dc328" href="https://www.iso.org/standard/83102.html#" id="ref-for-something②">VisualSampleEntry</a> and signals a track carrying AV2 coded video samples.</p>
@@ -2347,9 +3073,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 <ul>
 <li data-md="">
 <p>a <a data-link-type="dfn" href="https://super-adventure-4j2gglm.pages.github.io/#temporal-delimiter-obu" id="ref-for-temporal-delimiter-obu②">Temporal Delimiter OBU</a>;</p>
-<li data-md="">
+</li><li data-md="">
 <p>any OBU carrying coded frame data, including <a data-link-type="dfn" href="https://super-adventure-4j2gglm.pages.github.io/#clk" id="ref-for-clk③">Closed Loop Key OBUs</a>, <a data-link-type="dfn" href="https://super-adventure-4j2gglm.pages.github.io/#olk" id="ref-for-olk③">Open Loop Key OBUs</a>, <a data-link-type="dfn" href="https://super-adventure-4j2gglm.pages.github.io/#switch-frame" id="ref-for-switch-frame③">Switch OBUs</a>, <a data-link-type="dfn" href="https://super-adventure-4j2gglm.pages.github.io/#bridge-frame" id="ref-for-bridge-frame①">Bridge Frame OBUs</a>, regular or leading tile-group OBUs, and switch-eligible or TIP frame OBUs;</p>
-</li></li></ul>
+</li></ul>
 <p>The values of the fields in the <a data-link-type="dfn" href="#av2codecconfigurationbox" id="ref-for-av2codecconfigurationbox②">AV2CodecConfigurationBox</a> shall equal the corresponding effective values of the fields of the <a data-link-type="dfn" href="https://super-adventure-4j2gglm.pages.github.io/#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax⑤">Sequence Header OBU</a> carried in <code>configOBUs</code>.</p>
 <p class="back-to-toc-wrapper"><a class="back-to-toc" href="#toc">↑ Back to Table of Contents</a></p><h2 class="heading settled" data-level="3" id="cmaf"><span class="secno">3. </span><span class="content">CMAF AV2 track format</span><a class="self-link" href="#cmaf"></a></h2>
 <p>TBD</p>
@@ -2523,70 +3249,70 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 <h3 class="heading no-num no-ref settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
 <ul class="index">
 <li><a href="#valdef-isobmff-brand-av02">av02</a><span>, in § 2.1</span>
-<li><a href="#av2codecconfigurationbox">AV2CodecConfigurationBox</a><span>, in § 2.2.2</span>
-<li><a href="#av2sampleentry">AV2SampleEntry</a><span>, in § 2.2.1</span>
-</li></li></li></ul>
+</li><li><a href="#av2codecconfigurationbox">AV2CodecConfigurationBox</a><span>, in § 2.2.2</span>
+</li><li><a href="#av2sampleentry">AV2SampleEntry</a><span>, in § 2.2.1</span>
+</li></ul>
 <h3 class="heading no-num no-ref settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
 <ul class="index">
 <li>
 <a data-link-type="biblio">[AV2]</a> defines the following terms:
     <ul>
 <li><span class="dfn-paneled" id="29763816">AV2 bitstream</span>
-<li><span class="dfn-paneled" id="bb085e35">Bridge Frame OBU</span>
-<li><span class="dfn-paneled" id="b137f69e">Closed Loop Key OBU</span>
-<li><span class="dfn-paneled" id="6f86bd02">Closed Random Access</span>
-<li><span class="dfn-paneled" id="2d6b0877">Inter Frame</span>
-<li><span class="dfn-paneled" id="addb7593">Intra frame</span>
-<li><span class="dfn-paneled" id="2155ecc3">Key Frame</span>
-<li><span class="dfn-paneled" id="81ba0e65">Layer Configuration Record OBU</span>
-<li><span class="dfn-paneled" id="a7d77cf3">Leading frame</span>
-<li><span class="dfn-paneled" id="ca47db94">Length delimited bitstream format</span>
-<li><span class="dfn-paneled" id="92026faa">metadata group OBU syntax</span>
-<li><span class="dfn-paneled" id="41384ab0">Metadata OBU</span>
-<li><span class="dfn-paneled" id="0057d181">metadata short OBU syntax</span>
-<li><span class="dfn-paneled" id="1859d9fc">Multistream</span>
-<li><span class="dfn-paneled" id="da0ec094">OBU</span>
-<li><span class="dfn-paneled" id="50a9b72f">obu_header_extension_flag</span>
-<li><span class="dfn-paneled" id="4382c193">obu_mlayer_id</span>
-<li><span class="dfn-paneled" id="62d44e07">obu_tlayer_id</span>
-<li><span class="dfn-paneled" id="5c20e683">obu_type</span>
-<li><span class="dfn-paneled" id="9014a6c6">obu_xlayer_id</span>
-<li><span class="dfn-paneled" id="19dff915">Open Loop Key OBU</span>
-<li><span class="dfn-paneled" id="7f7260ca">Open Random Access</span>
-<li><span class="dfn-paneled" id="e7cfe400">Sequence Header OBU</span>
-<li><span class="dfn-paneled" id="968acf96">show_existing_frame</span>
-<li><span class="dfn-paneled" id="42b08e3d">Singlestream</span>
-<li><span class="dfn-paneled" id="3586ba37">Switch Frame</span>
-<li><span class="dfn-paneled" id="dae6e710">Switch OBU</span>
-<li><span class="dfn-paneled" id="4b3d250d">Temporal Delimiter OBU</span>
-<li><span class="dfn-paneled" id="c88fe55d">Temporal Unit</span>
-</li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></ul>
-<li>
+</li><li><span class="dfn-paneled" id="bb085e35">Bridge Frame OBU</span>
+</li><li><span class="dfn-paneled" id="b137f69e">Closed Loop Key OBU</span>
+</li><li><span class="dfn-paneled" id="6f86bd02">Closed Random Access</span>
+</li><li><span class="dfn-paneled" id="2d6b0877">Inter Frame</span>
+</li><li><span class="dfn-paneled" id="addb7593">Intra frame</span>
+</li><li><span class="dfn-paneled" id="2155ecc3">Key Frame</span>
+</li><li><span class="dfn-paneled" id="81ba0e65">Layer Configuration Record OBU</span>
+</li><li><span class="dfn-paneled" id="a7d77cf3">Leading frame</span>
+</li><li><span class="dfn-paneled" id="ca47db94">Length delimited bitstream format</span>
+</li><li><span class="dfn-paneled" id="92026faa">metadata group OBU syntax</span>
+</li><li><span class="dfn-paneled" id="41384ab0">Metadata OBU</span>
+</li><li><span class="dfn-paneled" id="0057d181">metadata short OBU syntax</span>
+</li><li><span class="dfn-paneled" id="1859d9fc">Multistream</span>
+</li><li><span class="dfn-paneled" id="da0ec094">OBU</span>
+</li><li><span class="dfn-paneled" id="50a9b72f">obu_header_extension_flag</span>
+</li><li><span class="dfn-paneled" id="4382c193">obu_mlayer_id</span>
+</li><li><span class="dfn-paneled" id="62d44e07">obu_tlayer_id</span>
+</li><li><span class="dfn-paneled" id="5c20e683">obu_type</span>
+</li><li><span class="dfn-paneled" id="9014a6c6">obu_xlayer_id</span>
+</li><li><span class="dfn-paneled" id="19dff915">Open Loop Key OBU</span>
+</li><li><span class="dfn-paneled" id="7f7260ca">Open Random Access</span>
+</li><li><span class="dfn-paneled" id="e7cfe400">Sequence Header OBU</span>
+</li><li><span class="dfn-paneled" id="968acf96">show_existing_frame</span>
+</li><li><span class="dfn-paneled" id="42b08e3d">Singlestream</span>
+</li><li><span class="dfn-paneled" id="3586ba37">Switch Frame</span>
+</li><li><span class="dfn-paneled" id="dae6e710">Switch OBU</span>
+</li><li><span class="dfn-paneled" id="4b3d250d">Temporal Delimiter OBU</span>
+</li><li><span class="dfn-paneled" id="c88fe55d">Temporal Unit</span>
+</li></ul>
+</li><li>
 <a data-link-type="biblio">[ISOBMFF]</a> defines the following terms:
     <ul>
 <li><span class="dfn-paneled" id="5e564b6f">btrt</span>
-<li><span class="dfn-paneled" id="5caf1e7e">clli</span>
-<li><span class="dfn-paneled" id="8f9972ea">colr</span>
-<li><span class="dfn-paneled" id="30f6deff">ctts</span>
-<li><span class="dfn-paneled" id="6bc8bbfe">iso6</span>
-<li><span class="dfn-paneled" id="4e576b8f">mdcv</span>
-<li><span class="dfn-paneled" id="9bfabbee">nclx</span>
-<li><span class="dfn-paneled" id="dde01329">pasp</span>
-<li><span class="dfn-paneled" id="07987749">VisualSampleEntry</span>
-</li></li></li></li></li></li></li></li></li></ul>
-</li></li></ul>
+</li><li><span class="dfn-paneled" id="5caf1e7e">clli</span>
+</li><li><span class="dfn-paneled" id="8f9972ea">colr</span>
+</li><li><span class="dfn-paneled" id="30f6deff">ctts</span>
+</li><li><span class="dfn-paneled" id="6bc8bbfe">iso6</span>
+</li><li><span class="dfn-paneled" id="4e576b8f">mdcv</span>
+</li><li><span class="dfn-paneled" id="9bfabbee">nclx</span>
+</li><li><span class="dfn-paneled" id="dde01329">pasp</span>
+</li><li><span class="dfn-paneled" id="07987749">VisualSampleEntry</span>
+</li></ul>
+</li></ul>
 <h2 class="heading no-num no-ref settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
 <h3 class="heading no-num no-ref settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
 <dl>
 <dt id="biblio-av2">[AV2]
-   <dd><a href="https://super-adventure-4j2gglm.pages.github.io/"><cite>AV2 Bitstream &amp; Decoding Process Specification</cite></a>. Standard. URL: <a href="https://super-adventure-4j2gglm.pages.github.io/">https://super-adventure-4j2gglm.pages.github.io/</a>
-<dt id="biblio-cmaf">[CMAF]
-   <dd><a href="https://www.iso.org/standard/71975.html"><cite>Information technology — Multimedia application format (MPEG-A) — Part 19: Common media application format (CMAF) for segmented media</cite></a>. Standard. URL: <a href="https://www.iso.org/standard/71975.html">https://www.iso.org/standard/71975.html</a>
-<dt id="biblio-isobmff">[ISOBMFF]
-   <dd><a href="https://www.iso.org/standard/83102.html"><cite>Information technology — Coding of audio-visual objects — Part 12: ISO base media file format</cite></a>. Standard. URL: <a href="https://www.iso.org/standard/83102.html">https://www.iso.org/standard/83102.html</a>
-<dt id="biblio-rfc2119">[RFC2119]
-   <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
-</dd></dt></dd></dt></dd></dt></dd></dt></dl>
+   </dt><dd><a href="https://super-adventure-4j2gglm.pages.github.io/"><cite>AV2 Bitstream &amp; Decoding Process Specification</cite></a>. Standard. URL: <a href="https://super-adventure-4j2gglm.pages.github.io/">https://super-adventure-4j2gglm.pages.github.io/</a>
+</dd><dt id="biblio-cmaf">[CMAF]
+   </dt><dd><a href="https://www.iso.org/standard/71975.html"><cite>Information technology — Multimedia application format (MPEG-A) — Part 19: Common media application format (CMAF) for segmented media</cite></a>. Standard. URL: <a href="https://www.iso.org/standard/71975.html">https://www.iso.org/standard/71975.html</a>
+</dd><dt id="biblio-isobmff">[ISOBMFF]
+   </dt><dd><a href="https://www.iso.org/standard/83102.html"><cite>Information technology — Coding of audio-visual objects — Part 12: ISO base media file format</cite></a>. Standard. URL: <a href="https://www.iso.org/standard/83102.html">https://www.iso.org/standard/83102.html</a>
+</dd><dt id="biblio-rfc2119">[RFC2119]
+   </dt><dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
+</dd></dl>
 <script>/* Boilerplate: script-dom-helper */
 "use strict";
 function query(sel) { return document.querySelector(sel); }
@@ -3458,732 +4184,4 @@ window.addEventListener("resize", () => {
     hideAllRefHints();
 });
 }
-</script></body><style id="dark-mode-css">
-/* Dark Mode Support
-   Three modes: light (default), dark, auto (follows OS preference).
-   Works by redefining the CSS custom properties from custom.css. */
-
-/* ── Dark theme variable overrides ──────────────────────────────── */
-
-[data-theme="dark"] {
-  --color-text:         #e0e0e0;
-  --color-body:         #d4d4d4;
-  --color-meta:         #b0b0b0;
-  --color-muted:        #999;
-  --color-accent:       #5ba3d9;
-  --color-link:         #6cb6ff;
-
-  --border-color:       #444;
-  --border-light:       #3a3a3a;
-  --border-subtle:      #333;
-  --border-medium:      #555;
-
-  --bg-code:            #1e1e1e;
-  --bg-header:          #2a2a2a;
-  --bg-white:           #252525;
-
-  --hl-name:            #6cb6ff;
-  --hl-keyword:         #f472b6;
-  --hl-number:          #f59e0b;
-  --hl-punctuation:     #aaa;
-  --hl-comment:         #6a9955;
-  --hl-descriptor:      #6cb6ff;
-
-  /* Bikeshed boilerplate variables */
-  --text:               #e0e0e0;
-  --bg:                 #1a1a1a;
-  --a-normal-text:      #6cb6ff;
-  --a-normal-underline: #4a7ab5;
-  --a-visited-text:     #b48eff;
-  --a-visited-underline:#7a5ab5;
-  --a-hover-bg:         rgba(100, 180, 255, 0.1);
-  --tocnav-normal-text: #999;
-  --tocnav-normal-bg:   #1a1a1a;
-  --tocnav-hover-bg:    #252525;
-  --tocsidebar-text:    #d4d4d4;
-  --tocsidebar-bg:      #222;
-  --tocsidebar-shadow:  rgba(0, 0, 0, 0.4);
-  --tocsidebar-heading-text: #999;
-  --toclink-text:       #d4d4d4;
-  --toclink-underline:  #5ba3d9;
-  --toclink-visited-text: #b48eff;
-  --toclink-visited-underline: #7a5ab5;
-}
-
-/* Auto mode: apply dark variables when OS prefers dark */
-@media (prefers-color-scheme: dark) {
-  [data-theme="auto"] {
-    --color-text:         #e0e0e0;
-    --color-body:         #d4d4d4;
-    --color-meta:         #b0b0b0;
-    --color-muted:        #999;
-    --color-accent:       #5ba3d9;
-    --color-link:         #6cb6ff;
-
-    --border-color:       #444;
-    --border-light:       #3a3a3a;
-    --border-subtle:      #333;
-    --border-medium:      #555;
-
-    --bg-code:            #1e1e1e;
-    --bg-header:          #2a2a2a;
-    --bg-white:           #252525;
-
-    --hl-name:            #6cb6ff;
-    --hl-keyword:         #f472b6;
-    --hl-number:          #f59e0b;
-    --hl-punctuation:     #aaa;
-    --hl-comment:         #6a9955;
-    --hl-descriptor:      #6cb6ff;
-
-    /* Bikeshed boilerplate variables */
-    --text:               #e0e0e0;
-    --bg:                 #1a1a1a;
-    --a-normal-text:      #6cb6ff;
-    --a-normal-underline: #4a7ab5;
-    --a-visited-text:     #b48eff;
-    --a-visited-underline:#7a5ab5;
-    --a-hover-bg:         rgba(100, 180, 255, 0.1);
-    --tocnav-normal-text: #999;
-    --tocnav-normal-bg:   #1a1a1a;
-    --tocnav-hover-bg:    #252525;
-    --tocsidebar-text:    #d4d4d4;
-    --tocsidebar-bg:      #222;
-    --tocsidebar-shadow:  rgba(0, 0, 0, 0.4);
-    --tocsidebar-heading-text: #999;
-    --toclink-text:       #d4d4d4;
-    --toclink-underline:  #5ba3d9;
-    --toclink-visited-text: #b48eff;
-    --toclink-visited-underline: #7a5ab5;
-  }
-}
-
-/* ── Body and page background ───────────────────────────────────── */
-
-[data-theme="dark"] body,
-[data-theme="dark"] {
-  background-color: #1a1a1a;
-  color: var(--color-body);
-}
-
-@media (prefers-color-scheme: dark) {
-  [data-theme="auto"] body,
-  [data-theme="auto"] {
-    background-color: #1a1a1a;
-    color: var(--color-body);
-  }
-}
-
-/* ── Bikeshed boilerplate overrides ─────────────────────────────── */
-/* Override inline styles and boilerplate that don't use CSS variables */
-
-[data-theme="dark"] .head,
-[data-theme="dark"] .head h1 {
-  color: var(--color-text);
-}
-
-[data-theme="dark"] a {
-  color: var(--color-link);
-}
-
-[data-theme="dark"] a:visited {
-  color: #b48eff;
-}
-
-[data-theme="dark"] h1, [data-theme="dark"] h2,
-[data-theme="dark"] h3, [data-theme="dark"] h4,
-[data-theme="dark"] h5, [data-theme="dark"] h6 {
-  color: var(--color-text);
-}
-
-[data-theme="dark"] p,
-[data-theme="dark"] li,
-[data-theme="dark"] dd,
-[data-theme="dark"] dt {
-  color: var(--color-body);
-}
-
-/* Tables */
-[data-theme="dark"] table {
-  color: var(--color-body);
-}
-
-[data-theme="dark"] td,
-[data-theme="dark"] th {
-  border-color: var(--border-color);
-  color: var(--color-body);
-}
-
-[data-theme="dark"] thead th {
-  background-color: var(--bg-header);
-  border-bottom-color: var(--border-medium);
-}
-
-[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
-  background-color: rgba(255, 255, 255, 0.04);
-}
-
-/* Code */
-[data-theme="dark"] pre,
-[data-theme="dark"] code {
-  color: var(--color-body);
-}
-
-[data-theme="dark"] pre.highlight {
-  background-color: var(--bg-code);
-  border-color: var(--border-light);
-  border-left-color: var(--color-accent);
-}
-
-@media screen {
-  [data-theme="dark"] code {
-    background-color: var(--bg-code);
-  }
-}
-
-/* TOC */
-[data-theme="dark"] #toc,
-[data-theme="dark"] .toc {
-  color: var(--color-body);
-}
-
-[data-theme="dark"] #toc a {
-  color: var(--color-link);
-}
-
-/* Inline notes, issues, examples (Bikeshed generates these) */
-[data-theme="dark"] .note,
-[data-theme="dark"] .advisement,
-[data-theme="dark"] details.note {
-  background-color: #1e2a1e;
-  border-color: #4a7a4a;
-  color: var(--color-body);
-}
-
-[data-theme="dark"] .issue {
-  background-color: #2a1e1e;
-  border-color: #7a4a4a;
-  color: var(--color-body);
-}
-
-[data-theme="dark"] .example {
-  background-color: #1e1e2a;
-  border-color: #4a4a7a;
-  color: var(--color-body);
-}
-
-/* Definition lists and terms */
-[data-theme="dark"] dfn {
-  color: var(--color-text);
-}
-
-/* Horizontal rules */
-[data-theme="dark"] hr {
-  border-color: var(--border-color);
-}
-
-/* ── Auto mode: duplicate overrides for prefers-color-scheme ──── */
-
-@media (prefers-color-scheme: dark) {
-  [data-theme="auto"] .head,
-  [data-theme="auto"] .head h1 { color: var(--color-text); }
-  [data-theme="auto"] a { color: var(--color-link); }
-  [data-theme="auto"] a:visited { color: #b48eff; }
-  [data-theme="auto"] h1, [data-theme="auto"] h2,
-  [data-theme="auto"] h3, [data-theme="auto"] h4,
-  [data-theme="auto"] h5, [data-theme="auto"] h6 { color: var(--color-text); }
-  [data-theme="auto"] p,
-  [data-theme="auto"] li,
-  [data-theme="auto"] dd,
-  [data-theme="auto"] dt { color: var(--color-body); }
-  [data-theme="auto"] table { color: var(--color-body); }
-  [data-theme="auto"] td,
-  [data-theme="auto"] th { border-color: var(--border-color); color: var(--color-body); }
-  [data-theme="auto"] thead th { background-color: var(--bg-header); border-bottom-color: var(--border-medium); }
-  [data-theme="auto"] .table-striped tbody tr:nth-of-type(odd) { background-color: rgba(255,255,255,0.04); }
-  [data-theme="auto"] pre,
-  [data-theme="auto"] code { color: var(--color-body); }
-  [data-theme="auto"] pre.highlight { background-color: var(--bg-code); border-color: var(--border-light); border-left-color: var(--color-accent); }
-  [data-theme="auto"] code { background-color: var(--bg-code); }
-  [data-theme="auto"] #toc,
-  [data-theme="auto"] .toc { color: var(--color-body); }
-  [data-theme="auto"] #toc a { color: var(--color-link); }
-  [data-theme="auto"] .note,
-  [data-theme="auto"] .advisement,
-  [data-theme="auto"] details.note { background-color: #1e2a1e; border-color: #4a7a4a; color: var(--color-body); }
-  [data-theme="auto"] .issue { background-color: #2a1e1e; border-color: #7a4a4a; color: var(--color-body); }
-  [data-theme="auto"] .example { background-color: #1e1e2a; border-color: #4a4a7a; color: var(--color-body); }
-  [data-theme="auto"] dfn { color: var(--color-text); }
-  [data-theme="auto"] hr { border-color: var(--border-color); }
-}
-
-/* ── Theme toggle button ────────────────────────────────────────── */
-
-@media screen {
-  #dark-mode-toggle {
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.4rem 0.7rem;
-    border: 1px solid var(--border-color, #ccc);
-    border-radius: 2rem;
-    background: var(--bg-white, #fff);
-    color: var(--color-muted, #666);
-    font-size: 0.75rem;
-    font-family: system-ui, -apple-system, sans-serif;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-
-  #dark-mode-toggle:hover {
-    border-color: var(--color-accent, #034575);
-    color: var(--color-text, #000);
-  }
-
-  #dark-mode-toggle .dm-icon {
-    font-size: 1rem;
-    line-height: 1;
-  }
-
-  #dark-mode-toggle .dm-label {
-    font-weight: 500;
-  }
-}
-
-/* Hide toggle in print */
-@media print {
-  #dark-mode-toggle {
-    display: none !important;
-  }
-}
-
-</style>
-<style id="rfc-keyword-css">
-/* RFC 2119 Keyword Highlighting */
-.rfc-keyword {
-  font-weight: bold;
-  font-variant: small-caps;
-  font-size: 0.95em;
-  color: #1a1a1a;
-  letter-spacing: 0.02em;
-}
-</style><style id="figure-table-tooltips-css">/* Figure & Table Tooltip Preview Styling */
-
-@media screen {
-  /* ── Shared base ──────────────────────────────────────────────── */
-
-  #fig-tooltip,
-  #tbl-tooltip {
-    position: absolute;
-    z-index: 10001;
-    padding: 0.6em 0.9em;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    pointer-events: auto;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.15s, transform 0.15s;
-    font-size: 0.9em;
-    line-height: 1.4;
-  }
-
-  #fig-tooltip.visible,
-  #tbl-tooltip.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ── Figure tooltip ───────────────────────────────────────────── */
-
-  #fig-tooltip {
-    max-width: 360px;
-    text-align: center;
-  }
-
-  .fig-tooltip-image {
-    max-width: 320px;
-    max-height: 200px;
-    width: auto;
-    height: auto;
-    display: block;
-    margin: 0 auto 0.4em;
-    border-radius: 3px;
-  }
-
-  .fig-tooltip-caption {
-    font-size: 0.85em;
-    color: #555;
-    border-top: 1px solid #eee;
-    padding-top: 0.4em;
-  }
-
-  /* ── Table tooltip ────────────────────────────────────────────── */
-
-  #tbl-tooltip {
-    max-width: 500px;
-    overflow: hidden;
-  }
-
-  .tbl-tooltip-caption {
-    font-weight: 600;
-    font-size: 0.88em;
-    color: #034575;
-    margin-bottom: 0.4em;
-  }
-
-  .tbl-tooltip-preview {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.8em;
-  }
-
-  .tbl-tooltip-preview th,
-  .tbl-tooltip-preview td {
-    padding: 0.25em 0.5em;
-    border: 1px solid #ddd;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 120px;
-  }
-
-  .tbl-tooltip-preview thead th {
-    background: #f0f0f0;
-    font-weight: 600;
-  }
-
-  .tbl-tooltip-ellipsis {
-    text-align: center;
-    color: #999;
-    font-style: italic;
-    border: none !important;
-    padding-top: 0.3em !important;
-  }
-
-  /* Subtle highlight on figure/table reference links */
-  a.figure-ref,
-  a.table-ref {
-    border-bottom: 1px dashed currentColor;
-    text-decoration: none;
-  }
-
-  a.figure-ref:hover,
-  a.table-ref:hover {
-    background-color: rgba(3, 69, 117, 0.06);
-    border-bottom-style: solid;
-  }
-
-  /* ── Dark mode ────────────────────────────────────────────────── */
-
-  [data-theme="dark"] #fig-tooltip,
-  [data-theme="dark"] #tbl-tooltip {
-    background: #2a2a2a;
-    border-color: #555;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-    color: #e0e0e0;
-  }
-
-  [data-theme="dark"] .fig-tooltip-caption {
-    color: #aaa;
-    border-top-color: #444;
-  }
-
-  [data-theme="dark"] .tbl-tooltip-caption {
-    color: #6cb6ff;
-  }
-
-  [data-theme="dark"] .tbl-tooltip-preview th,
-  [data-theme="dark"] .tbl-tooltip-preview td {
-    border-color: #444;
-  }
-
-  [data-theme="dark"] .tbl-tooltip-preview thead th {
-    background: #333;
-  }
-
-  [data-theme="dark"] a.figure-ref:hover,
-  [data-theme="dark"] a.table-ref:hover {
-    background-color: rgba(91, 163, 217, 0.12);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    [data-theme="auto"] #fig-tooltip,
-    [data-theme="auto"] #tbl-tooltip {
-      background: #2a2a2a;
-      border-color: #555;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-      color: #e0e0e0;
-    }
-
-    [data-theme="auto"] .fig-tooltip-caption { color: #aaa; border-top-color: #444; }
-    [data-theme="auto"] .tbl-tooltip-caption { color: #6cb6ff; }
-    [data-theme="auto"] .tbl-tooltip-preview th,
-    [data-theme="auto"] .tbl-tooltip-preview td { border-color: #444; }
-    [data-theme="auto"] .tbl-tooltip-preview thead th { background: #333; }
-    [data-theme="auto"] a.figure-ref:hover,
-    [data-theme="auto"] a.table-ref:hover { background-color: rgba(91, 163, 217, 0.12); }
-  }
-}
-
-@media print {
-  #fig-tooltip,
-  #tbl-tooltip {
-    display: none !important;
-  }
-}
-</style><script id="figure-table-tooltips-js">/* Figure & Table Tooltip Previews
-   Shows a preview when hovering over figure-ref and table-ref links. */
-
-(function () {
-  "use strict";
-
-  var FIG_TOOLTIP_ID = "fig-tooltip";
-  var TBL_TOOLTIP_ID = "tbl-tooltip";
-  var SHOW_DELAY = 250;
-  var HIDE_DELAY = 150;
-
-  var figTooltip = null;
-  var tblTooltip = null;
-  var showTimer = null;
-  var hideTimer = null;
-  var activeTooltip = null;
-
-  function getOrCreate(id) {
-    var el = document.getElementById(id);
-    if (!el) {
-      el = document.createElement("div");
-      el.id = id;
-      el.setAttribute("role", "tooltip");
-      document.body.appendChild(el);
-      el.addEventListener("mouseenter", function () { clearTimeout(hideTimer); });
-      el.addEventListener("mouseleave", function () { scheduleHide(); });
-    }
-    return el;
-  }
-
-  function position(tip, anchor) {
-    var rect = anchor.getBoundingClientRect();
-    var top = rect.top + window.scrollY - tip.offsetHeight - 8;
-    var left = rect.left + window.scrollX + rect.width / 2 - tip.offsetWidth / 2;
-    left = Math.max(8, Math.min(left, window.innerWidth - tip.offsetWidth - 8));
-    if (top < window.scrollY + 8) {
-      top = rect.bottom + window.scrollY + 8;
-    }
-    tip.style.top = top + "px";
-    tip.style.left = left + "px";
-  }
-
-  function hideActive() {
-    if (activeTooltip) {
-      activeTooltip.classList.remove("visible");
-      activeTooltip = null;
-    }
-  }
-
-  function scheduleHide() {
-    clearTimeout(showTimer);
-    hideTimer = setTimeout(hideActive, HIDE_DELAY);
-  }
-
-  /* ── Figure tooltip ──────────────────────────────────────────── */
-
-  function showFigure(anchor) {
-    clearTimeout(hideTimer);
-    hideActive();
-
-    var href = anchor.getAttribute("href");
-    if (!href || !href.startsWith("#")) return;
-
-    var figEl = document.getElementById(href.slice(1));
-    if (!figEl) return;
-
-    // Find the figure element (target might be the figure or inside it)
-    var figure = figEl.tagName === "FIGURE" ? figEl : figEl.closest("figure");
-    if (!figure) return;
-
-    var tip = getOrCreate(FIG_TOOLTIP_ID);
-    tip.innerHTML = "";
-
-    // Clone the image (thumbnail)
-    var img = figure.querySelector("img, svg");
-    if (img) {
-      var imgClone = img.cloneNode(true);
-      imgClone.className = "fig-tooltip-image";
-      imgClone.removeAttribute("width");
-      imgClone.removeAttribute("height");
-      tip.appendChild(imgClone);
-    }
-
-    // Caption text
-    var figcaption = figure.querySelector("figcaption");
-    if (figcaption) {
-      var cap = document.createElement("div");
-      cap.className = "fig-tooltip-caption";
-      cap.textContent = figcaption.textContent.trim();
-      tip.appendChild(cap);
-    }
-
-    activeTooltip = tip;
-    tip.classList.add("visible");
-    requestAnimationFrame(function () { position(tip, anchor); });
-  }
-
-  /* ── Table tooltip ───────────────────────────────────────────── */
-
-  function showTable(anchor) {
-    clearTimeout(hideTimer);
-    hideActive();
-
-    var href = anchor.getAttribute("href");
-    if (!href || !href.startsWith("#")) return;
-
-    var targetEl = document.getElementById(href.slice(1));
-    if (!targetEl) return;
-
-    // Find the table element
-    var table = targetEl.tagName === "TABLE" ? targetEl : targetEl.closest("table");
-    if (!table) {
-      // Caption ID might be on the caption itself
-      table = targetEl.parentElement;
-      if (!table || table.tagName !== "TABLE") return;
-    }
-
-    var tip = getOrCreate(TBL_TOOLTIP_ID);
-    tip.innerHTML = "";
-
-    // Caption
-    var caption = table.querySelector("caption");
-    if (caption) {
-      var cap = document.createElement("div");
-      cap.className = "tbl-tooltip-caption";
-      cap.textContent = caption.textContent.trim();
-      tip.appendChild(cap);
-    }
-
-    // Clone first few rows as preview
-    var preview = document.createElement("table");
-    preview.className = "tbl-tooltip-preview";
-
-    var thead = table.querySelector("thead");
-    if (thead) {
-      preview.appendChild(thead.cloneNode(true));
-    }
-
-    var tbody = table.querySelector("tbody");
-    if (tbody) {
-      var previewBody = document.createElement("tbody");
-      var rows = tbody.querySelectorAll("tr");
-      var maxRows = Math.min(rows.length, 3);
-      for (var i = 0; i < maxRows; i++) {
-        previewBody.appendChild(rows[i].cloneNode(true));
-      }
-      if (rows.length > 3) {
-        var ellipsis = document.createElement("tr");
-        var td = document.createElement("td");
-        td.colSpan = 20;
-        td.className = "tbl-tooltip-ellipsis";
-        td.textContent = "\u2026 " + (rows.length - 3) + " more rows";
-        ellipsis.appendChild(td);
-        previewBody.appendChild(ellipsis);
-      }
-      preview.appendChild(previewBody);
-    }
-
-    tip.appendChild(preview);
-
-    activeTooltip = tip;
-    tip.classList.add("visible");
-    requestAnimationFrame(function () { position(tip, anchor); });
-  }
-
-  /* ── Event delegation ────────────────────────────────────────── */
-
-  function init() {
-    document.addEventListener("mouseover", function (e) {
-      var figLink = e.target.closest("a.figure-ref");
-      var tblLink = e.target.closest("a.table-ref");
-      if (!figLink && !tblLink) return;
-
-      clearTimeout(hideTimer);
-      var link = figLink || tblLink;
-      var handler = figLink ? showFigure : showTable;
-      showTimer = setTimeout(function () { handler(link); }, SHOW_DELAY);
-    });
-
-    document.addEventListener("mouseout", function (e) {
-      var link = e.target.closest("a.figure-ref, a.table-ref");
-      if (!link) return;
-      scheduleHide();
-    });
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
-})();
-</script><style id="toc-bold-primary-only-css">
-/* TOC: only bold top-level entries */
-.toc > li li { font-weight: normal; }
-.toc > li[data-level]:not([data-level="1"]) { font-weight: normal; }
-</style><style id="content-width-css">
-@media screen {
-  body {
-    max-width: 60em;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1em;
-    padding-right: 1em;
-  }
-}
-</style><link href="manifest.json" rel="manifest"/><meta content="#034575" name="theme-color"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="AV2 Codec ISO Media File Format Binding" name="apple-mobile-web-app-title"/><link href="images/icon-192x192.svg" rel="apple-touch-icon"/><script id="pwa-sw-register">if ('serviceWorker' in navigator) {  window.addEventListener('load', function() {    navigator.serviceWorker.register('sw.js')      .then(function(r) { console.log('SW registered:', r.scope); })      .catch(function(e) { console.log('SW registration failed:', e); });  });}</script><style id="page-numbering-css">
-/* Page Numbering — Dual (roman front-matter, arabic body) */
-
-/* Front matter: lowercase roman numerals using built-in page counter */
-@page front-matter {
-  @bottom-right {
-    content: "Page " counter(page, lower-roman);
-    font-size: 9pt;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #666;
-  }
-}
-
-/* Body pages: arabic numerals using custom bodypage counter.
-   The built-in page counter cannot be reliably reset, so we use a
-   separate counter that starts at 0 on <main> and increments per
-   body page. */
-@page body-pages {
-  counter-increment: bodypage;
-  @bottom-right {
-    content: "Page " counter(bodypage);
-    font-size: 9pt;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #666;
-  }
-}
-
-/* Suppress page number on cover/first page */
-@page :first {
-  @bottom-left {
-    content: none;
-  }
-  @bottom-center {
-    content: none;
-  }
-  @bottom-right {
-    content: none;
-  }
-}
-</style><style>.links-banner a:hover { background: #e2e8f0; border-color: #cbd5e0; transform: translateY(-1px); }}</style></head></html>
+</script></body></html>
