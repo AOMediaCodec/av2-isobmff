@@ -319,11 +319,23 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 }
 ```
 
-semantics TBD
+<code>configurationVersion</code> is an integer that specifies the version of this box. This version of this specification defines version 1. Readers shall not attempt to interpret an [=AV2CodecConfigurationBox=] with a value of <code>configurationVersion</code> that they do not recognise.
+
+<code>seq_profile_idc</code>, <code>seq_level_idx</code> and <code>seq_tier</code> specify the profile, level and tier, respectively, of the coded video sequence and have the same meaning and value ranges as the syntax elements of the same name defined in [[!AV2]]. In [[!AV2]], <code>seq_tier</code> is present only when <code>seq_level_idx</code> is greater than 3; when it is not present its value is inferred to be 0, and that inferred value is stored in this box.
+
+<code>chroma_format_idc</code> specifies the chroma subsampling format and has the same meaning as the syntax element of the same name defined in [[!AV2]]: the value 0 indicates 4:2:0, the value 1 indicates monochrome (4:0:0), the value 2 indicates 4:4:4 and the value 3 indicates 4:2:2.
+
+<code>bit_depth_idc</code> indicates the bit depth and has the same meaning as the syntax element of the same name defined in [[!AV2]]: the value 0 indicates a bit depth of 10 and the value 1 indicates a bit depth of 8.
+
+<code>monotonic_output_order_flag</code>, <code>still_picture</code> and <code>film_grain_params_present</code> have the same meaning as the syntax elements of the same name defined in [[!AV2]].
+
+<code>seq_initial_display_delay_present_flag</code> and <code>seq_initial_display_delay_minus_1</code> have the same meaning as the syntax elements of the same name defined in [[!AV2]]. When <code>seq_initial_display_delay_present_flag</code> is equal to 0, <code>seq_initial_display_delay_minus_1</code> shall be equal to 0 and readers shall ignore its value.
+
+<code>reserved1</code> is reserved for use by future extensions of this specification; it shall be equal to 0, and readers shall ignore its value.
+
+<code>max_frame_width_minus_1</code> and <code>max_frame_height_minus_1</code> specify the maximum frame width minus 1 and the maximum frame height minus 1, respectively, of the frames represented by the [=Sequence Header OBU=], and have the same meaning as the syntax elements of the same name defined in [[!AV2]].
 
 NOTE: In [[!AV2]], <code>chroma_format_idc</code> and <code>bit_depth_idc</code> are coded with <code>uvlc()</code> and therefore have no inherent upper bound, even though [[!AV2]] currently defines only a small number of values for each (4 and 2 respectively). The 3-bit fields used here accommodate all values currently defined by [[!AV2]] with additional headroom for future extensions. If a future revision of [[!AV2]] defines values that do not fit in 3 bits, a new <code>configurationVersion</code> of the [=AV2CodecConfigurationBox=] can be defined.
-
-<code>reserved</code> shall be set to 0. Readers shall ignore its value.
 
 <code>configOBUs</code> is a byte array carrying one or more OBUs as described in [[#configobus]].
 
