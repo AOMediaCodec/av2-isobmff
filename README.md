@@ -2,6 +2,13 @@
 
 This repository hosts the specification work for encapsulating AV2 bitstreams in ISO Base Media File Format (ISOBMFF).
 
+## Related repositories
+
+- [av2-tools](https://github.com/AOMediaCodec/av2-tools) - reference software implementing this specification (AV2 OBU parsing/analysis and MP4/ISOBMFF muxing & demuxing).
+- [av2-interop-private](https://github.com/AOMediaCodec/av2-interop-private) - AV2 interop stream recipes and catalog used to exercise the toolchain against this spec.
+
+## Specification source
+
 The specification is written using a special syntax (mixing markup and markdown) to enable generation of cross-references, syntax highlighting, ...
 The file using this syntax is [index.bs](./index.bs).
 
