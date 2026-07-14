@@ -40,102 +40,102 @@ url: https://www.webmproject.org/vp9/mp4/#; spec: VP9; type: property;
 url: https://tools.ietf.org/html/rfc6381#; spec: RFC6381; type: property;
     text: codecs
 
-url: https://super-adventure-4j2gglm.pages.github.io/#bitstream; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#bitstream; spec: AV2; type: dfn;
     text: AV2 bitstream
 
-url: https://super-adventure-4j2gglm.pages.github.io/#obu; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#obu; spec: AV2; type: dfn;
     text: OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#obu_header_syntax; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#obu_header_syntax; spec: AV2; type: dfn;
     text: OBU Header
 
-url: https://super-adventure-4j2gglm.pages.github.io/#general_sequence_header_obu_syntax; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax; spec: AV2; type: dfn;
     text: Sequence Header OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#temporal-delimiter-obu; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#temporal-delimiter-obu; spec: AV2; type: dfn;
     text: Temporal Delimiter OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#general_tile_group_payload_semantics; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#general_tile_group_payload_semantics; spec: AV2; type: dfn;
     text: Tile Group OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#metadata_obu_syntax; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#metadata_obu_syntax; spec: AV2; type: dfn;
     text: Metadata OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#metadata_short_obu_syntax; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#metadata_short_obu_syntax; spec: AV2; type: dfn;
     text: metadata short OBU syntax
 
-url: https://super-adventure-4j2gglm.pages.github.io/#metadata_group_obu_syntax; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#metadata_group_obu_syntax; spec: AV2; type: dfn;
     text: metadata group OBU syntax
 
-url: https://super-adventure-4j2gglm.pages.github.io/#padding_obu_syntax; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#padding_obu_syntax; spec: AV2; type: dfn;
     text: Padding OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#frame_header_syntax; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#frame_header_syntax; spec: AV2; type: dfn;
     text: Frame Header OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#layer_config_record_obu_semantics; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#layer_config_record_obu_semantics; spec: AV2; type: dfn;
     text: Layer Configuration Record OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#switch-frame; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#switch-frame; spec: AV2; type: dfn;
     text: Switch OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#bridge-frame; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#bridge-frame; spec: AV2; type: dfn;
     text: Bridge Frame OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#clk; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#clk; spec: AV2; type: dfn;
     text: Closed Loop Key OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#olk; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#olk; spec: AV2; type: dfn;
     text: Open Loop Key OBU
 
-url: https://super-adventure-4j2gglm.pages.github.io/#closed-random-access; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#closed-random-access; spec: AV2; type: dfn;
     text: Closed Random Access
 
-url: https://super-adventure-4j2gglm.pages.github.io/#open-random-access; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#open-random-access; spec: AV2; type: dfn;
     text: Open Random Access
 
-url: https://super-adventure-4j2gglm.pages.github.io/#leading-frame; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#leading-frame; spec: AV2; type: dfn;
     text: Leading frame
 
-url: https://super-adventure-4j2gglm.pages.github.io/#inter-frame; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#inter-frame; spec: AV2; type: dfn;
     text: Inter Frame
 
-url: https://super-adventure-4j2gglm.pages.github.io/#intra-frame; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#intra-frame; spec: AV2; type: dfn;
     text: Intra frame
 
-url: https://super-adventure-4j2gglm.pages.github.io/#key-frame; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#key-frame; spec: AV2; type: dfn;
     text: Key Frame
 
-url: https://super-adventure-4j2gglm.pages.github.io/#switch-frame; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#switch-frame; spec: AV2; type: dfn;
     text: Switch Frame
 
-url: https://super-adventure-4j2gglm.pages.github.io/#temporal-units; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#temporal-units; spec: AV2; type: dfn;
     text: Temporal Unit
 
-url: https://super-adventure-4j2gglm.pages.github.io/#frame_header_info_semantics; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#frame_header_info_semantics; spec: AV2; type: dfn;
     text: immediate_output_frame
 
-url: https://super-adventure-4j2gglm.pages.github.io/#sef; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#sef; spec: AV2; type: dfn;
     text: show_existing_frame
 
-url: https://super-adventure-4j2gglm.pages.github.io/#obu_header_syntax; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#obu_header_syntax; spec: AV2; type: dfn;
     text: obu_type
     text: obu_header_extension_flag
     text: obu_tlayer_id
     text: obu_mlayer_id
     text: obu_xlayer_id
 
-url: https://super-adventure-4j2gglm.pages.github.io/#singlestream; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#singlestream; spec: AV2; type: dfn;
     text: Singlestream
 
-url: https://super-adventure-4j2gglm.pages.github.io/#multistream; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#multistream; spec: AV2; type: dfn;
     text: Multistream
 
-url: https://super-adventure-4j2gglm.pages.github.io/#general_obu_semantics; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#general_obu_semantics; spec: AV2; type: dfn;
     text: obu_has_size_field
     text: obu_size
 
-url: https://super-adventure-4j2gglm.pages.github.io/#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
     text: seq_profile
     text: seq_level_idx
     text: seq_tier
@@ -144,17 +144,17 @@ url: https://super-adventure-4j2gglm.pages.github.io/#general_sequence_header_ob
     text: max_frame_width_minus_1
     text: max_frame_height_minus_1
 
-url: https://super-adventure-4j2gglm.pages.github.io/#color_config_semantics; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#color_config_semantics; spec: AV2; type: dfn;
     text: high_bitdepth
     text: twelve_bit
     text: mono_chrome
     text: subsampling_x
     text: subsampling_y
 
-url: https://super-adventure-4j2gglm.pages.github.io/#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
     text: initial_display_delay_minus_1
 
-url: https://super-adventure-4j2gglm.pages.github.io/#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
     text: seq_profile_idc
     text: chroma_format_idc
     text: bit_depth_idc
@@ -164,19 +164,19 @@ url: https://super-adventure-4j2gglm.pages.github.io/#general_sequence_header_ob
     text: seq_initial_display_delay_minus_1
     text: single_picture_header_flag
 
-url: https://super-adventure-4j2gglm.pages.github.io/#general_obu_syntax; spec: AV2; type: dfn
+url: https://av2.aomedia.org/v1.0.0/index.html#general_obu_syntax; spec: AV2; type: dfn
     text: Low Overhead Bitstream Format
 
-url: https://super-adventure-4j2gglm.pages.github.io/; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html; spec: AV2; type: dfn;
     text: Length delimited bitstream format
 
-url: https://super-adventure-4j2gglm.pages.github.io/#ordering_of_obus_temporal_unit; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#ordering_of_obus_temporal_unit; spec: AV2; type: dfn;
     text: ordering of OBUs in a temporal unit
 
-url: https://super-adventure-4j2gglm.pages.github.io/#availability_of_hls_obus; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#availability_of_hls_obus; spec: AV2; type: dfn;
     text: availability of HLS OBUs
 
-url: https://super-adventure-4j2gglm.pages.github.io/#ordering_of_obus_extended_layer; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#ordering_of_obus_extended_layer; spec: AV2; type: dfn;
     text: coded extended layer unit
 
 url: https://www.iso.org/standard/71975.html#; spec: CMAF; type: dfn;
@@ -196,7 +196,7 @@ url: https://www.iso.org/standard/68042.html#; spec: CENC; type: dfn;
 <pre class='biblio'>
 {
     "AV2": {
-        "href": "https://super-adventure-4j2gglm.pages.github.io/",
+        "href": "https://av2.aomedia.org/v1.0.0/index.html",
         "title": "AV2 Bitstream & Decoding Process Specification",
         "status": "Standard",
         "publisher": "AOM"
