@@ -1492,7 +1492,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version NORMALIZED" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="2087e793f645cbeca3a7320bd57a4a8801cb8898" name="revision"/>
+<meta content="b26ff9b1a71aeac911f1a64f4e35bf7e7f254ba6" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -4541,7 +4541,7 @@ constraints:
 </ins></p><ul><li data-md=""><p><ins class="diff-new">
 a
 sample
-should
+shall
 not
 contain
 any
@@ -4616,7 +4616,7 @@ carried
 in
 a
 sample
-should
+shall
 be
 limited
 to
@@ -4634,7 +4634,7 @@ in
 ;
 trailing
 bits
-should
+shall
 not
 be
 used
@@ -4762,7 +4762,18 @@ than
 repeated
 in
 every
-sample.
+sample,
+or
+discarded
+from
+the
+samples
+and
+conveyed
+at
+the
+ISOBMFF
+level.
 </ins></p></li></ul><p><ins class="diff-new">
 The
 handling
@@ -4969,7 +4980,10 @@ starting
 decoding
 at
 that
-point:
+point
+for
+all
+layers:
 every
 OBU
 referenced
@@ -5021,7 +5035,9 @@ OBUs
 in
 </ins><a data-link-type="biblio" href="#biblio-av2" title="AV2 Bitstream &amp; Decoding Process Specification"><ins class="diff-new">
 [AV2]
-</ins></a>.</p><p><ins class="diff-new">
+</ins></a>.</p><p class="note" role="note"><span class="marker"><ins class="diff-new">
+NOTE:
+</ins></span><ins class="diff-new">
 In
 ISOBMFF
 terms,
@@ -5073,23 +5089,15 @@ tracks
 </ins><a data-link-type="biblio" href="#biblio-isobmff" title="Information technology — Coding of audio-visual objects — Part 12: ISO base media file format"><ins class="diff-new">
 [ISOBMFF]
 </ins></a><ins class="diff-new">
-);
+),
+and
 in
 fragmented
-tracks,
-the
-same
+tracks
+this
 is
 expressed
-by
-setting
-</ins><code><ins class="diff-new">
-sample_is_non_sync_sample
-</ins></code><ins class="diff-new">
-equal
-to
-0
-in
+through
 the
 default
 sample
@@ -5108,7 +5116,7 @@ TrackFragmentHeaderBox
 </ins><u class="link-error property" data-lt="tfhd" title="LINK ERROR: No 'property' refs found for 'tfhd'."><ins class="diff-new">
 tfhd
 </ins></u><ins class="diff-new">
-),
+)
 with
 no
 per-sample
