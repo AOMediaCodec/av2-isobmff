@@ -170,23 +170,30 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
 
     logging.info(f"  Normalized whitespace in {cell_changes} table cells")
 
-    # 8b. Override the bibliography-link white-space rule for the diff view.
-    # Bikeshed's default stylesheet sets `[data-link-type=biblio]
-    # { white-space: pre }`. htmldiff emits word-per-line output, so it leaves
-    # literal newlines inside citation links (`<a>...[AV2]...</a>`) that `pre`
-    # then renders as broken, one-token-per-line references. Normalizing the
-    # input whitespace does not help — htmldiff re-inserts the newlines — so we
-    # inject a CSS override into <head>, which htmldiff preserves into diff.html.
-    # (print.css already does the same for print media.)
-    biblio_changes = 0
+    # 8b. Inject CSS overrides for the diff view. These live in <head> so
+    # htmldiff preserves them into diff.html.
+    #  * Bikeshed sets `[data-link-type=biblio] { white-space: pre }`; combined
+    #    with htmldiff's word-per-line output (which leaves newlines inside
+    #    citation links), references render one token per line. Force normal.
+    #  * Bikeshed's in-spec sidebar TOC (`#toc`) and its reserved left padding
+    #    (`body:not(.toc-inline) { padding-left: 29em }`, applied above 78em)
+    #    are redundant in the diff viewer (it has its own TOC) and, in a
+    #    full-width single pane, shove the spec content far to the right. Hide
+    #    the TOC and drop the padding so the content fills the pane.
+    diff_css = (
+        "[data-link-type=biblio]{white-space:normal !important;}"
+        "#toc{display:none !important;}"
+        "body:not(.toc-inline){padding-left:1.5em !important;}"
+    )
+    override_changes = 0
     head = soup.find("head")
     if head is not None:
-        override = soup.new_tag("style", id="diff-biblio-whitespace-fix")
-        override.string = "[data-link-type=biblio]{white-space:normal !important;}"
+        override = soup.new_tag("style", id="diff-view-css-overrides")
+        override.string = diff_css
         head.append(override)
-        biblio_changes = 1
+        override_changes = 1
 
-    logging.info(f"  Injected biblio white-space override: {biblio_changes}")
+    logging.info(f"  Injected diff-view CSS overrides: {override_changes}")
 
     # 9. Normalize SDL table inline indentation styles
     # The padding-left value can vary between builds depending on source
@@ -314,7 +321,7 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
         + version_changes
         + id_changes
         + cell_changes
-        + biblio_changes
+        + override_changes
         + sdl_indent_changes
         + tooltip_changes
         + rfc_keyword_changes
