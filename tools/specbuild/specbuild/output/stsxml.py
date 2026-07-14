@@ -15,17 +15,23 @@ import logging
 import re
 from pathlib import Path
 from typing import TYPE_CHECKING
-from xml.etree.ElementTree import Element, SubElement, indent, tostring
+from xml.etree.ElementTree import Element, SubElement, indent, register_namespace, tostring
 
 from specbuild.utils import HEADING_RE
+
+# Register the MathML prefix so ElementTree serializes Clark-notation MathML
+# elements as ``mml:math`` (matching the STS DTD) and emits a single
+# ``xmlns:mml`` declaration, instead of an auto-generated ``ns0:`` prefix.
+register_namespace("mml", "http://www.w3.org/1998/Math/MathML")
 
 if TYPE_CHECKING:
     from bs4 import BeautifulSoup
 
     from specbuild.standards.flavors import FlavorSpec
 
-# TBX namespace used for terminology entries.
-_TBX_NS = "urn:iso:std:iso:30042:ed-2"
+# TBX namespace used for terminology entries (NISO STS interchange DTD fixes
+# this to the ed-1 URN).
+_TBX_NS = "urn:iso:std:iso:30042:ed-1"
 _XLINK_NS = "http://www.w3.org/1999/xlink"
 _MML_NS = "http://www.w3.org/1998/Math/MathML"
 
@@ -109,6 +115,48 @@ def export_sts_xml(
     return output_path
 
 
+# Bundled NISO STS 1.2 interchange (MathML3) DTD entry point, relative to either
+# the consumer workspace or PROJECT_ROOT (see resolve_asset_file).
+_STS_DTD_REL = "schema/niso-sts-1.2-mathml3/NISO-STS-interchange-1-mathml3.dtd"
+
+
+def validate_sts_xml(xml_path: Path) -> list[str]:
+    """Validate an STS XML file against the bundled NISO STS 1.2 DTD.
+
+    Args:
+        xml_path: Path to the STS XML file to validate.
+
+    Returns:
+        A list of human-readable error strings (empty if the document is
+        valid). A single-element list is returned when validation cannot be
+        performed (lxml or the DTD is unavailable, or the file is missing).
+    """
+    try:
+        from lxml import etree
+    except ImportError:
+        return ["lxml is required to validate STS XML (pip install lxml)"]
+
+    if not xml_path.exists():
+        return [f"STS file not found: {xml_path}"]
+
+    from specbuild.utils import resolve_asset_file
+
+    dtd_path = resolve_asset_file(_STS_DTD_REL)
+    if not dtd_path.exists():
+        return [f"bundled NISO STS DTD not found: {dtd_path}"]
+
+    try:
+        dtd = etree.DTD(str(dtd_path))
+        tree = etree.parse(str(xml_path), etree.XMLParser(resolve_entities=True))
+    except Exception as exc:  # noqa: BLE001 — surface parse/DTD-load failures
+        return [f"could not parse STS or DTD: {exc}"]
+
+    if dtd.validate(tree):
+        return []
+    return [f"line {e.line}: {e.message}" for e in dtd.error_log]
+
+
+
 def _collect_footnotes(soup: BeautifulSoup) -> dict[str, str]:
     """Collect footnote content indexed by anchor ID.
 
@@ -165,7 +213,8 @@ def export_sts_xml_soup(
 ) -> str:
     """Convert parsed HTML soup to NISO STS XML string."""
     root = Element("standard")
-    root.set("xmlns:mml", _MML_NS)
+    # xmlns:mml is emitted automatically via the registered "mml" prefix when a
+    # MathML element is present; declaring it here too would duplicate the attr.
     root.set("xmlns:xlink", _XLINK_NS)
     root.set("xmlns:tbx", _TBX_NS)
     root.set("xml:lang", metadata.get("language", "en"))
@@ -179,6 +228,8 @@ def export_sts_xml_soup(
     _build_body(root, soup, flavor, footnote_map, lang=lang)
     _build_back(root, soup, metadata, flavor, footnote_map)
 
+    _sanitize_ids(root)
+
     indent(root, space="  ")
     xml_bytes = tostring(root, encoding="unicode", xml_declaration=False)
     doctype = (
@@ -187,6 +238,43 @@ def export_sts_xml_soup(
         '"NISO-STS-interchange-1-2-MathML3.dtd">'
     )
     return f'<?xml version="1.0" encoding="UTF-8"?>\n{doctype}\n{xml_bytes}\n'
+
+
+# Attributes whose values are ID references and must be rewritten in lockstep
+# with sanitized ``id`` values.
+_IDREF_ATTRS = ("rid", "rids")
+
+
+def _sanitize_ids(root: Element) -> None:
+    """Rewrite ``id`` values to valid XML names and fix references in lockstep.
+
+    XML ``ID``/``IDREF`` values must be valid names (NCName) — they cannot begin
+    with a digit. Bikeshed can emit ids like ``11-7-subtitle`` or ``29``; STS
+    validation then rejects both the ``id`` and any ``rid`` that points to it.
+    Build a remap of offending ids, apply it to every ``id`` and to all
+    IDREF-bearing attributes so cross-references keep resolving.
+    """
+    remap: dict[str, str] = {}
+    for el in root.iter():
+        cur = el.get("id")
+        if cur and not _is_xml_name(cur):
+            remap.setdefault(cur, "id-" + cur)
+    if not remap:
+        return
+    for el in root.iter():
+        cur = el.get("id")
+        if cur in remap:
+            el.set("id", remap[cur])
+        for attr in _IDREF_ATTRS:
+            val = el.get(attr)
+            if not val:
+                continue
+            el.set(attr, " ".join(remap.get(tok, tok) for tok in val.split()))
+
+
+def _is_xml_name(value: str) -> bool:
+    """True if *value* is a valid XML Name (safe as an ID; no leading digit)."""
+    return bool(re.match(r"^[A-Za-z_][\w.\-]*$", value))
 
 
 # ---------------------------------------------------------------------------
@@ -209,16 +297,16 @@ def _build_front(
     title_wrap.set("xml:lang", lang)
 
     title_main = metadata.get("title_main", "")
-    if title_main:
-        main_el = SubElement(title_wrap, "main")
-        main_el.text = title_main
-
     title_intro = metadata.get("title_intro", "")
+    title_part = metadata.get("title_part", "")
+
+    # STS <title-wrap> child order is fixed: intro?, main?, compl?.
     if title_intro:
         intro_el = SubElement(title_wrap, "intro")
         intro_el.text = title_intro
-
-    title_part = metadata.get("title_part", "")
+    if title_main:
+        main_el = SubElement(title_wrap, "main")
+        main_el.text = title_main
     if title_part:
         compl_el = SubElement(title_wrap, "compl")
         compl_el.text = title_part
@@ -347,7 +435,7 @@ def _build_body(
 
     fn_map = footnote_map or {}
 
-    for section in body.find_all("section", recursive=False):
+    for section in _top_level_sections(soup):
         heading = section.find(HEADING_RE)
         if heading is None:
             continue
@@ -359,6 +447,84 @@ def _build_body(
             continue
 
         _convert_section(body_el, section, footnote_map=fn_map, lang=lang)
+
+
+def _top_level_sections(soup: BeautifulSoup) -> list:
+    """Return the document's top-level ``<section>`` elements.
+
+    Looks under ``<main>`` (where Bikeshed places content) and falls back to
+    ``<body>``. Bikeshed emits a flat ``<hN>`` + sibling stream with no
+    ``<section>`` wrappers; when none are found, the headings are grouped into
+    nested ``<section>`` trees in place (idempotent — subsequent calls reuse
+    them). Shared by ``_build_body`` and ``_build_back`` so both see the same
+    structure.
+    """
+    body = soup.find("body")
+    if body is None:
+        return []
+    container = soup.find("main") or body
+    sections = container.find_all("section", recursive=False)
+    if not sections:
+        _sectionize_headings(soup, container)
+        sections = container.find_all("section", recursive=False)
+    return sections
+
+
+def _sectionize_headings(soup: BeautifulSoup, container: object) -> int:
+    """Wrap a flat ``<hN>`` + following-sibling stream into nested ``<section>``.
+
+    Bikeshed output is not sectioned; STS conversion is section-driven. This
+    groups each heading and the content that follows it (until the next heading
+    of the same or shallower level) into a ``<section>`` nested by heading
+    level. Returns the number of sections created. No-op if *container* has no
+    headings.
+    """
+    from bs4 import NavigableString, Tag
+
+    def _level(node: object) -> int | None:
+        if isinstance(node, Tag) and node.name and len(node.name) == 2 and node.name[0] == "h":
+            try:
+                return int(node.name[1])
+            except ValueError:
+                return None
+        return None
+
+    nodes = [n for n in container.children if isinstance(n, (Tag, NavigableString))]
+    for n in nodes:
+        n.extract()
+
+    top: list = []
+    stack: list[tuple[int, Tag]] = []  # (level, section)
+    created = 0
+    for node in nodes:
+        lv = _level(node)
+        if lv is not None:
+            while stack and stack[-1][0] >= lv:
+                stack.pop()
+            sec = soup.new_tag("section")
+            created += 1
+            hid = node.get("id") if isinstance(node, Tag) else None
+            if hid:
+                sec["id"] = hid
+            (stack[-1][1] if stack else _TopSink(top)).append(sec)
+            sec.append(node)
+            stack.append((lv, sec))
+        else:
+            (stack[-1][1] if stack else _TopSink(top)).append(node)
+
+    for n in top:
+        container.append(n)
+    return created
+
+
+class _TopSink:
+    """Collect top-level (pre-heading / un-nested) nodes into a list."""
+
+    def __init__(self, lst: list) -> None:
+        self._lst = lst
+
+    def append(self, node: object) -> None:
+        self._lst.append(node)
 
 
 def _extract_label(heading_text: str) -> tuple[str, str]:
@@ -394,7 +560,33 @@ def _infer_ref_type(rid: str) -> str:
         return "disp-formula"
     if rid_lower.startswith(("req-",)):
         return "other"
+    if rid_lower.startswith(("term-", "dfn-")):
+        # Terms are emitted as <def-item> inside <def-list> within a <sec>;
+        # NISO STS ref-types has no "term" value, so reference them as "sec".
+        return "sec"
     return "sec"
+
+
+def _term_anchor_id(dts: list) -> str:
+    """Return the cross-reference anchor id for a term entry.
+
+    The id may sit directly on a ``<dt>`` or on a descendant carrying the
+    anchor (``<span id="term-…">``, ``<dfn id="…">``). Prefers an explicit
+    ``term-*``/``dfn-*`` id; otherwise falls back to the first id found.
+    """
+    fallback = ""
+    for dt in dts:
+        candidates = [dt]
+        if hasattr(dt, "find_all"):
+            candidates += dt.find_all(["span", "dfn"], recursive=True)
+        for el in candidates:
+            eid = el.get("id", "") if hasattr(el, "get") else ""
+            if not eid:
+                continue
+            if eid.startswith(("term-", "dfn-")):
+                return eid
+            fallback = fallback or eid
+    return fallback
 
 
 def _code_language(pre_elem: object) -> str:
@@ -465,14 +657,22 @@ def _fill_inline(
 
             elif href.startswith("#"):
                 rid = href[1:]
-                inner = SubElement(xml_el, "xref")
-                inner.set("ref-type", _infer_ref_type(rid))
-                inner.set("rid", rid)
-                inner.text = child.get_text(strip=True)
-                children_added.append(inner)
+                # Navigation chrome (self-links, "back to ToC", etc.) are not
+                # real cross-references and have no STS target — emit their text
+                # only, so we don't produce dangling <xref rid="toc">.
+                _nav = {"toc", "contents", "top"}
+                _nav_classes = {"self-link", "back-to-top", "toc-backref", "back-to-toc"}
+                if rid in _nav or (set(classes) & _nav_classes):
+                    _append_text(xml_el, child.get_text(strip=True), children_added)
+                else:
+                    inner = SubElement(xml_el, "xref")
+                    inner.set("ref-type", _infer_ref_type(rid))
+                    inner.set("rid", rid)
+                    inner.text = child.get_text(strip=True)
+                    children_added.append(inner)
             elif href:
                 inner = SubElement(xml_el, "ext-link")
-                inner.set(f"{{{_XLINK_NS}}}href", href)
+                inner.set("xlink:href", href)
                 inner.set("ext-link-type", "uri")
                 inner.text = child.get_text(strip=True)
                 children_added.append(inner)
@@ -523,7 +723,7 @@ def _fill_inline(
             inline_graphic = SubElement(xml_el, "inline-graphic")
             src = child.get("src", "")
             if src:
-                inline_graphic.set(f"{{{_XLINK_NS}}}href", src)
+                inline_graphic.set("xlink:href", src)
             alt = child.get("alt", "")
             if alt:
                 inline_graphic.set("xlink:title", alt)
@@ -715,16 +915,17 @@ def _convert_terms_section(
             lang_set = SubElement(tbx_entry, "tbx:langSet")
             lang_set.set("xml:lang", lang)
 
+            # STS TBX subset: <langSet> is (definition | crossReference | ...)*
+            # followed by <tig>+. The definition is a <tbx:definition> sibling
+            # that precedes the <tig> (which holds only the term + grammar).
+            defn_p = child.find("p")
+            if defn_p:
+                definition = SubElement(lang_set, "tbx:definition")
+                _fill_inline(definition, defn_p)
+
             tig = SubElement(lang_set, "tbx:tig")
             term_el = SubElement(tig, "tbx:term")
             term_el.text = sub_title
-
-            defn_p = child.find("p")
-            if defn_p:
-                descrip_grp = SubElement(lang_set, "tbx:descripGrp")
-                descrip = SubElement(descrip_grp, "tbx:descrip")
-                descrip.set("type", "definition")
-                _fill_inline(descrip, defn_p)
 
         elif child.name == "p":
             p_el = SubElement(sec_el, "p")
@@ -773,7 +974,7 @@ def _build_back(
     annexes: list = []
     bib_sections: list = []
 
-    for section in body.find_all("section", recursive=False):
+    for section in _top_level_sections(soup):
         heading = section.find(HEADING_RE)
         if heading is None:
             continue
@@ -999,12 +1200,30 @@ def _convert_children(
 
         elif child.name == "dl":
             def_list = SubElement(parent, "def-list")
-            for dt in child.find_all("dt", recursive=False):
+            # A definition entry may have several <dt> before its <dd>
+            # (e.g. ISO terms: one <dt> for the number, one for the term name).
+            # Group consecutive <dt> siblings together, carry the entry's anchor
+            # id (preferring a term-*/dfn-* id on the <dt> or a descendant) onto
+            # <def-item>, and join the <dt> texts into a single <term>.
+            entries: list[tuple[list, object]] = []
+            pending: list = []
+            for node in child.find_all(["dt", "dd"], recursive=False):
+                if node.name == "dt":
+                    pending.append(node)
+                else:  # dd closes the current group
+                    entries.append((pending, node))
+                    pending = []
+            if pending:  # trailing <dt> with no <dd>
+                entries.append((pending, None))
+
+            for dts, dd in entries:
                 def_item = SubElement(def_list, "def-item")
+                item_id = _term_anchor_id(dts)
+                if item_id:
+                    def_item.set("id", item_id)
                 term_el = SubElement(def_item, "term")
-                term_el.text = dt.get_text(strip=True)
-                dd = dt.find_next_sibling("dd")
-                if dd:
+                term_el.text = " ".join(dt.get_text(" ", strip=True) for dt in dts).strip()
+                if dd is not None:
                     def_el = SubElement(def_item, "def")
                     _convert_p(def_el, dd, footnote_map=fn_map)
 
@@ -1038,7 +1257,8 @@ def _convert_children(
             if not code_lang and any(c in classes for c in ("sdl", "sdl-code", "sdl-syntax")):
                 code_lang = "sdl"
             code = SubElement(parent, "code")
-            code.set("preformat-type", "computer")
+            # NISO STS <code> has no @preformat-type (that belongs to
+            # <preformat>); it does allow @xml:space and @language/@code-type.
             code.set("xml:space", "preserve")
             if code_lang:
                 code.set("language", code_lang)
@@ -1274,7 +1494,10 @@ def _extract_cell_attrs(cell: object) -> dict[str, str]:
 
 def _convert_table(parent: Element, table: object) -> None:
     """Convert an HTML ``<table>`` to an STS ``<table-wrap>`` with full content."""
-    table_id = table.get("id", "")
+    # Anchor id may live on the <table> or, per ISO/STS convention, on its
+    # <caption> (Bikeshed/specbuild places table ids on the caption).
+    caption_for_id = table.find("caption")
+    table_id = table.get("id", "") or (caption_for_id.get("id", "") if caption_for_id else "")
     classes = table.get("class", [])
     attrs: dict[str, str] = {}
     if table_id:
@@ -1308,20 +1531,20 @@ def _convert_table(parent: Element, table: object) -> None:
     thead = table.find("thead")
     if thead:
         thead_el = SubElement(tbl_el, "thead")
-        for tr in thead.find_all("tr"):
+        for tr in thead.find_all("tr", recursive=False):
             row_el = SubElement(thead_el, "tr")
-            for cell in tr.find_all(["th", "td"]):
+            for cell in tr.find_all(["th", "td"], recursive=False):
                 cell_tag = "th" if cell.name == "th" else "td"
                 cell_el = SubElement(row_el, cell_tag, **_extract_cell_attrs(cell))
                 _fill_inline(cell_el, cell)
 
     tbody_source = table.find("tbody") or table
     tbody_el = SubElement(tbl_el, "tbody")
-    for tr in tbody_source.find_all("tr"):
+    for tr in tbody_source.find_all("tr", recursive=False):
         if thead and tr.parent and tr.parent.name == "thead":
             continue
         row_el = SubElement(tbody_el, "tr")
-        for cell in tr.find_all(["th", "td"]):
+        for cell in tr.find_all(["th", "td"], recursive=False):
             cell_tag = "th" if cell.name == "th" else "td"
             cell_el = SubElement(row_el, cell_tag, **_extract_cell_attrs(cell))
             _fill_inline(cell_el, cell)
@@ -1370,7 +1593,9 @@ def _convert_figure(parent: Element, figure: object) -> None:
         graphic = SubElement(fig_el, "graphic")
         src = img.get("src", "")
         if src:
-            graphic.set(f"{{{_XLINK_NS}}}href", src)
+            graphic.set("xlink:href", src)
         alt = img.get("alt", "")
         if alt:
-            graphic.set("alt", alt)
+            # STS has no @alt on <graphic>; alternate text goes in <alt-text>.
+            alt_el = SubElement(graphic, "alt-text")
+            alt_el.text = alt
