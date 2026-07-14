@@ -82,6 +82,8 @@ def render(root: Path, repo: str) -> str:
 
     repo_url = f"https://github.com/{repo}"
     has_main = (root / "main" / "index.html").exists()
+    main_pdf = "av2-isobmff_Spec.pdf"
+    has_main_pdf = (root / "main" / main_pdf).exists()
 
     cards = []
     for n in pr_numbers:
@@ -114,13 +116,16 @@ def render(root: Path, repo: str) -> str:
     if not cards:
         cards.append('<p class="empty">No open pull requests with previews right now.</p>')
 
+    pdf_link = (
+        f'\n          <a href="./main/{main_pdf}">📕 PDF</a>' if has_main_pdf else ""
+    )
     main_card = (
         f"""
       <article class="card main">
         <h3><a href="./main/index.html">Main specification</a></h3>
         <p class="meta">Latest build of the <code>main</code> branch</p>
         <p class="links">
-          <a href="./main/index.html">📄 Spec</a>
+          <a href="./main/index.html">📄 Spec</a>{pdf_link}
           <a href="{repo_url}">🔗 Repository</a>
         </p>
       </article>"""
