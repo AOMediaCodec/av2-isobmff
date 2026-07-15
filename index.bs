@@ -331,7 +331,7 @@ NOTE: In [[!AV2]], <code>chroma_format_idc</code> and <code>bit_depth_idc</code>
 
 Each OBU carried in <code>configOBUs</code> shall be framed using the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]]: each OBU is preceded by a <code>leb128()</code> <code>num_bytes_in_obu</code> value giving the byte length of the OBU that follows.
 
-<code>configOBUs</code> shall contain a [=Sequence Header OBU=] as its first OBU.
+<code>configOBUs</code> shall contain a [=Sequence Header OBU=] as its first OBU. For a [=Multistream=], <code>configOBUs</code> shall contain the [=Sequence Header OBU=] of each extended layer together with the stream's global configuration OBUs, in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]]; its first OBU may therefore be a [=Layer Configuration Record OBU=] rather than a [=Sequence Header OBU=].
 
 <code>configOBUs</code> may contain additional OBUs whose content is constant for the track's samples, such as static [=Metadata OBUs=].
 
@@ -340,6 +340,8 @@ Each OBU carried in <code>configOBUs</code> shall be framed using the [=Length d
 - any OBU carrying coded frame data, including [=Closed Loop Key OBUs=], [=Open Loop Key OBUs=], [=Switch OBUs=], [=Bridge Frame OBUs=], regular or leading tile-group OBUs, and switch-eligible or TIP frame OBUs;
 
 The values of the fields in the [=AV2CodecConfigurationBox=] shall equal the corresponding effective values of the fields of the [=Sequence Header OBU=] carried in <code>configOBUs</code>.
+
+<p class="issue">Editor's note: a [=Multistream=]'s <code>configOBUs</code> contains a [=Sequence Header OBU=] for each extended layer. Which sequence header determines the [=AV2CodecConfigurationBox=] field values, and the impact on multi-layer use cases, needs investigation.</p>
 
 ## AV2 Sample Format ## {#sample-format}
 
@@ -364,6 +366,8 @@ The OBUs within a sample shall appear in the order specified by the [=ordering o
 - a sample shall not contain a [=Sequence Header OBU=]; sequence headers are carried in the <code>configOBUs</code> of the [=AV2CodecConfigurationBox=] of the active [=AV2SampleEntry=];
 - a sample shall not contain a [=Layer Configuration Record OBU=]; layer configuration records are carried in the <code>configOBUs</code> of the active [=AV2SampleEntry=];
 - a sample should not contain any other OBU whose contents do not change for the duration of the active [=AV2SampleEntry=], in order to avoid redundant data; for example, a [=Metadata OBU=] whose contents are constant should be carried in <code>configOBUs</code> rather than repeated in every sample, or discarded from the samples and conveyed at the ISOBMFF level.
+
+<p class="issue">Editor's note: the Content Interpretation OBU (<code>OBU_CONTENT_INTERPRETATION</code>) carries picture-level interpretation metadata (for example, colour description) that overlaps ISOBMFF container-level signalling such as the ColourInformationBox. Whether to carry it in the track or replace it entirely with container-level signalling is to be resolved in this version.</p>
 
 The handling of the [=Temporal Delimiter OBU=] depends on how a track's samples are consumed. When the samples are passed to an AV2 decoder API that already treats each sample as one [=Temporal Unit=], a [=Temporal Delimiter OBU=] is not required. When the samples are reconstructed into an [=AV2 bitstream=] in the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]], or into any other carriage that does not itself delimit temporal units, a [=Temporal Delimiter OBU=] (framed with its <code>leb128()</code> length prefix) shall be prepended ahead of each sample's OBUs that does not already start with one.
 
