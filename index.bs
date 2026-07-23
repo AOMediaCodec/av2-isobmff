@@ -286,12 +286,12 @@ The <dfn>AV2CodecConfigurationBox</dfn> carries the decoder initialisation data 
 ```cpp
 aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 {
-  unsigned int(8)  reserved = 0;
+  unsigned int(8)  reserved1 = 0;
   unsigned int(8)  configOBUs[];
 }
 ```
 
-<code>reserved</code> shall be set to 0 in this version of the specification. Readers compliant with this version of the specification shall ignore its value.
+<code>reserved1</code> shall be set to 0 in this version of the specification. Readers compliant with this version of the specification shall ignore its value.
 
 <code>configOBUs</code> is a byte array carrying one or more OBUs as described in [[#configobus]].
 
