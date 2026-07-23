@@ -137,12 +137,7 @@ url: https://av2.aomedia.org/v1.0.0/index.html#general_obu_semantics; spec: AV2;
 
 url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
     text: seq_profile
-    text: seq_level_idx
-    text: seq_tier
-    text: still_picture
     text: timing_info_present_flag
-    text: max_frame_width_minus_1
-    text: max_frame_height_minus_1
 
 url: https://av2.aomedia.org/v1.0.0/index.html#color_config_semantics; spec: AV2; type: dfn;
     text: high_bitdepth
@@ -155,13 +150,8 @@ url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_seman
     text: initial_display_delay_minus_1
 
 url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
-    text: seq_profile_idc
-    text: chroma_format_idc
-    text: bit_depth_idc
     text: monotonic_output_order_flag
     text: film_grain_params_present
-    text: seq_initial_display_delay_present_flag
-    text: seq_initial_display_delay_minus_1
     text: single_picture_header_flag
 
 url: https://av2.aomedia.org/v1.0.0/index.html#general_obu_syntax; spec: AV2; type: dfn
@@ -296,34 +286,12 @@ The <dfn>AV2CodecConfigurationBox</dfn> carries the decoder initialisation data 
 ```cpp
 aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 {
-  unsigned int(8)  configurationVersion = 1;
-
-  unsigned int(5)  seq_profile_idc;
-  unsigned int(5)  seq_level_idx;
-  unsigned int(1)  seq_tier;
-
-  unsigned int(3)  chroma_format_idc;
-  unsigned int(3)  bit_depth_idc;
-
-  unsigned int(1)  monotonic_output_order_flag;
-  unsigned int(1)  still_picture;
-  unsigned int(1)  film_grain_params_present;
-  unsigned int(1)  seq_initial_display_delay_present_flag;
-  unsigned int(4)  seq_initial_display_delay_minus_1;
-  unsigned int(7)  reserved1 = 0;
-
-  unsigned int(16) max_frame_width_minus_1;
-  unsigned int(16) max_frame_height_minus_1;
-
+  unsigned int(8)  reserved = 0;
   unsigned int(8)  configOBUs[];
 }
 ```
 
-semantics TBD
-
-NOTE: In [[!AV2]], <code>chroma_format_idc</code> and <code>bit_depth_idc</code> are coded with <code>uvlc()</code> and therefore have no inherent upper bound, even though [[!AV2]] currently defines only a small number of values for each (4 and 2 respectively). The 3-bit fields used here accommodate all values currently defined by [[!AV2]] with additional headroom for future extensions. If a future revision of [[!AV2]] defines values that do not fit in 3 bits, a new <code>configurationVersion</code> of the [=AV2CodecConfigurationBox=] can be defined.
-
-<code>reserved</code> shall be set to 0. Readers shall ignore its value.
+<code>reserved</code> shall be set to 0 in this version of the specification. Readers compliant with this version of the specification shall ignore its value.
 
 <code>configOBUs</code> is a byte array carrying one or more OBUs as described in [[#configobus]].
 
