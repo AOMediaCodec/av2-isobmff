@@ -253,7 +253,7 @@ Examples in this specification are introduced with the words "for example" or ar
 
 Informative notes begin with the word "Note" and are set apart from the normative text with <code>class="note"</code>, like this:
 
-NOTE: This is an informative note.
+NOTE: This is an example of an informative note.
 
 Bitstream features overview {#bitstream-overview}
 =================================================
@@ -390,7 +390,7 @@ The OBUs within a sample SHALL appear in the order specified by the [=ordering o
 - the trailing bits of an OBU carried in a sample SHALL be limited to those required for byte alignment as specified in [[!AV2]]; trailing bits SHALL NOT be used to pad an OBU beyond byte alignment;
 - a sample SHALL NOT contain a [=Sequence Header OBU=]; sequence headers are carried in the <code>configOBUs</code> of the [=AV2CodecConfigurationBox=] of the active [=AV2SampleEntry=];
 - a sample SHALL NOT contain a [=Layer Configuration Record OBU=]; layer configuration records are carried in the <code>configOBUs</code> of the active [=AV2SampleEntry=];
-- a sample SHOULD NOT contain any other OBU whose contents do not change for the duration of the active [=AV2SampleEntry=], in order to avoid redundant data; for example, a [=Metadata OBU=] whose contents are constant SHOULD be carried in <code>configOBUs</code> rather than repeated in every sample, or discarded from the samples and conveyed at the ISOBMFF level.
+- a sample SHOULD NOT contain any other OBU whose contents do not change for the duration of the active [=AV2SampleEntry=], in order to avoid redundant data; for example, a [=Metadata OBU=] whose contents are constant should be carried in <code>configOBUs</code> rather than repeated in every sample, or discarded from the samples and conveyed at the ISOBMFF level.
 
 The handling of the [=Temporal Delimiter OBU=] depends on how a track's samples are consumed. When the samples are passed to an AV2 decoder API that already treats each sample as one [=Temporal Unit=], a [=Temporal Delimiter OBU=] is not required. When the samples are reconstructed into an [=AV2 bitstream=] in the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]], or into any other carriage that does not itself delimit temporal units, a [=Temporal Delimiter OBU=] (framed with its <code>leb128()</code> length prefix) SHALL be prepended ahead of each sample's OBUs that does not already start with one.
 
