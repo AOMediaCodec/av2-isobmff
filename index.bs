@@ -137,12 +137,7 @@ url: https://av2.aomedia.org/v1.0.0/index.html#general_obu_semantics; spec: AV2;
 
 url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
     text: seq_profile
-    text: seq_level_idx
-    text: seq_tier
-    text: still_picture
     text: timing_info_present_flag
-    text: max_frame_width_minus_1
-    text: max_frame_height_minus_1
 
 url: https://av2.aomedia.org/v1.0.0/index.html#color_config_semantics; spec: AV2; type: dfn;
     text: high_bitdepth
@@ -155,13 +150,8 @@ url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_seman
     text: initial_display_delay_minus_1
 
 url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
-    text: seq_profile_idc
-    text: chroma_format_idc
-    text: bit_depth_idc
     text: monotonic_output_order_flag
     text: film_grain_params_present
-    text: seq_initial_display_delay_present_flag
-    text: seq_initial_display_delay_minus_1
     text: single_picture_header_flag
 
 url: https://av2.aomedia.org/v1.0.0/index.html#general_obu_syntax; spec: AV2; type: dfn
@@ -323,50 +313,31 @@ The <dfn>AV2CodecConfigurationBox</dfn> carries the decoder initialisation data 
 ```cpp
 aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 {
-  unsigned int(8)  configurationVersion = 1;
-
-  unsigned int(5)  seq_profile_idc;
-  unsigned int(5)  seq_level_idx;
-  unsigned int(1)  seq_tier;
-
-  unsigned int(3)  chroma_format_idc;
-  unsigned int(3)  bit_depth_idc;
-
-  unsigned int(1)  monotonic_output_order_flag;
-  unsigned int(1)  still_picture;
-  unsigned int(1)  film_grain_params_present;
-  unsigned int(1)  seq_initial_display_delay_present_flag;
-  unsigned int(4)  seq_initial_display_delay_minus_1;
-  unsigned int(7)  reserved1 = 0;
-
-  unsigned int(16) max_frame_width_minus_1;
-  unsigned int(16) max_frame_height_minus_1;
-
-  unsigned int(8)  configOBUs[];
+  unsigned int(8) reserved1 = 0;
+  unsigned int(8) config_obus_count_minus1;
+  for (i = 0; i < config_obus_count_minus1 + 1; ++i) {
+    unsigned int(8) config_obu[];
+  }
 }
 ```
 
-semantics TBD
-
-NOTE: In [[!AV2]], <code>chroma_format_idc</code> and <code>bit_depth_idc</code> are coded with <code>uvlc()</code> and therefore have no inherent upper bound, even though [[!AV2]] currently defines only a small number of values for each (4 and 2 respectively). The 3-bit fields used here accommodate all values currently defined by [[!AV2]] with additional headroom for future extensions. If a future revision of [[!AV2]] defines values that do not fit in 3 bits, a new <code>configurationVersion</code> of the [=AV2CodecConfigurationBox=] can be defined.
-
 <code>reserved</code> SHALL be set to 0. Readers SHALL ignore its value.
 
-<code>configOBUs</code> is a byte array carrying one or more OBUs as described in [[#configobus]].
+<code>config_obus_count_minus1</code> is the number of <code>config_obu</code> minus one.
 
-### configOBUs ### {#configobus}
+<code>config_obu</code> is a byte array carrying one OBU and its length as described in [[#config_obu]].
 
-Each OBU carried in <code>configOBUs</code> SHALL be framed using the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]]: each OBU is preceded by a <code>leb128()</code> <code>num_bytes_in_obu</code> value giving the byte length of the OBU that follows.
+### config_obu ### {#config_obu}
 
-<code>configOBUs</code> SHALL contain a [=Sequence Header OBU=] as its first OBU.
+Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128()</code> <code>num_bytes_in_obu</code> value giving the byte length of that OBU, as specified in the [=Length delimited bitstream format=] from Annex B of [[!AV2]].
 
-<code>configOBUs</code> MAY contain additional OBUs whose content is constant for the track's samples, such as static [=Metadata OBUs=].
+The first <code>config_obu</code> SHALL carry a [=Sequence Header OBU=].
 
-<code>configOBUs</code> SHALL NOT contain any of the following:
+The <code>AV2CodecConfigurationBox</code> MAY contain additional OBUs whose content is constant for the track's samples, such as static [=Metadata OBUs=].
+
+A <code>config_obu</code> SHALL NOT contain any of the following:
 - a [=Temporal Delimiter OBU=];
 - any OBU carrying coded frame data, including [=Closed Loop Key OBUs=], [=Open Loop Key OBUs=], [=Switch OBUs=], [=Bridge Frame OBUs=], regular or leading tile-group OBUs, and switch-eligible or TIP frame OBUs;
-
-The values of the fields in the [=AV2CodecConfigurationBox=] SHALL equal the corresponding effective values of the fields of the [=Sequence Header OBU=] carried in <code>configOBUs</code>.
 
 ## AV2 Sample Format ## {#sample-format}
 
@@ -388,9 +359,9 @@ The OBUs within a sample SHALL appear in the order specified by the [=ordering o
 - a sample SHALL NOT contain any OBU with <code>obu_type</code> equal to <code>OBU_TEMPORAL_DELIMITER</code>, since the sample boundary already delimits the temporal unit;
 - a sample SHALL NOT contain any OBU with <code>obu_type</code> equal to <code>OBU_PADDING</code>; byte-level padding within a track is achieved using ISOBMFF mechanisms (e.g., 'free'/'skip' boxes or sample size signalling);
 - the trailing bits of an OBU carried in a sample SHALL be limited to those required for byte alignment as specified in [[!AV2]]; trailing bits SHALL NOT be used to pad an OBU beyond byte alignment;
-- a sample SHALL NOT contain a [=Sequence Header OBU=]; sequence headers are carried in the <code>configOBUs</code> of the [=AV2CodecConfigurationBox=] of the active [=AV2SampleEntry=];
-- a sample SHALL NOT contain a [=Layer Configuration Record OBU=]; layer configuration records are carried in the <code>configOBUs</code> of the active [=AV2SampleEntry=];
-- a sample SHOULD NOT contain any other OBU whose contents do not change for the duration of the active [=AV2SampleEntry=], in order to avoid redundant data; for example, a [=Metadata OBU=] whose contents are constant should be carried in <code>configOBUs</code> rather than repeated in every sample, or discarded from the samples and conveyed at the ISOBMFF level.
+- a sample SHALL NOT contain a [=Sequence Header OBU=]; sequence headers are carried in the [=AV2CodecConfigurationBox=] of the active [=AV2SampleEntry=];
+- a sample SHALL NOT contain a [=Layer Configuration Record OBU=]; layer configuration records are carried in the [=AV2CodecConfigurationBox=] of the active [=AV2SampleEntry=];
+- a sample SHOULD NOT contain any other OBU whose contents do not change for the duration of the active [=AV2SampleEntry=], in order to avoid redundant data; for example, a [=Metadata OBU=] whose contents are constant should be carried in the [=AV2CodecConfigurationBox=] rather than repeated in every sample, or discarded from the samples and conveyed at the ISOBMFF level.
 
 The handling of the [=Temporal Delimiter OBU=] depends on how a track's samples are consumed. When the samples are passed to an AV2 decoder API that already treats each sample as one [=Temporal Unit=], a [=Temporal Delimiter OBU=] is not required. When the samples are reconstructed into an [=AV2 bitstream=] in the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]], or into any other carriage that does not itself delimit temporal units, a [=Temporal Delimiter OBU=] (framed with its <code>leb128()</code> length prefix) SHALL be prepended ahead of each sample's OBUs that does not already start with one.
 
@@ -398,7 +369,7 @@ The handling of the [=Temporal Delimiter OBU=] depends on how a track's samples 
 
 A sample is a sync sample if, for every [=coded extended layer unit=] present in the sample, the first coded frame OBU of that coded extended layer unit has <code>obu_type</code> equal to <code>OBU_CLOSED_LOOP_KEY</code>. Such a sample is a [=Closed Random Access=] point for the carried bitstream and corresponds to a SAP of type 1 or 2 as defined in Annex I of [[!ISOBMFF]].
 
-A sync sample SHALL be self-sufficient for starting decoding at that point for all layers: every OBU referenced by the coded frame OBUs of the sync sample SHALL be available either by being carried in <code>configOBUs</code> of the active [=AV2SampleEntry=] or by being present in the sync sample itself, as required by the [=availability of HLS OBUs=] in [[!AV2]].
+A sync sample SHALL be self-sufficient for starting decoding at that point for all layers: every OBU referenced by the coded frame OBUs of the sync sample SHALL be available either by being carried in the [=AV2CodecConfigurationBox=] of the active [=AV2SampleEntry=] or by being present in the sync sample itself, as required by the [=availability of HLS OBUs=] in [[!AV2]].
 
 NOTE: In ISOBMFF terms, sync samples are signalled using the SyncSampleBox ('stss') in unfragmented tracks, or by setting <code>sample_is_non_sync_sample</code> equal to 0 in fragmented tracks. When every sample in a track is a sync sample, the SyncSampleBox is omitted in unfragmented tracks (per [[!ISOBMFF]]), and in fragmented tracks this is expressed through the default sample flags of the MovieExtendsBox ('trex') or TrackFragmentHeaderBox ('tfhd') with no per-sample override.
 
