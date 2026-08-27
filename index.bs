@@ -331,7 +331,7 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 
 Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128()</code> <code>num_bytes_in_obu</code> value giving the byte length of that OBU, as specified in the [=Length delimited bitstream format=] from Annex B of [[!AV2]].
 
-<code>configOBUs</code> SHALL not contain OBUs of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a>.
+<code>configOBUs</code> SHALL NOT contain OBUs of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a>.
 
 <figure class="table" id="figure-table-obus">
   <table class='complex data'>
@@ -489,7 +489,7 @@ Each [=OBU=] within a sample SHALL be framed using the [=Length delimited bitstr
 ### OBUs in samples ### {#sample-obus}
 
 The OBUs within a sample SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]], with the following constraints:
-- the OBUs within a sample SHALL not contain OBUs of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a>;
+- the OBUs within a sample SHALL NOT contain OBUs of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a>;
 - the trailing bits of an OBU carried in a sample SHALL be limited to those required for byte alignment as specified in [[!AV2]]; trailing bits SHALL NOT be used to pad an OBU beyond byte alignment;
 - a sample SHOULD NOT contain any other OBU whose contents do not change for the duration of the active [=AV2SampleEntry=], in order to avoid redundant data; for example, a [=Metadata OBU=] whose contents are constant should be carried in the [=AV2CodecConfigurationBox=] rather than repeated in every sample, or discarded from the samples and conveyed at the ISOBMFF level.
 
