@@ -331,13 +331,147 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 
 Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128()</code> <code>num_bytes_in_obu</code> value giving the byte length of that OBU, as specified in the [=Length delimited bitstream format=] from Annex B of [[!AV2]].
 
+<code>configOBUs</code> SHALL NOT contain OBUs of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a>.
+
+<figure class="table" id="figure-table-obus">
+  <table class='complex data'>
+    <tr>
+      <th>AV2 OBU type</th>
+      <th>Be present in <code>AV2CodecConfigurationBox</code> (in <code>configOBUs</code>)</th>
+      <th>Be present in a sample</th>
+    </tr>
+    <tr>
+      <td><code>OBU_SEQUENCE_HEADER</code></td>
+      <td>SHALL</td>
+      <td>SHALL NOT</td>
+    </tr>
+    <tr>
+      <td><code>OBU_TEMPORAL_DELIMITER</code></td>
+      <td>SHALL NOT</td>
+      <td>SHALL NOT (the sample boundary already delimits the temporal unit)</td>
+    </tr>
+    <tr>
+      <td><code>OBU_MULTI_FRAME_HEADER</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_CLOSED_LOOP_KEY</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_OPEN_LOOP_KEY</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_LEADING_TILE_GROUP</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_REGULAR_TILE_GROUP</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_METADATA_SHORT</code></td>
+      <td>MAY</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_METADATA_GROUP</code></td>
+      <td>MAY</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_SWITCH</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_LEADING_SEF</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_REGULAR_SEF</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_LEADING_TIP</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_REGULAR_TIP</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_BUFFER_REMOVAL_TIMING</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_LAYER_CONFIGURATION_RECORD</code></td>
+      <td>MAY</td>
+      <td>SHALL NOT</td>
+    </tr>
+    <tr>
+      <td><code>OBU_ATLAS_SEGMENT</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_OPERATING_POINT_SET</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_BRIDGE_FRAME</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_MSDO</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_RAS_FRAME</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_QUANTIZATION_MATRIX</code></td>
+      <td>SHALL NOT</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_FILM_GRAIN</code></td>
+      <td>MAY</td>
+      <td>MAY</td>
+    </tr>
+    <tr>
+      <td><code>OBU_CONTENT_INTERPRETATION</code></td>
+      <td>MAY</td>
+      <td>SHALL NOT</td>
+    </tr>
+    <tr>
+      <td><code>OBU_PADDING</code></td>
+      <td>SHALL NOT</td>
+      <td>SHALL NOT (byte-level padding within a track is achieved using ISOBMFF mechanisms, e.g. 'free'/'skip' boxes or sample size signalling)</td>
+     <tr>
+  </table>
+  <figcaption>List of AV2 OBU types and where they can be found</figcaption>
+</figure>
+
 The first <code>config_obu</code> SHALL carry a [=Sequence Header OBU=].
 
 The <code>AV2CodecConfigurationBox</code> MAY contain additional OBUs whose content is constant for the track's samples, such as static [=Metadata OBUs=].
-
-A <code>config_obu</code> SHALL NOT contain any of the following:
-- a [=Temporal Delimiter OBU=];
-- any OBU carrying coded frame data, including [=Closed Loop Key OBUs=], [=Open Loop Key OBUs=], [=Switch OBUs=], [=Bridge Frame OBUs=], regular or leading tile-group OBUs, and switch-eligible or TIP frame OBUs;
 
 ## AV2 Sample Format ## {#sample-format}
 
@@ -355,12 +489,8 @@ Each [=OBU=] within a sample SHALL be framed using the [=Length delimited bitstr
 ### OBUs in samples ### {#sample-obus}
 
 The OBUs within a sample SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]], with the following constraints:
-
-- a sample SHALL NOT contain any OBU with <code>obu_type</code> equal to <code>OBU_TEMPORAL_DELIMITER</code>, since the sample boundary already delimits the temporal unit;
-- a sample SHALL NOT contain any OBU with <code>obu_type</code> equal to <code>OBU_PADDING</code>; byte-level padding within a track is achieved using ISOBMFF mechanisms (e.g., 'free'/'skip' boxes or sample size signalling);
+- the OBUs within a sample SHALL NOT contain OBUs of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a>;
 - the trailing bits of an OBU carried in a sample SHALL be limited to those required for byte alignment as specified in [[!AV2]]; trailing bits SHALL NOT be used to pad an OBU beyond byte alignment;
-- a sample SHALL NOT contain a [=Sequence Header OBU=]; sequence headers are carried in the [=AV2CodecConfigurationBox=] of the active [=AV2SampleEntry=];
-- a sample SHALL NOT contain a [=Layer Configuration Record OBU=]; layer configuration records are carried in the [=AV2CodecConfigurationBox=] of the active [=AV2SampleEntry=];
 - a sample SHOULD NOT contain any other OBU whose contents do not change for the duration of the active [=AV2SampleEntry=], in order to avoid redundant data; for example, a [=Metadata OBU=] whose contents are constant should be carried in the [=AV2CodecConfigurationBox=] rather than repeated in every sample, or discarded from the samples and conveyed at the ISOBMFF level.
 
 The handling of the [=Temporal Delimiter OBU=] depends on how a track's samples are consumed. When the samples are passed to an AV2 decoder API that already treats each sample as one [=Temporal Unit=], a [=Temporal Delimiter OBU=] is not required. When the samples are reconstructed into an [=AV2 bitstream=] in the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]], or into any other carriage that does not itself delimit temporal units, a [=Temporal Delimiter OBU=] (framed with its <code>leb128()</code> length prefix) SHALL be prepended ahead of each sample's OBUs that does not already start with one.
