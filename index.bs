@@ -321,7 +321,7 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 }
 ```
 
-<code>reserved</code> SHALL be set to 0. Readers SHALL ignore its value.
+Writers SHALL set <code>reserved</code> to 0. If <code>reserved</code> is 0, there SHALL NOT be any extra bytes after the last <code>config_obu</code> in the payload of the <code>AV2CodecConfigurationBox</code>. If <code>reserved</code> is nonzero, readers SHALL ignore its value.
 
 <code>config_obus_count_minus1</code> is the number of <code>config_obu</code> minus one.
 
