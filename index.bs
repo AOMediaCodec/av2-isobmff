@@ -422,13 +422,13 @@ Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128
     </tr>
     <tr>
       <td><code>OBU_ATLAS_SEGMENT</code></td>
-      <td>SHALL NOT</td>
       <td>MAY</td>
+      <td>SHALL NOT</td>
     </tr>
     <tr>
       <td><code>OBU_OPERATING_POINT_SET</code></td>
-      <td>SHALL NOT</td>
       <td>MAY</td>
+      <td>SHALL NOT</td>
     </tr>
     <tr>
       <td><code>OBU_BRIDGE_FRAME</code></td>
@@ -437,8 +437,8 @@ Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128
     </tr>
     <tr>
       <td><code>OBU_MSDO</code></td>
-      <td>SHALL NOT</td>
       <td>MAY</td>
+      <td>SHALL NOT</td>
     </tr>
     <tr>
       <td><code>OBU_RAS_FRAME</code></td>
@@ -452,7 +452,7 @@ Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128
     </tr>
     <tr>
       <td><code>OBU_FILM_GRAIN</code></td>
-      <td>MAY</td>
+      <td>SHALL NOT</td>
       <td>MAY</td>
     </tr>
     <tr>
