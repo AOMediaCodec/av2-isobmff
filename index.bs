@@ -352,7 +352,7 @@ Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128
     </tr>
     <tr>
       <td><code>OBU_MULTI_FRAME_HEADER</code></td>
-      <td>SHALL NOT</td>
+      <td>MAY</td>
       <td>MAY</td>
     </tr>
     <tr>
