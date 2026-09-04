@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="469936461c4ba060d730c48e4996bbfe10fa14e6" name="revision"/>
+<meta content="720d78e65faab3cd853cef47318eac8111638064" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2939,7 +2939,7 @@ figcaption.has-figure-number::before { content: none !important; }
 </p>
 <h1 class="no-ref p-name" id="title">AV2 Codec ISO Media File Format Binding</h1>
 <h2 class="heading no-num no-ref no-toc settled" id="profile-and-date"><span class="content">Working Group Draft,
-    <time class="dt-updated" datetime="2026-09-02">2 September 2026</time></span></h2>
+    <time class="dt-updated" datetime="2026-09-04">4 September 2026</time></span></h2>
 <div data-fill-with="spec-metadata">
 <dl>
 <dt>This version:
@@ -3062,18 +3062,18 @@ figcaption.has-figure-number::before { content: none !important; }
   <c- p="">}</c->
 <c- p="">}</c->
 </pre>
-<p><code>reserved1</code> <span class="rfc-keyword">SHALL</span> be set to 0 and there <span class="rfc-keyword">SHALL NOT</span> be any extra bytes after the last <code>config_obu</code> in the payload of the <code>AV2CodecConfigurationBox</code>. If <code>reserved1</code> is nonzero, readers <span class="rfc-keyword">SHALL</span> ignore its value and <span class="rfc-keyword">SHALL</span> ignore any extra bytes after the last <code>config_obu</code>.</p>
+<p>Writers <span class="rfc-keyword">SHALL</span> set <code>reserved</code> to 0. If <code>reserved</code> is 0, there <span class="rfc-keyword">SHALL NOT</span> be any extra bytes after the last <code>config_obu</code> in the payload of the <code>AV2CodecConfigurationBox</code>. If <code>reserved</code> is nonzero, readers <span class="rfc-keyword">SHALL</span> ignore its value.</p>
 <p><code>config_obus_count_minus1</code> is the number of <code>config_obu</code> minus one.</p>
 <p><code>config_obu</code> is a byte array carrying one OBU and its length as described in <a href="#config_obu">§ 3.2.3 config_obu</a>.</p>
 <h4 class="heading settled" data-level="3.2.3" id="config_obu"><span class="secno">3.2.3. </span><span class="content">config_obu</span><a class="self-link" href="#config_obu"></a></h4>
 <p>Each <code>config_obu</code> <span class="rfc-keyword">SHALL</span> carry a single OBU preceded by a <code>leb128()</code> <code>num_bytes_in_obu</code> value giving the byte length of that OBU, as specified in the <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html" id="ref-for-something①①">Length delimited bitstream format</a> from Annex B of <a data-link-type="biblio" href="#biblio-av2" title="AV2 Bitstream &amp; Decoding Process Specification">[AV2]</a>.</p>
-<p><code>configOBUs</code> <span class="rfc-keyword">SHALL NOT</span> contain OBUs of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Figure 3.1</a>.</p>
+<p><code>config_obu</code> <span class="rfc-keyword">SHALL NOT</span> contain OBUs of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Figure 3.1</a>.</p>
 <figure class="table" id="figure-table-obus">
 <table class="complex data">
 <tbody>
 <tr>
 <th>AV2 OBU type
-       </th><th>Be present in <code>AV2CodecConfigurationBox</code> (in <code>configOBUs</code>)
+       </th><th>Be present in <code>AV2CodecConfigurationBox</code> (in <code>config_obu</code>)
        </th><th>Be present in a sample
       </th></tr><tr>
 <td><code>OBU_SEQUENCE_HEADER</code>

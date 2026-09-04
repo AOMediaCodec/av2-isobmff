@@ -1492,7 +1492,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version NORMALIZED" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="469936461c4ba060d730c48e4996bbfe10fa14e6" name="revision"/>
+<meta content="720d78e65faab3cd853cef47318eac8111638064" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -4360,21 +4360,27 @@ track.
 }
 </pre>
 <p>
-<code>
-<del class="diff-old">reserved
-</del>
-<ins class="diff-chg">reserved1
-</ins>
-</code>
+<ins class="diff-chg">Writers
 SHALL
+set
+</ins>
+<code>
+reserved
+</code>
+<del class="diff-old">SHALL
 be
 set
-to
-<del class="diff-old">0.
-Readers
 </del>
-<ins class="diff-chg">0
-and
+to
+0.
+<del class="diff-old">Readers
+</del>
+<ins class="diff-chg">If
+</ins><code><ins class="diff-chg">
+reserved
+</ins></code><ins class="diff-chg">
+is
+0,
 there
 SHALL
 NOT
@@ -4398,7 +4404,7 @@ AV2CodecConfigurationBox
 </ins></code>.<ins class="diff-chg">
 If
 </ins><code><ins class="diff-chg">
-reserved1
+reserved
 </ins></code><ins class="diff-chg">
 is
 nonzero,
@@ -4407,21 +4413,7 @@ readers
 SHALL
 ignore
 its
-<del class="diff-old">value.
-</del>
-<ins class="diff-chg">value
-and
-SHALL
-ignore
-any
-extra
-bytes
-after
-the
-last
-</ins><code><ins class="diff-chg">
-config_obu
-</ins></code>.
+value.
 </p>
 <p>
 <code>
@@ -4516,7 +4508,7 @@ of
 </p>
 <p>
 <code>
-configOBUs
+config_obu
 </code>
 SHALL
 NOT
@@ -4553,7 +4545,7 @@ AV2CodecConfigurationBox
 </code>
 (in
 <code>
-configOBUs
+config_obu
 </code>
 )
 </th>
