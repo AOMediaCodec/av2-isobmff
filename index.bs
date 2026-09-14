@@ -473,6 +473,8 @@ Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128
 
 The first <code>config_obu</code> SHALL carry a [=Sequence Header OBU=].
 
+The trailing bits of an OBU carried in a <code>config_obu</code> SHALL be limited to those required for byte alignment as specified in [[!AV2]]; trailing bits SHALL NOT be used to pad an OBU beyond byte alignment.
+
 The <code>AV2CodecConfigurationBox</code> MAY contain additional OBUs whose content is constant for the track's samples, such as static [=Metadata OBUs=].
 
 ## AV2 Sample Format ## {#sample-format}
