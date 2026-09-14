@@ -378,13 +378,13 @@ Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128
       <td>MAY</td>
     </tr>
     <tr>
-      <td><code>OBU_METADATA_SHORT</code></td>
+      <td><code>OBU_METADATA_SHORT</code> or <code>OBU_METADATA_GROUP</code>, when its contents do not change for the duration of the active [=AV2SampleEntry=]</td>
       <td>MAY</td>
-      <td>MAY</td>
+      <td>SHOULD NOT</td>
     </tr>
     <tr>
-      <td><code>OBU_METADATA_GROUP</code></td>
-      <td>MAY</td>
+      <td><code>OBU_METADATA_SHORT</code> or <code>OBU_METADATA_GROUP</code>, otherwise</td>
+      <td>SHOULD NOT</td>
       <td>MAY</td>
     </tr>
     <tr>
@@ -453,8 +453,13 @@ Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128
       <td>MAY</td>
     </tr>
     <tr>
-      <td><code>OBU_FILM_GRAIN</code></td>
+      <td><code>OBU_FILM_GRAIN</code>, when its contents do not change for the duration of the active [=AV2SampleEntry=]</td>
       <td>MAY</td>
+      <td>SHOULD NOT</td>
+    </tr>
+    <tr>
+      <td><code>OBU_FILM_GRAIN</code>, otherwise</td>
+      <td>SHOULD NOT</td>
       <td>MAY</td>
     </tr>
     <tr>
@@ -473,8 +478,6 @@ Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128
 
 The first <code>config_obu</code> SHALL carry a [=Sequence Header OBU=].
 
-The <code>AV2CodecConfigurationBox</code> MAY contain additional OBUs whose content is constant for the track's samples, such as static [=Metadata OBUs=].
-
 ## AV2 Sample Format ## {#sample-format}
 
 ### General ### {#sample-format-general}
@@ -492,8 +495,7 @@ Each [=OBU=] within a sample SHALL be framed using the [=Length delimited bitstr
 
 The OBUs within a sample SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]], with the following constraints:
 - the OBUs within a sample SHALL NOT contain OBUs of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a>;
-- the trailing bits of an OBU carried in a sample SHALL be limited to those required for byte alignment as specified in [[!AV2]]; trailing bits SHALL NOT be used to pad an OBU beyond byte alignment;
-- a sample SHOULD NOT contain any other OBU whose contents do not change for the duration of the active [=AV2SampleEntry=], in order to avoid redundant data; for example, a [=Metadata OBU=] whose contents are constant should be carried in the [=AV2CodecConfigurationBox=] rather than repeated in every sample, or discarded from the samples and conveyed at the ISOBMFF level.
+- the trailing bits of an OBU carried in a sample SHALL be limited to those required for byte alignment as specified in [[!AV2]]; trailing bits SHALL NOT be used to pad an OBU beyond byte alignment.
 
 The handling of the [=Temporal Delimiter OBU=] depends on how a track's samples are consumed. When the samples are passed to an AV2 decoder API that already treats each sample as one [=Temporal Unit=], a [=Temporal Delimiter OBU=] is not required. When the samples are reconstructed into an [=AV2 bitstream=] in the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]], or into any other carriage that does not itself delimit temporal units, a [=Temporal Delimiter OBU=] (framed with its <code>leb128()</code> length prefix) SHALL be prepended ahead of each sample's OBUs that does not already start with one.
 
