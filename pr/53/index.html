@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="b863db46ca4adf1e561b7df6f4262c1c180a3ae5" name="revision"/>
+<meta content="8dcddccbe375bdacf09993d73f11e4186eccd859" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2939,7 +2939,7 @@ figcaption.has-figure-number::before { content: none !important; }
 </p>
 <h1 class="no-ref p-name" id="title">AV2 Codec ISO Media File Format Binding</h1>
 <h2 class="heading no-num no-ref no-toc settled" id="profile-and-date"><span class="content">Working Group Draft,
-    <time class="dt-updated" datetime="2026-09-11">11 September 2026</time></span></h2>
+    <time class="dt-updated" datetime="2026-09-14">14 September 2026</time></span></h2>
 <div data-fill-with="spec-metadata">
 <dl>
 <dt>This version:
@@ -3049,7 +3049,7 @@ figcaption.has-figure-number::before { content: none !important; }
 <c- p="">}</c->
 </pre>
 <p>An <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry①">AV2SampleEntry</a> <span class="rfc-keyword">SHALL</span> contain exactly one <a data-link-type="dfn" href="#av2codecconfigurationbox" id="ref-for-av2codecconfigurationbox">AV2CodecConfigurationBox</a>.</p>
-<p>An <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry②">AV2SampleEntry</a> <span class="rfc-keyword">SHALL</span> contain a <a class="css property" data-link-type="property" data-refhint-key="cf14aa3a" href="https://www.iso.org/standard/83102.html#" id="ref-for-something③">colr</a> box with the <a class="css property" data-link-type="property" data-refhint-key="df9379c0" href="https://www.iso.org/standard/83102.html#" id="ref-for-something④">nclx</a> colour type. Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, <code>matrix_coefficients</code> and <code>full_range_flag</code> carried in that <a class="css property" data-link-type="property" data-refhint-key="cf14aa3a" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑤">colr</a> box:</p>
+<p>An <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry②">AV2SampleEntry</a> <span class="rfc-keyword">SHALL</span> contain a <a class="css property" data-link-type="property" data-refhint-key="cf14aa3a" href="https://www.iso.org/standard/83102.html#" id="ref-for-something③">colr</a> box with the <a class="css property" data-link-type="property" data-refhint-key="df9379c0" href="https://www.iso.org/standard/83102.html#" id="ref-for-something④">nclx</a> colour type. Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, <code>matrix_coefficients</code>, and <code>full_range_flag</code> carried in that <a class="css property" data-link-type="property" data-refhint-key="cf14aa3a" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑤">colr</a> box:</p>
 <ul>
 <li data-md="">
 <p><span class="rfc-keyword">SHALL</span> equal the corresponding effective value of the AV2 bitstream carried by the track if the latter is anything but 2 (<code>Unspecified</code>);</p>
