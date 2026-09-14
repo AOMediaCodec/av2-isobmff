@@ -29,6 +29,7 @@ url: https://www.iso.org/standard/83102.html#; spec: ISOBMFF; type: property;
     text: mdcv
     text: nclx
     text: pasp
+    text: pixi
     text: sgpd
     text: stsd
     text: saiz
@@ -305,6 +306,8 @@ An [=AV2SampleEntry=] SHALL contain exactly one [=AV2CodecConfigurationBox=].
 An [=AV2SampleEntry=] SHALL contain a 'colr' box with the 'nclx' colour type. Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, <code>matrix_coefficients</code>, and <code>full_range_flag</code> carried in that 'colr' box:
 - SHALL equal the corresponding effective value of the AV2 bitstream carried by the track if the latter is anything but 2 (<code>Unspecified</code>);
 - SHALL take precedence over the corresponding effective value of the AV2 bitstream carried by the track.
+
+An [=AV2SampleEntry=] SHALL contain exactly one 'pixi' box with the lowest significant bit of 'px_flags' enabled.
 
 NOTE: An [=AV2SampleEntry=] may contain additional sub-boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'pasp', 'clli', 'mdcv' or 'btrt'.
 
