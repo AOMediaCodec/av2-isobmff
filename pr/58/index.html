@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="abd197f3346af81f17ae3ecfa08520ead62e9139" name="revision"/>
+<meta content="1de9d2358a3e146feabbee3021fea83ce038345e" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2939,7 +2939,7 @@ figcaption.has-figure-number::before { content: none !important; }
 </p>
 <h1 class="no-ref p-name" id="title">AV2 Codec ISO Media File Format Binding</h1>
 <h2 class="heading no-num no-ref no-toc settled" id="profile-and-date"><span class="content">Working Group Draft,
-    <time class="dt-updated" datetime="2026-09-14">14 September 2026</time></span></h2>
+    <time class="dt-updated" datetime="2026-09-15">15 September 2026</time></span></h2>
 <div data-fill-with="spec-metadata">
 <dl>
 <dt>This version:
@@ -3056,7 +3056,7 @@ figcaption.has-figure-number::before { content: none !important; }
 </li><li data-md="">
 <p><span class="rfc-keyword">SHALL</span> take precedence over the corresponding effective value of the AV2 bitstream carried by the track.</p>
 </li></ul>
-<p>An <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry③">AV2SampleEntry</a> <span class="rfc-keyword">SHALL</span> contain exactly one <a class="css property" data-link-type="property" data-refhint-key="d5755519" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑥">pixi</a> box with the lowest significant bit of <u class="link-error property" data-lt="px_flags" title="LINK ERROR: No 'property' refs found for 'px_flags'.">px_flags</u> enabled.</p>
+<p>An <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry③">AV2SampleEntry</a> <span class="rfc-keyword">SHALL</span> contain exactly one <a class="css property" data-link-type="property" data-refhint-key="d5755519" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑥">pixi</a> box with the least significant bit of <u class="link-error property" data-lt="px_flags" title="LINK ERROR: No 'property' refs found for 'px_flags'.">px_flags</u> enabled.</p>
 <p class="note" role="note"><span class="marker">NOTE:</span> An <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry④">AV2SampleEntry</a> may contain additional sub-boxes permitted by <a data-link-type="biblio" href="#biblio-isobmff" title="Information technology — Coding of audio-visual objects — Part 12: ISO base media file format">[ISOBMFF]</a> for a <a data-link-type="dfn" data-refhint-key="ec5dc328" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑦">VisualSampleEntry</a>, such as <a class="css property" data-link-type="property" data-refhint-key="8e5c6be2" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑧">pasp</a>, <a class="css property" data-link-type="property" data-refhint-key="62c9592b" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑨">clli</a>, <a class="css property" data-link-type="property" data-refhint-key="ac4e1efa" href="https://www.iso.org/standard/83102.html#" id="ref-for-something①⓪">mdcv</a> or <a class="css property" data-link-type="property" data-refhint-key="64269aad" href="https://www.iso.org/standard/83102.html#" id="ref-for-something①①">btrt</a>.</p>
 <h4 class="heading settled" data-level="3.2.2" id="av2c"><span class="secno">3.2.2. </span><span class="content">AV2 Codec Configuration Box</span><a class="self-link" href="#av2c"></a></h4>
 <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport="" id="av2codecconfigurationbox">AV2CodecConfigurationBox</dfn> carries the decoder initialisation data required to decode the AV2 coded video samples of a track.</p>
