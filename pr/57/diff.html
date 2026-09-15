@@ -1492,7 +1492,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version NORMALIZED" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="fa734471c32dd8df6a22aa7b9b8507cf0385bef6" name="revision"/>
+<meta content="8fcfb10bc4cb70f53dd0a8ba1cd515a57e45ab55" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -4257,12 +4257,15 @@ colour_primaries
 <code>
 transfer_characteristics
 </code>,
-<code>
-matrix_coefficients
-</code>,
+<del class="diff-old">matrix_coefficients
+,
+</del>
 and
 <code>
-full_range_flag
+<del class="diff-old">full_range_flag
+</del>
+<ins class="diff-chg">matrix_coefficients
+</ins>
 </code>
 carried
 in
