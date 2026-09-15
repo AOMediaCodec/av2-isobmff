@@ -302,11 +302,13 @@ class AV2SampleEntry extends VisualSampleEntry('av02') {
 
 An [=AV2SampleEntry=] SHALL contain exactly one [=AV2CodecConfigurationBox=].
 
-An [=AV2SampleEntry=] SHALL contain exactly one 'colr' box with the 'nclx' colour type. Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, <code>matrix_coefficients</code>, and <code>full_range_flag</code> carried in that 'colr' box:
+An [=AV2SampleEntry=] SHALL contain exactly one 'colr' box with the 'nclx' colour type. Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, and <code>matrix_coefficients</code> carried in that 'colr' box:
 - SHALL equal the corresponding effective value of the AV2 bitstream carried by the track if the latter is anything but 2 (<code>Unspecified</code>);
 - SHALL take precedence over the corresponding effective value of the AV2 bitstream carried by the track.
 
-NOTE: An [=AV2SampleEntry=] may contain additional sub-boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'colr' with other 'nclx' values, 'pasp', 'clli', 'mdcv' or 'btrt'. They may be located before and/or after the [=AV2CodecConfigurationBox=].
+The value of <code>full_range_flag</code> carried in that 'colr' box SHALL equal the corresponding effective value of the AV2 bitstream carried by the track.
+
+NOTE: An [=AV2SampleEntry=] may contain additional sub-boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'colr' with a 'colour_type' value other than 'nclx', 'pasp', 'clli', 'mdcv' or 'btrt'. They may be located before and/or after the [=AV2CodecConfigurationBox=].
 
 ### AV2 Codec Configuration Box ### {#av2c}
 
