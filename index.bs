@@ -506,7 +506,7 @@ NOTE: In ISOBMFF terms, sync samples are signalled using the SyncSampleBox ('sts
 ### Layers ### {#layers}
 
 When a box as defined in [[!ISOBMFF]] or in an [[!ISOBMFF]]-derived specification describes the presence, ordering, and/or types of channels in a sample, the following applies to each [=coded extended layer unit=] in that sample:
-- The sample channel ordering is considered to be as if the embedded layers where concatenated in increasing <code>mlayer_id</code> order.
+- The channels in the sample are considered to be ordered as if the embedded layers were concatenated in increasing <code>mlayer_id</code> order.
 
     <div class="example" id="sample-channel-ordering-example"><a class="self-link" href="#sample-channel-ordering-example"></a>An embedded layer with <code>mlayer_id</code> 0 and <code>CHROMA_FORMAT_420</code> contains the three first channels. Another embedded layer with <code>mlayer_id</code> 1 and <code>CHROMA_FORMAT_400</code> contains the fourth channel.</div>
 
