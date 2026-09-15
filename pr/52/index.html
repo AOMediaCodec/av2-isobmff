@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="d7fff2f146b4ebe4c1ea3f58f3e00b1de581193c" name="revision"/>
+<meta content="f6f97a759f54a87c0ab7fcd892f563b865029838" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2939,7 +2939,7 @@ figcaption.has-figure-number::before { content: none !important; }
 </p>
 <h1 class="no-ref p-name" id="title">AV2 Codec ISO Media File Format Binding</h1>
 <h2 class="heading no-num no-ref no-toc settled" id="profile-and-date"><span class="content">Working Group Draft,
-    <time class="dt-updated" datetime="2026-09-11">11 September 2026</time></span></h2>
+    <time class="dt-updated" datetime="2026-09-15">15 September 2026</time></span></h2>
 <div data-fill-with="spec-metadata">
 <dl>
 <dt>This version:
@@ -3050,7 +3050,13 @@ figcaption.has-figure-number::before { content: none !important; }
 <c- p="">}</c->
 </pre>
 <p>An <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry①">AV2SampleEntry</a> <span class="rfc-keyword">SHALL</span> contain exactly one <a data-link-type="dfn" href="#av2codecconfigurationbox" id="ref-for-av2codecconfigurationbox">AV2CodecConfigurationBox</a>.</p>
-<p>An <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry②">AV2SampleEntry</a> <span class="rfc-keyword">SHALL</span> contain a <a class="css property" data-link-type="property" data-refhint-key="cf14aa3a" href="https://www.iso.org/standard/83102.html#" id="ref-for-something③">colr</a> box with the <a class="css property" data-link-type="property" data-refhint-key="df9379c0" href="https://www.iso.org/standard/83102.html#" id="ref-for-something④">nclx</a> colour type. The values of <code>colour_primaries</code>, <code>transfer_characteristics</code>, <code>matrix_coefficients</code> and <code>full_range_flag</code> carried in that <a class="css property" data-link-type="property" data-refhint-key="cf14aa3a" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑤">colr</a> box <span class="rfc-keyword">SHOULD</span> equal the corresponding effective values of the AV2 bitstream carried by the track.</p>
+<p>An <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry②">AV2SampleEntry</a> <span class="rfc-keyword">SHALL</span> contain a <a class="css property" data-link-type="property" data-refhint-key="cf14aa3a" href="https://www.iso.org/standard/83102.html#" id="ref-for-something③">colr</a> box with the <a class="css property" data-link-type="property" data-refhint-key="df9379c0" href="https://www.iso.org/standard/83102.html#" id="ref-for-something④">nclx</a> colour type. Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, <code>matrix_coefficients</code>, and <code>full_range_flag</code> carried in that <a class="css property" data-link-type="property" data-refhint-key="cf14aa3a" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑤">colr</a> box:</p>
+<ul>
+<li data-md="">
+<p><span class="rfc-keyword">SHALL</span> equal the corresponding effective value of the AV2 bitstream carried by the track if the latter is anything but 2 (<code>Unspecified</code>);</p>
+</li><li data-md="">
+<p><span class="rfc-keyword">SHALL</span> take precedence over the corresponding effective value of the AV2 bitstream carried by the track.</p>
+</li></ul>
 <p class="note" role="note"><span class="marker">NOTE:</span> An <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry③">AV2SampleEntry</a> may contain additional sub-boxes permitted by <a data-link-type="biblio" href="#biblio-isobmff" title="Information technology — Coding of audio-visual objects — Part 12: ISO base media file format">[ISOBMFF]</a> for a <a data-link-type="dfn" data-refhint-key="ec5dc328" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑥">VisualSampleEntry</a>, such as <a class="css property" data-link-type="property" data-refhint-key="8e5c6be2" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑦">pasp</a>, <a class="css property" data-link-type="property" data-refhint-key="62c9592b" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑧">clli</a>, <a class="css property" data-link-type="property" data-refhint-key="ac4e1efa" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑨">mdcv</a> or <a class="css property" data-link-type="property" data-refhint-key="64269aad" href="https://www.iso.org/standard/83102.html#" id="ref-for-something①⓪">btrt</a>.</p>
 <h4 class="heading settled" data-level="3.2.2" id="av2c"><span class="secno">3.2.2. </span><span class="content">AV2 Codec Configuration Box</span><a class="self-link" href="#av2c"></a></h4>
 <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport="" id="av2codecconfigurationbox">AV2CodecConfigurationBox</dfn> carries the decoder initialisation data required to decode the AV2 coded video samples of a track.</p>
@@ -3209,7 +3215,7 @@ figcaption.has-figure-number::before { content: none !important; }
 <p>When a box as defined in <a data-link-type="biblio" href="#biblio-isobmff" title="Information technology — Coding of audio-visual objects — Part 12: ISO base media file format">[ISOBMFF]</a> or in an <a data-link-type="biblio" href="#biblio-isobmff" title="Information technology — Coding of audio-visual objects — Part 12: ISO base media file format">[ISOBMFF]</a>-derived specification describes the presence, ordering, and/or types of channels in a sample, the following applies to each <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#ordering_of_obus_extended_layer" id="ref-for-ordering_of_obus_extended_layer①">coded extended layer unit</a> in that sample:</p>
 <ul>
 <li data-md="">
-<p>The sample channel ordering is considered to be as if the embedded layers where concatenated in increasing <code>mlayer_id</code> order.</p>
+<p>The channels in the sample are considered to be ordered as if the embedded layers were concatenated in increasing <code>mlayer_id</code> order.</p>
 <div class="example" id="sample-channel-ordering-example"><a class="self-link" href="#sample-channel-ordering-example"></a><a class="self-link" href="#sample-channel-ordering-example"></a>An embedded layer with <code>mlayer_id</code> 0 and <code>CHROMA_FORMAT_420</code> contains the three first channels. Another embedded layer with <code>mlayer_id</code> 1 and <code>CHROMA_FORMAT_400</code> contains the fourth channel.</div>
 </li><li data-md="">
 <p>If the box describes the Nth channel to be a color channel, the Nth channel in the sample <span class="rfc-keyword">SHALL</span> be present and a color channel: if signalled, its associated <code>lcr_layer_type</code> <span class="rfc-keyword">SHALL</span> be set to 0 (<code>TEXTURE_LAYER</code>).</p>

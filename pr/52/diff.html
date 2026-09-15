@@ -1492,7 +1492,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version NORMALIZED" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="d7fff2f146b4ebe4c1ea3f58f3e00b1de581193c" name="revision"/>
+<meta content="f6f97a759f54a87c0ab7fcd892f563b865029838" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -4248,9 +4248,9 @@ nclx
 </a>
 colour
 type.
-The
-values
-of
+Each
+value
+among
 <code>
 colour_primaries
 </code>,
@@ -4259,7 +4259,7 @@ transfer_characteristics
 </code>,
 <code>
 matrix_coefficients
-</code>
+</code>,
 and
 <code>
 full_range_flag
@@ -4270,13 +4270,49 @@ that
 <a class="css property" data-link-type="property" data-refhint-key="cf14aa3a" href="https://www.iso.org/standard/83102.html#" id="ref-for-something⑤">
 colr
 </a>
-box
-SHOULD
+box:
+</p>
+<ul>
+<li data-md="">
+<p>
+SHALL
 equal
 the
 corresponding
 effective
-values
+value
+of
+the
+AV2
+bitstream
+carried
+by
+the
+track
+if
+the
+latter
+is
+anything
+but
+2
+(
+<code>
+Unspecified
+</code>
+);
+</p>
+</li>
+<li data-md="">
+<p>
+SHALL
+take
+precedence
+over
+the
+corresponding
+effective
+value
 of
 the
 AV2
@@ -4286,6 +4322,8 @@ by
 the
 track.
 </p>
+</li>
+</ul>
 <p class="note" role="note">
 <span class="marker">
 NOTE:
@@ -5693,19 +5731,21 @@ that
 sample:
 </ins></p><ul><li data-md=""><p><ins class="diff-new">
 The
+channels
+in
+the
 sample
-channel
-ordering
-is
+are
 considered
 to
 be
+ordered
 as
 if
 the
 embedded
 layers
-where
+were
 concatenated
 in
 increasing
