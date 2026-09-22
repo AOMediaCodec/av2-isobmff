@@ -1492,7 +1492,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version NORMALIZED" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="e275df6f0bcbfd6f0b8444365583d54eba5ce95a" name="revision"/>
+<meta content="096410a2dafcd811cf20dcc557304d6b6d6a405b" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -4427,13 +4427,13 @@ concatenation
 of
 the
 OBUs
-</del>
-</a>
-<del class="diff-old">carried
+carried
 in
 the
 AV2CodecConfigurationBox
-of
+</del>
+</a>
+<del class="diff-old">of
 the
 corresponding
 AV2SampleEntry
@@ -6096,8 +6096,10 @@ sample
 by
 applying
 the
-following:
+following
+steps:
 </ins></p><ol><li data-md=""><p><ins class="diff-new">
+Write
 a
 </ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#temporal-delimiter-obu" id="ref-for-temporal-delimiter-obu③"><ins class="diff-new">
 Temporal
@@ -6111,10 +6113,9 @@ its
 leb128()
 </ins></code><ins class="diff-new">
 length
-prefix,
-is
-written,
+prefix.
 </ins></p></li><li data-md=""><p><ins class="diff-new">
+Write
 the
 </ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#obu" id="ref-for-obu①⑦"><ins class="diff-new">
 OBUs
@@ -6123,6 +6124,17 @@ carried
 in
 the
 </ins><a data-link-type="dfn" href="https://www.iso.org/standard/83102.html#" id="ref-for-something③⓪"><ins class="diff-new">
+sample
+</ins></a>,<ins class="diff-new">
+in
+the
+same
+order
+as
+present
+in
+the
+</ins><a data-link-type="dfn" href="https://www.iso.org/standard/83102.html#" id="ref-for-something③①"><ins class="diff-new">
 sample
 </ins></a>,<ins class="diff-new">
 each
@@ -6138,24 +6150,10 @@ as
 present
 in
 the
-</ins><a data-link-type="dfn" href="https://www.iso.org/standard/83102.html#" id="ref-for-something③①"><ins class="diff-new">
-sample
-</ins></a>,<ins class="diff-new">
-are
-written
-in
-the
-same
-order
-as
-present
-in
-the
 </ins><a data-link-type="dfn" href="https://www.iso.org/standard/83102.html#" id="ref-for-something③②"><ins class="diff-new">
 sample
-</ins></a>,<ins class="diff-new">
-and
-</ins></p></li><li data-md=""><p><ins class="diff-new">
+</ins></a>.</p></li><li data-md=""><p><ins class="diff-new">
+Insert
 each
 </ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#obu" id="ref-for-obu①⑧"><ins class="diff-new">
 OBU
@@ -6187,8 +6185,6 @@ the
 </ins><a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry①⓪"><ins class="diff-new">
 AV2SampleEntry
 </ins></a>,<ins class="diff-new">
-is
-inserted
 between
 two
 </ins><code><ins class="diff-new">
@@ -6217,7 +6213,7 @@ OBUs
 </ins></a><ins class="diff-new">
 carried
 in
-a
+an
 </ins><a data-link-type="dfn" href="#av2codecconfigurationbox" id="ref-for-av2codecconfigurationbox⑧"><ins class="diff-new">
 AV2CodecConfigurationBox
 </ins></a><ins class="diff-new">
@@ -6268,17 +6264,12 @@ that
 </ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#obu" id="ref-for-obu②①"><ins class="diff-new">
 OBU
 </ins></a><ins class="diff-new">
-which
-could
-have
-led
-to
+that
+would
+satisfy
 the
 above
-constraints
-to
-be
-respected.
+constraints.
 </ins></p></li></ul></li></ol><p class="note" role="note"><span class="marker"><ins class="diff-new">
 Note:
 </ins></span><ins class="diff-new">
