@@ -493,9 +493,11 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
   <figcaption>List of AV2 OBU types and where they can be found</figcaption>
 </figure>
 
-The first <code>config_obu</code> SHALL carry a [=Sequence Header OBU=].
+The first <code>config_obu</code> SHALL carry a [=Sequence Header OBU=]. For a [=Multistream=], <code>config_obu</code> SHALL contain the [=Sequence Header OBU=] of each extended layer together with the stream's global configuration OBUs, in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]]; its first OBU may therefore be a [=Layer Configuration Record OBU=] rather than a [=Sequence Header OBU=].
 
 The <code>AV2CodecConfigurationBox</code> MAY contain additional [=OBUs=] whose content is constant for the track's <l spec=ISOBMFF>[=samples=]</l>, such as static [=Metadata OBUs=].
+
+<p class="issue">Editor's note: for a [=Multistream=], <code>config_obu</code> contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation. Also how profile / level is signalled to decoder API for layers. etc.</p>
 
 ## AV2 Sample Format ## {#sample-format}
 
@@ -515,6 +517,8 @@ The [=AV2 sample=] boundary delimits the temporal unit.
 <assert>The [=OBUs=] within a <l spec=ISOBMFF>[=sample=]</l> SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]]</assert>, with the following constraints:
 - <assert>the [=OBUs=] within a <l spec=ISOBMFF>[=sample=]</l> SHALL NOT contain [=OBUs=] of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a></assert>;
 - <assert>a <l spec=ISOBMFF>[=sample=]</l> SHOULD NOT contain any other [=OBU=] whose contents do not change for the duration of the active [=AV2SampleEntry=], in order to avoid redundant data</assert>; for example, a [=Metadata OBU=] whose contents are constant should be carried in the [=AV2CodecConfigurationBox=] rather than repeated in every sample, or discarded from the samples and conveyed at the [[!ISOBMFF]] level.
+
+<p class="issue">Editor's note: the Content Interpretation OBU (<code>OBU_CONTENT_INTERPRETATION</code>) carries picture-level interpretation metadata (for example, colour description) that overlaps ISOBMFF container-level signalling such as the ColourInformationBox. Whether to carry it in the track or replace it entirely with container-level signalling is to be resolved in this version.</p>
 
 The handling of the [=Temporal Delimiter OBU=] depends on how a track's <l spec=ISOBMFF>[=samples=]</l> are consumed. When the <l spec=ISOBMFF>[=samples=]</l> are passed to an AV2 decoder API that already treats each <l spec=ISOBMFF>[=sample=]</l> as one [=Temporal Unit=], a [=Temporal Delimiter OBU=] is not required. <assert>When the <l spec=ISOBMFF>[=samples=]</l> are reconstructed into an [=AV2 bitstream=] in the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]], or into any other carriage that does not itself delimit temporal units, a [=Temporal Delimiter OBU=] (framed with its <code>leb128()</code> length prefix) SHALL be prepended ahead of each <l spec=ISOBMFF>[=sample=]</l> that does not already start with one.</assert>
 
