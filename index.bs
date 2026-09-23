@@ -497,7 +497,7 @@ The first <code>config_obu</code> SHALL carry a [=Sequence Header OBU=]. For a [
 
 The <code>AV2CodecConfigurationBox</code> MAY contain additional [=OBUs=] whose content is constant for the track's <l spec=ISOBMFF>[=samples=]</l>, such as static [=Metadata OBUs=].
 
-<p class="issue">Editor's note: for a [=Multistream=], <code>config_obu</code> contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation.</p>
+<p class="issue">Editor's note: for a [=Multistream=], <code>config_obu</code> contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation. Also how profile / level is signalled to decoder API for layers. etc.</p>
 
 ## AV2 Sample Format ## {#sample-format}
 
