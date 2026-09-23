@@ -149,21 +149,69 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
 
     logging.info(f"  Removed {id_changes} auto-generated IDs")
 
+    # 7b. Unwrap RFC 2119/8174 keyword spans (highlight_keywords enhancement).
+    # The <span class="rfc-keyword"> wrappers are injected only into the enhanced
+    # build, never the bare anchor, so these one-sided insertions desync the
+    # word-level diff and cascade into false differences elsewhere. Unwrapping
+    # restores the plain keyword text so both sides match. This must run
+    # *before* step 8's whitespace normalization: a keyword span splits its
+    # surrounding text into sibling text nodes (e.g. "SHALL NOT" + " (the "),
+    # and normalizing those nodes in isolation would strip the leading space
+    # off " (the " as if it were edge whitespace, silently eating the space
+    # between the keyword and what follows once the span is later unwrapped.
+    rfc_keyword_changes = 0
+    for span in soup.find_all("span", class_="rfc-keyword"):
+        span.unwrap()
+        rfc_keyword_changes += 1
+
+    logging.info(f"  Unwrapped {rfc_keyword_changes} rfc-keyword spans")
+
     # 8. Normalize whitespace in table cells and definition list entries to
     # avoid spurious diffs. SDL tables can have different whitespace that
     # doesn't affect content, and reference entries (<dt>/<dd>, e.g. "[AV2]"
     # and its citation) pick up trailing newlines in the bare anchor but not
     # the enhanced build after HTML reserialization — whitespace-only
     # differences htmldiff would otherwise flag.
+    #
+    # This must treat the cell's text as one continuous stream, not each text
+    # node in isolation: inline markup (an rfc-keyword <span>, a bikeshed
+    # <a> link) can split one sentence into several sibling text nodes, and a
+    # space that sits *between* two words can end up as the trailing/leading
+    # edge of one of those fragments (e.g. "SHALL NOT" + " (the "). Trimming
+    # every node's edges independently would delete that space even though
+    # it's internal to the sentence — only the cell's true outer edges should
+    # be stripped; whitespace *within* a node collapses to a single space but
+    # keeps at least one space if it was there, so word boundaries introduced
+    # by markup survive.
     cell_changes = 0
     for cell in soup.find_all(["td", "th", "dt", "dd"]):
-        # Normalize all text nodes within the cell, preserving tag structure
+        text_nodes = cell.find_all(string=True)
+        if not text_nodes:
+            continue
         cell_modified = False
-        for text_node in cell.find_all(string=True):
+        for text_node in text_nodes:
             original_text = str(text_node)
-            normalized_text = " ".join(original_text.split())
-            if normalized_text != original_text:
-                text_node.replace_with(normalized_text)
+            collapsed_text = re.sub(r"\s+", " ", original_text)
+            if collapsed_text != original_text:
+                text_node.replace_with(collapsed_text)
+                cell_modified = True
+        text_nodes = cell.find_all(string=True)
+        if len(text_nodes) == 1:
+            original_text = str(text_nodes[0])
+            stripped_text = original_text.strip()
+            if stripped_text != original_text:
+                text_nodes[0].replace_with(stripped_text)
+                cell_modified = True
+        else:
+            first_text = str(text_nodes[0])
+            stripped_first = first_text.lstrip()
+            if stripped_first != first_text:
+                text_nodes[0].replace_with(stripped_first)
+                cell_modified = True
+            last_text = str(text_nodes[-1])
+            stripped_last = last_text.rstrip()
+            if stripped_last != last_text:
+                text_nodes[-1].replace_with(stripped_last)
                 cell_modified = True
         if cell_modified:
             cell_changes += 1
@@ -227,18 +275,6 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
         tooltip_changes += 1
 
     logging.info(f"  Removed {tooltip_changes} tooltip attributes")
-
-    # 10b. Unwrap RFC 2119/8174 keyword spans (highlight_keywords enhancement).
-    # The <span class="rfc-keyword"> wrappers are injected only into the enhanced
-    # build, never the bare anchor, so these one-sided insertions desync the
-    # word-level diff and cascade into false differences elsewhere. Unwrapping
-    # restores the plain keyword text so both sides match.
-    rfc_keyword_changes = 0
-    for span in soup.find_all("span", class_="rfc-keyword"):
-        span.unwrap()
-        rfc_keyword_changes += 1
-
-    logging.info(f"  Unwrapped {rfc_keyword_changes} rfc-keyword spans")
 
     # 11. Unwrap line-anchor spans in code blocks
     # Line anchors (<span class="code-line">) are a presentation feature;
