@@ -22,14 +22,13 @@ import re
 import sys
 from pathlib import Path
 
-from bs4 import BeautifulSoup
-
 # Route logging through the shared colored formatter when this script is
 # invoked as a subprocess of compile.py.
 _repo_root = str(Path(__file__).resolve().parent.parent)
 if _repo_root not in sys.path:
     sys.path.insert(0, _repo_root)
 from specbuild.logsetup import setup_logging  # noqa: E402
+from specbuild.utils import read_html  # noqa: E402
 
 setup_logging("INFO")
 
@@ -44,10 +43,14 @@ def preprocess_html_for_diff(html_path: Path, output_path: Path) -> None:
     """
     logging.info(f"Preprocessing {html_path.name} for diff")
 
-    with open(html_path, encoding="utf-8") as f:
-        html_content = f.read()
-
-    soup = BeautifulSoup(html_content, "html.parser")
+    # Use a spec-compliant parser (via read_html's lxml/html5lib fallback
+    # chain) rather than the stdlib html.parser. Bikeshed emits bibliography
+    # entries with implicitly-closed <dt>/<dd> tags (relying on the next
+    # sibling to close the previous one); html.parser doesn't implement that
+    # HTML5 auto-closing rule and instead nests them indefinitely
+    # (dt > dd > dt > dd > ...), producing a DOM that diffs as "changed" even
+    # when the reference text is identical on both sides.
+    soup = read_html(html_path)
 
     changes_made = 0
 
