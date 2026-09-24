@@ -400,13 +400,13 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
       <td>MAY</td>
     </tr>
     <tr>
-      <td><code>OBU_METADATA_SHORT</code></td>
+      <td><code>OBU_METADATA_SHORT</code> or <code>OBU_METADATA_GROUP</code>, when its contents do not change for the duration of the active [=AV2SampleEntry=]</td>
       <td>MAY</td>
-      <td>MAY</td>
+      <td>SHOULD NOT</td>
     </tr>
     <tr>
-      <td><code>OBU_METADATA_GROUP</code></td>
-      <td>MAY</td>
+      <td><code>OBU_METADATA_SHORT</code> or <code>OBU_METADATA_GROUP</code>, otherwise</td>
+      <td>SHOULD NOT</td>
       <td>MAY</td>
     </tr>
     <tr>
@@ -495,8 +495,6 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 
 The first <code>config_obu</code> SHALL carry a [=Sequence Header OBU=]. For a [=Multistream=], <code>config_obu</code> SHALL contain the [=Sequence Header OBU=] of each extended layer together with the stream's global configuration OBUs, in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]]; its first OBU may therefore be a [=Layer Configuration Record OBU=] rather than a [=Sequence Header OBU=].
 
-The <code>AV2CodecConfigurationBox</code> MAY contain additional [=OBUs=] whose content is constant for the track's <l spec=ISOBMFF>[=samples=]</l>, such as static [=Metadata OBUs=].
-
 <p class="issue">Editor's note: for a [=Multistream=], <code>config_obu</code> contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation. Also how profile / level is signalled to decoder API for layers. etc.</p>
 
 ## AV2 Sample Format ## {#sample-format}
@@ -514,9 +512,8 @@ The [=AV2 sample=] boundary delimits the temporal unit.
 
 ### OBUs in samples ### {#sample-obus}
 
-<assert>The [=OBUs=] within a <l spec=ISOBMFF>[=sample=]</l> SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]]</assert>, with the following constraints:
-- <assert>the [=OBUs=] within a <l spec=ISOBMFF>[=sample=]</l> SHALL NOT contain [=OBUs=] of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a></assert>;
-- <assert>a <l spec=ISOBMFF>[=sample=]</l> SHOULD NOT contain any other [=OBU=] whose contents do not change for the duration of the active [=AV2SampleEntry=], in order to avoid redundant data</assert>; for example, a [=Metadata OBU=] whose contents are constant should be carried in the [=AV2CodecConfigurationBox=] rather than repeated in every sample, or discarded from the samples and conveyed at the [[!ISOBMFF]] level.
+<assert>The [=OBUs=] within a <l spec=ISOBMFF>[=sample=]</l> SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]]</assert>, with the following constraint:
+- <assert>the [=OBUs=] within a <l spec=ISOBMFF>[=sample=]</l> SHALL NOT contain [=OBUs=] of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a></assert>.
 
 <p class="issue">Editor's note: the Content Interpretation OBU (<code>OBU_CONTENT_INTERPRETATION</code>) carries picture-level interpretation metadata (for example, colour description) that overlaps ISOBMFF container-level signalling such as the ColourInformationBox. Whether to carry it in the track or replace it entirely with container-level signalling is to be resolved in this version.</p>
 
