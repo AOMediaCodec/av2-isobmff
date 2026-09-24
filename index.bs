@@ -534,6 +534,21 @@ An [=AV2 sample=] is a <dfn>sync AV2 sample</dfn> if, for every [=coded extended
 
 NOTE: In ISOBMFF terms, sync samples are signalled using the SyncSampleBox ('stss') in unfragmented tracks, or by setting <code>sample_is_non_sync_sample</code> equal to 0 in fragmented tracks. When every sample in a track is a sync sample, the SyncSampleBox is omitted in unfragmented tracks (per [[!ISOBMFF]]), and in fragmented tracks this is expressed through the default sample flags of the MovieExtendsBox ('trex') or TrackFragmentHeaderBox ('tfhd') with no per-sample override.
 
+### Layers ### {#layers}
+
+When a box as defined in [[!ISOBMFF]] or in an [[!ISOBMFF]]-derived specification describes the presence, ordering, and/or types of channels in a sample, the following applies to each [=coded extended layer unit=] in that sample:
+- The channels in the sample are considered to be ordered as if the embedded layers were concatenated in increasing <code>mlayer_id</code> order.
+
+    <div class="example" id="sample-channel-ordering-example"><a class="self-link" href="#sample-channel-ordering-example"></a>An embedded layer with <code>mlayer_id</code> 0 and <code>CHROMA_FORMAT_420</code> contains the three first channels. Another embedded layer with <code>mlayer_id</code> 1 and <code>CHROMA_FORMAT_400</code> contains the fourth channel.</div>
+
+- If the box describes the Nth channel to be a color channel, the Nth channel in the sample SHALL be present and a color channel: if signalled, its associated <code>lcr_layer_type</code> SHALL be set to 0 (<code>TEXTURE_LAYER</code>).
+- If the box describes the Nth channel to be an alpha channel, the Nth channel in the sample SHALL be present and an alpha channel: if signalled, its associated <code>lcr_layer_type</code> SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 0 (<code>ALPHA_AUX</code>).
+- If the box describes the Nth channel to be a depth channel, the Nth channel in the sample SHALL be present and a depth channel: if signalled, its associated <code>lcr_layer_type</code> SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 1 (<code>DEPTH_AUX</code>).
+
+<div class="example" id="sample-channel-type-example"><a class="self-link" href="#sample-channel-type-example"></a>A <code>PixelInformationBox</code> with <code>px_flags=1</code> and <code>channel_idc</code> set to 2, 3, 4, 1, 0, 0, 0, 5, 6 matches the following embedded layers: <code>TEXTURE_LAYER</code>/<code>CHROMA_FORMAT_444</code>, <code>AUX_LAYER</code>/<code>SEGMENTATION_AUX</code>/<code>CHROMA_FORMAT_400</code>, <code>AUX_LAYER</code>/<code>GAIN_MAP_AUX</code>/<code>CHROMA_FORMAT_420</code>, <code>AUX_LAYER</code>/<code>ALPHA_AUX</code>/<code>CHROMA_FORMAT_400</code>, <code>AUX_LAYER</code>/<code>DEPTH_AUX</code>/<code>CHROMA_FORMAT_400</code>.</div>
+
+<div class="example" id="sample-channel-type-example2"><a class="self-link" href="#sample-channel-type-example2"></a>A <code>PixelInformationBox</code> with <code>px_flags=1</code> and <code>channel_idc</code> set to 7, 2, 3, 4 matches the following embedded layers: <code>TEXTURE_LAYER</code>/<code>CHROMA_FORMAT_400</code>, <code>TEXTURE_LAYER</code>/<code>CHROMA_FORMAT_444</code>.</div>
+
 # CMAF AV2 track format # {#cmaf}
 
 TBD
