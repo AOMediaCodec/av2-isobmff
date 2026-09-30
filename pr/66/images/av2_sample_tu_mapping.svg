@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" viewBox="-1 -1 731 410" width="731" height="410">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 8 8" markerWidth="8" markerHeight="8" color="#444">
+      <g>
+        <path d="M 5.866667 0 L 0 -2.2 L 0 2.2 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-9 -4 10 8" markerWidth="10" markerHeight="8" color="#666">
+      <g>
+        <path d="M -8 0 L 0 3 L 0 -3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <g id="with_leb128()_prefix" stroke-opacity="1" stroke="none" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>av2_sample_tu_mapping</title>
+    <rect fill="white" x="-1" y="-1" width="731" height="410"/>
+    <g id="with_leb128()_prefix_Mapping">
+      <title>Mapping</title>
+      <g id="Line_172">
+        <line x1="139" y1="142" x2="139" y2="200.6" marker-end="url(#FilledArrow_Marker)" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1.5"/>
+      </g>
+      <g id="Line_171">
+        <line x1="380" y1="142" x2="380" y2="200.6" marker-end="url(#FilledArrow_Marker)" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1.5"/>
+      </g>
+      <g id="Line_170">
+        <line x1="621" y1="142" x2="621" y2="200.6" marker-end="url(#FilledArrow_Marker)" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1.5"/>
+      </g>
+      <g id="Graphic_169">
+        <title>Text</title>
+        <text transform="translate(10.898226 168.04076)" fill="#444">
+          <tspan font-family="Helvetica" font-size="11" fill="#444" x="0" y="10" xml:space="preserve">TD stripped;</tspan>
+        </text>
+      </g>
+      <g id="Graphic_168">
+        <title>Text</title>
+        <text transform="translate(10.898226 183.04076)" fill="#444">
+          <tspan font-family="Helvetica" font-size="11" fill="#444" x="0" y="10" xml:space="preserve">one TU per sample</tspan>
+        </text>
+      </g>
+    </g>
+    <g id="with_leb128()_prefix_Bitstream">
+      <title>Bitstream</title>
+      <g id="Graphic_166">
+        <title>Text</title>
+        <text transform="translate(241.62695 2.2197266)" fill="black">
+          <tspan font-family="Helvetica" font-size="14" fill="black" x="0" y="14" xml:space="preserve">AV2 elementary bitstream (Annex B framing)</tspan>
+        </text>
+      </g>
+      <g id="Group_150">
+        <title>tu1</title>
+        <g id="Graphic_165">
+          <rect x="31" y="34" width="12" height="60" fill="#d9d9d9"/>
+          <rect x="31" y="34" width="12" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_164">
+          <rect x="43" y="34" width="40" height="60" fill="#fde0a8"/>
+          <rect x="43" y="34" width="40" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_163">
+          <title>Text</title>
+          <text transform="translate(55.00195 58.759766)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" fill="black" x="0" y="11" xml:space="preserve">TD</tspan>
+          </text>
+        </g>
+        <g id="Graphic_162">
+          <rect x="83" y="34" width="12" height="60" fill="#d9d9d9"/>
+          <rect x="83" y="34" width="12" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_161">
+          <rect x="95" y="34" width="70" height="60" fill="#cfe2f3"/>
+          <rect x="95" y="34" width="70" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_160">
+          <title>Text</title>
+          <text transform="translate(114.10962 51.529785)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" fill="black" x="0" y="10" xml:space="preserve">Frame</tspan>
+          </text>
+        </g>
+        <g id="Graphic_159">
+          <title>Text</title>
+          <text transform="translate(118.08154 65.529785)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" fill="black" x="0" y="10" xml:space="preserve">OBU</tspan>
+          </text>
+        </g>
+        <g id="Graphic_158">
+          <title>Text</title>
+          <text transform="translate(106.8606 81.06982)" fill="black">
+            <tspan font-family="Helvetica" font-size="9" fill="black" x="0" y="9" xml:space="preserve">xlayer_id=0</tspan>
+          </text>
+        </g>
+        <g id="Graphic_157">
+          <rect x="165" y="34" width="12" height="60" fill="#d9d9d9"/>
+          <rect x="165" y="34" width="12" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_156">
+          <rect x="177" y="34" width="70" height="60" fill="#cfe2f3"/>
+          <rect x="177" y="34" width="70" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_155">
+          <title>Text</title>
+          <text transform="translate(196.10962 51.529785)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" fill="black" x="0" y="10" xml:space="preserve">Frame</tspan>
+          </text>
+        </g>
+        <g id="Graphic_154">
+          <title>Text</title>
+          <text transform="translate(200.08154 65.529785)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" fill="black" x="0" y="10" xml:space="preserve">OBU</tspan>
+          </text>
+        </g>
+        <g id="Graphic_153">
+          <title>Text</title>
+          <text transform="translate(188.8606 81.06982)" fill="black">
+            <tspan font-family="Helvetica" font-size="9" fill="black" x="0" y="9" xml:space="preserve">xlayer_id=1</tspan>
+          </text>
+        </g>
+        <g id="Graphic_152">
+          <path d="M 31 104 L 31 114 L 247 114 L 247 104" stroke="#666" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_151">
+          <title>Text</title>
+          <text transform="translate(96.98242 117.75977)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" fill="black" x="0" y="11" xml:space="preserve">Temporal Unit 1</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_134">
+        <title>tu2</title>
+        <g id="Graphic_149">
+          <rect x="272" y="34" width="12" height="60" fill="#d9d9d9"/>
+          <rect x="272" y="34" width="12" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_148">
+          <rect x="284" y="34" width="40" height="60" fill="#fde0a8"/>
+          <rect x="284" y="34" width="40" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_147">
+          <title>Text</title>
+          <text transform="translate(296.00195 58.759766)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" fill="black" x="0" y="11" xml:space="preserve">TD</tspan>
+          </text>
+        </g>
+        <g id="Graphic_146">
+          <rect x="324" y="34" width="12" height="60" fill="#d9d9d9"/>
+          <rect x="324" y="34" width="12" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_145">
+          <rect x="336" y="34" width="70" height="60" fill="#cfe2f3"/>
+          <rect x="336" y="34" width="70" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_144">
+          <title>Text</title>
+          <text transform="translate(355.1096 51.529785)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" fill="black" x="0" y="10" xml:space="preserve">Frame</tspan>
+          </text>
+        </g>
+        <g id="Graphic_143">
+          <title>Text</title>
+          <text transform="translate(359.08154 65.529785)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" fill="black" x="0" y="10" xml:space="preserve">OBU</tspan>
+          </text>
+        </g>
+        <g id="Graphic_142">
+          <title>Text</title>
+          <text transform="translate(347.8606 81.06982)" fill="black">
+            <tspan font-family="Helvetica" font-size="9" fill="black" x="0" y="9" xml:space="preserve">xlayer_id=0</tspan>
+          </text>
+        </g>
+        <g id="Graphic_141">
+          <rect x="406" y="34" width="12" height="60" fill="#d9d9d9"/>
+          <rect x="406" y="34" width="12" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_140">
+          <rect x="418" y="34" width="70" height="60" fill="#cfe2f3"/>
+          <rect x="418" y="34" width="70" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_139">
+          <title>Text</title>
+          <text transform="translate(437.1096 51.529785)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" fill="black" x="0" y="10" xml:space="preserve">Frame</tspan>
+          </text>
+        </g>
+        <g id="Graphic_138">
+          <title>Text</title>
+          <text transform="translate(441.08154 65.529785)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" fill="black" x="0" y="10" xml:space="preserve">OBU</tspan>
+          </text>
+        </g>
+        <g id="Graphic_137">
+          <title>Text</title>
+          <text transform="translate(429.8606 81.06982)" fill="black">
+            <tspan font-family="Helvetica" font-size="9" fill="black" x="0" y="9" xml:space="preserve">xlayer_id=1</tspan>
+          </text>
+        </g>
+        <g id="Graphic_136">
+          <path d="M 272 104 L 272 114 L 488 114 L 488 104" stroke="#666" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_135">
+          <title>Text</title>
+          <text transform="translate(337.98242 117.75977)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" fill="black" x="0" y="11" xml:space="preserve">Temporal Unit 2</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_118">
+        <title>tu3</title>
+        <g id="Graphic_133">
+          <rect x="513" y="34" width="12" height="60" fill="#d9d9d9"/>
+          <rect x="513" y="34" width="12" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_132">
+          <rect x="525" y="34" width="40" height="60" fill="#fde0a8"/>
+          <rect x="525" y="34" width="40" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_131">
+          <title>Text</title>
+          <text transform="translate(537.00195 58.759766)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" fill="black" x="0" y="11" xml:space="preserve">TD</tspan>
+          </text>
+        </g>
+        <g id="Graphic_130">
+          <rect x="565" y="34" width="12" height="60" fill="#d9d9d9"/>
+          <rect x="565" y="34" width="12" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_129">
+          <rect x="577" y="34" width="70" height="60" fill="#cfe2f3"/>
+          <rect x="577" y="34" width="70" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_128">
+          <title>Text</title>
+          <text transform="translate(596.1096 51.529785)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" fill="black" x="0" y="10" xml:space="preserve">Frame</tspan>
+          </text>
+        </g>
+        <g id="Graphic_127">
+          <title>Text</title>
+          <text transform="translate(600.08154 65.529785)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" fill="black" x="0" y="10" xml:space="preserve">OBU</tspan>
+          </text>
+        </g>
+        <g id="Graphic_126">
+          <title>Text</title>
+          <text transform="translate(588.8606 81.06982)" fill="black">
+            <tspan font-family="Helvetica" font-size="9" fill="black" x="0" y="9" xml:space="preserve">xlayer_id=0</tspan>
+          </text>
+        </g>
+        <g id="Graphic_125">
+          <rect x="647" y="34" width="12" height="60" fill="#d9d9d9"/>
+          <rect x="647" y="34" width="12" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_124">
+          <rect x="659" y="34" width="70" height="60" fill="#cfe2f3"/>
+          <rect x="659" y="34" width="70" height="60" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_123">
+          <title>Text</title>
+          <text transform="translate(678.1096 51.529785)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" fill="black" x="0" y="10" xml:space="preserve">Frame</tspan>
+          </text>
+        </g>
+        <g id="Graphic_122">
+          <title>Text</title>
+          <text transform="translate(682.08154 65.529785)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" fill="black" x="0" y="10" xml:space="preserve">OBU</tspan>
+          </text>
+        </g>
+        <g id="Graphic_121">
+          <title>Text</title>
+          <text transform="translate(670.8606 81.06982)" fill="black">
+            <tspan font-family="Helvetica" font-size="9" fill="black" x="0" y="9" xml:space="preserve">xlayer_id=1</tspan>
+          </text>
+        </g>
+        <g id="Graphic_120">
+          <path d="M 513 104 L 513 114 L 729 114 L 729 104" stroke="#666" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_119">
+          <title>Text</title>
+          <text transform="translate(578.9824 117.75977)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" fill="black" x="0" y="11" xml:space="preserve">Temporal Unit 3</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_114">
+        <title>leb128-callout</title>
+        <g id="Line_117">
+          <line x1="37" y1="20.98" x2="37" y2="14" marker-start="url(#FilledArrow_Marker_2)" stroke="#666" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Line_116">
+          <line x1="37" y1="14" x2="0" y2="14" stroke="#666" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_115">
+          <title>Text</title>
+          <text transform="translate(7105427e-21 -.7001953)" fill="#444">
+            <tspan font-family="Helvetica" font-size="10" fill="#444" x="0" y="10" xml:space="preserve">leb128() num_bytes_in_obu</tspan>
+          </text>
+        </g>
+      </g>
+    </g>
+    <g id="with_leb128()_prefix_Legend">
+      <title>Legend</title>
+      <g id="Graphic_223">
+        <rect x="31" y="379" width="14" height="12" fill="#d9d9d9"/>
+        <rect x="31" y="379" width="14" height="12" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_222">
+        <title>Text</title>
+        <text transform="translate(51 379.2998)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">leb128() num_bytes_in_obu (Annex B length prefix)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_221">
+        <rect x="31" y="396" width="14" height="12" fill="#fde0a8"/>
+        <rect x="31" y="396" width="14" height="12" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_220">
+        <title>Text</title>
+        <text transform="translate(51 396.2998)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">TD = Temporal Delimiter OBU </tspan>
+        </text>
+      </g>
+      <g id="Graphic_219">
+        <rect x="391" y="396" width="14" height="12" fill="#cfe2f3"/>
+        <rect x="391" y="396" width="14" height="12" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_218">
+        <title>Text</title>
+        <text transform="translate(411 396.2998)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">Frame OBU = tile-group / key / switch / RAS frame, etc.</tspan>
+        </text>
+      </g>
+    </g>
+    <g id="with_leb128()_prefix_Track">
+      <title>Track</title>
+      <g id="Graphic_216">
+        <title>Text</title>
+        <text transform="translate(289.10596 222.21973)" fill="black">
+          <tspan font-family="Helvetica" font-size="14" fill="black" x="0" y="14" xml:space="preserve">AV2 ISOBMFF track samples</tspan>
+        </text>
+      </g>
+      <g id="Group_202">
+        <title>sample1</title>
+        <g id="Graphic_215">
+          <rect x="49" y="249" width="180" height="90" fill="#d9ead3"/>
+          <rect x="49" y="249" width="180" height="90" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_214">
+          <title>Text</title>
+          <text transform="translate(113.65234 254.75977)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" fill="black" x="0" y="11" xml:space="preserve">Sample 1</tspan>
+          </text>
+        </g>
+        <g id="Graphic_213">
+          <rect x="59" y="274" width="10" height="55" fill="#d9d9d9"/>
+          <rect x="59" y="274" width="10" height="55" stroke="#888" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_212">
+          <rect x="69" y="274" width="65" height="55" fill="#cfe2f3"/>
+          <rect x="69" y="274" width="65" height="55" stroke="#888" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_211">
+          <title>Text</title>
+          <text transform="translate(86.5542 282.2998)" fill="black">
+            <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">Frame</tspan>
+          </text>
+        </g>
+        <g id="Graphic_210">
+          <title>Text</title>
+          <text transform="translate(90.16504 295.2998)" fill="black">
+            <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">OBU</tspan>
+          </text>
+        </g>
+        <g id="Graphic_209">
+          <title>Text</title>
+          <text transform="translate(77.8606 311.06982)" fill="black">
+            <tspan font-family="Helvetica" font-size="9" fill="black" x="0" y="9" xml:space="preserve">xlayer_id=0</tspan>
+          </text>
+        </g>
+        <g id="Graphic_208">
+          <rect x="144" y="274" width="10" height="55" fill="#d9d9d9"/>
+          <rect x="144" y="274" width="10" height="55" stroke="#888" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_207">
+          <rect x="154" y="274" width="65" height="55" fill="#cfe2f3"/>
+          <rect x="154" y="274" width="65" height="55" stroke="#888" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_206">
+          <title>Text</title>
+          <text transform="translate(171.5542 282.2998)" fill="black">
+            <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">Frame</tspan>
+          </text>
+        </g>
+        <g id="Graphic_205">
+          <title>Text</title>
+          <text transform="translate(175.16504 295.2998)" fill="black">
+            <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">OBU</tspan>
+          </text>
+        </g>
+        <g id="Graphic_204">
+          <title>Text</title>
+          <text transform="translate(162.8606 311.06982)" fill="black">
+            <tspan font-family="Helvetica" font-size="9" fill="black" x="0" y="9" xml:space="preserve">xlayer_id=1</tspan>
+          </text>
+        </g>
+        <g id="Graphic_203">
+          <title>Text</title>
+          <text transform="translate(115.41016 348.5298)" fill="#444">
+            <tspan font-family="Helvetica" font-size="11" fill="#444" x="0" y="10" xml:space="preserve">CTS = T1</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_188">
+        <title>sample2</title>
+        <g id="Graphic_201">
+          <rect x="290" y="249" width="180" height="90" fill="#d9ead3"/>
+          <rect x="290" y="249" width="180" height="90" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_200">
+          <title>Text</title>
+          <text transform="translate(354.65234 254.75977)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" fill="black" x="0" y="11" xml:space="preserve">Sample 2</tspan>
+          </text>
+        </g>
+        <g id="Graphic_199">
+          <rect x="300" y="274" width="10" height="55" fill="#d9d9d9"/>
+          <rect x="300" y="274" width="10" height="55" stroke="#888" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_198">
+          <rect x="310" y="274" width="65" height="55" fill="#cfe2f3"/>
+          <rect x="310" y="274" width="65" height="55" stroke="#888" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_197">
+          <title>Text</title>
+          <text transform="translate(327.5542 282.2998)" fill="black">
+            <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">Frame</tspan>
+          </text>
+        </g>
+        <g id="Graphic_196">
+          <title>Text</title>
+          <text transform="translate(331.16504 295.2998)" fill="black">
+            <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">OBU</tspan>
+          </text>
+        </g>
+        <g id="Graphic_195">
+          <title>Text</title>
+          <text transform="translate(318.8606 311.06982)" fill="black">
+            <tspan font-family="Helvetica" font-size="9" fill="black" x="0" y="9" xml:space="preserve">xlayer_id=0</tspan>
+          </text>
+        </g>
+        <g id="Graphic_194">
+          <rect x="385" y="274" width="10" height="55" fill="#d9d9d9"/>
+          <rect x="385" y="274" width="10" height="55" stroke="#888" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_193">
+          <rect x="395" y="274" width="65" height="55" fill="#cfe2f3"/>
+          <rect x="395" y="274" width="65" height="55" stroke="#888" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_192">
+          <title>Text</title>
+          <text transform="translate(412.5542 282.2998)" fill="black">
+            <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">Frame</tspan>
+          </text>
+        </g>
+        <g id="Graphic_191">
+          <title>Text</title>
+          <text transform="translate(416.16504 295.2998)" fill="black">
+            <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">OBU</tspan>
+          </text>
+        </g>
+        <g id="Graphic_190">
+          <title>Text</title>
+          <text transform="translate(403.8606 311.06982)" fill="black">
+            <tspan font-family="Helvetica" font-size="9" fill="black" x="0" y="9" xml:space="preserve">xlayer_id=1</tspan>
+          </text>
+        </g>
+        <g id="Graphic_189">
+          <title>Text</title>
+          <text transform="translate(356.41016 348.5298)" fill="#444">
+            <tspan font-family="Helvetica" font-size="11" fill="#444" x="0" y="10" xml:space="preserve">CTS = T2</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_174">
+        <title>sample3</title>
+        <g id="Graphic_187">
+          <rect x="531" y="249" width="180" height="90" fill="#d9ead3"/>
+          <rect x="531" y="249" width="180" height="90" stroke="#444" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_186">
+          <title>Text</title>
+          <text transform="translate(595.65234 254.75977)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" fill="black" x="0" y="11" xml:space="preserve">Sample 3</tspan>
+          </text>
+        </g>
+        <g id="Graphic_185">
+          <rect x="541" y="274" width="10" height="55" fill="#d9d9d9"/>
+          <rect x="541" y="274" width="10" height="55" stroke="#888" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_184">
+          <rect x="551" y="274" width="65" height="55" fill="#cfe2f3"/>
+          <rect x="551" y="274" width="65" height="55" stroke="#888" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_183">
+          <title>Text</title>
+          <text transform="translate(568.5542 282.2998)" fill="black">
+            <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">Frame</tspan>
+          </text>
+        </g>
+        <g id="Graphic_182">
+          <title>Text</title>
+          <text transform="translate(572.16504 295.2998)" fill="black">
+            <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">OBU</tspan>
+          </text>
+        </g>
+        <g id="Graphic_181">
+          <title>Text</title>
+          <text transform="translate(559.8606 311.06982)" fill="black">
+            <tspan font-family="Helvetica" font-size="9" fill="black" x="0" y="9" xml:space="preserve">xlayer_id=0</tspan>
+          </text>
+        </g>
+        <g id="Graphic_180">
+          <rect x="626" y="274" width="10" height="55" fill="#d9d9d9"/>
+          <rect x="626" y="274" width="10" height="55" stroke="#888" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_179">
+          <rect x="636" y="274" width="65" height="55" fill="#cfe2f3"/>
+          <rect x="636" y="274" width="65" height="55" stroke="#888" stroke-linecap="butt" stroke-linejoin="round" stroke-width=".8"/>
+        </g>
+        <g id="Graphic_178">
+          <title>Text</title>
+          <text transform="translate(653.5542 282.2998)" fill="black">
+            <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">Frame</tspan>
+          </text>
+        </g>
+        <g id="Graphic_177">
+          <title>Text</title>
+          <text transform="translate(657.165 295.2998)" fill="black">
+            <tspan font-family="Helvetica" font-size="10" fill="black" x="0" y="10" xml:space="preserve">OBU</tspan>
+          </text>
+        </g>
+        <g id="Graphic_176">
+          <title>Text</title>
+          <text transform="translate(644.8606 311.06982)" fill="black">
+            <tspan font-family="Helvetica" font-size="9" fill="black" x="0" y="9" xml:space="preserve">xlayer_id=1</tspan>
+          </text>
+        </g>
+        <g id="Graphic_175">
+          <title>Text</title>
+          <text transform="translate(597.41016 348.5298)" fill="#444">
+            <tspan font-family="Helvetica" font-size="11" fill="#444" x="0" y="10" xml:space="preserve">CTS = T3</tspan>
+          </text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
