@@ -273,7 +273,7 @@ An [=Open Random Access=] is the random access process that applies to an extend
 
 In addition to Key Frames, AV2 provides two further mechanisms that support random access or stream switching: a RAS frame (<code>OBU_RAS_FRAME</code>) is an inter-predicted frame that uses long-term reference frames and enables random access or switching without inserting a full key frame; a [=Switch Frame=] (<code>OBU_SWITCH</code>) is an inter-predicted frame that enables switching between representations at a given point, typically in adaptive streaming scenarios.
 
-AV2 supports three scalability dimensions: temporal layers (identified by [=obu_tlayer_id=]), embedded layers (identified by [=obu_mlayer_id=]), and extended layers (identified by [=obu_xlayer_id=]). The reserved [=obu_xlayer_id=] value <code>GLOBAL_XLAYER_ID</code> (equal to 31, as defined in [[!AV2]]) denotes global scope and is used by OBUs that do not belong to any specific extended layer (such as the [=Temporal Delimiter OBU=]). A bitstream that uses a single distinct non-global value of [=obu_xlayer_id=] is a [=Singlestream=]; a bitstream that uses two or more distinct non-global values is a [=Multistream=].
+AV2 supports three scalability dimensions: temporal layers (identified by [=obu_tlayer_id=]), embedded layers (identified by [=obu_mlayer_id=]), and extended layers (identified by [=obu_xlayer_id=]). The reserved [=obu_xlayer_id=] value <code>GLOBAL_XLAYER_ID</code> (equal to 31, as defined in [[!AV2]]) denotes global scope and is used by OBUs that do not belong to any specific extended layer (such as the [=Temporal Delimiter OBU=]). A bitstream that uses a single distinct non-global value of [=obu_xlayer_id=] is a [=Singlestream=] bitstream; a bitstream that uses two or more distinct non-global values is a [=Multistream=] bitstream.
 
 AV2 defines two distinct [=Metadata OBU=] types for carrying metadata: <code>OBU_METADATA_SHORT</code>, using the [=metadata short OBU syntax=], and <code>OBU_METADATA_GROUP</code>, using the [=metadata group OBU syntax=]. A separate OBU type carries film grain synthesis parameters; its presence is indicated by the <code>film_grain_params_present</code> flag in the [=Sequence Header OBU=].
 
@@ -502,9 +502,9 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
   <figcaption>List of AV2 OBU types and where they can be found</figcaption>
 </figure>
 
-<assert>For a [=Multistream=], the [=Sequence Header OBU=] of each extended layer together with the stream's global configuration OBUs SHALL be carried by the associated [=AV2CodecConfigurationBox=], in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]].</assert>
+<assert>For a [=Multistream=] bitstream, the [=Sequence Header OBU=] of each extended layer together with the stream's global configuration OBUs SHALL be carried by the associated [=AV2CodecConfigurationBox=], in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]].</assert>
 
-<p class="issue">Editor's note: for a [=Multistream=], the [=AV2CodecConfigurationBox=] contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation. Also how profile / level is signalled to decoder API for layers. etc.</p>
+<p class="issue">Editor's note: for a [=Multistream=] bitstream, the [=AV2CodecConfigurationBox=] contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation. Also how profile / level is signalled to decoder API for layers. etc.</p>
 
 ## AV2 Sample Format ## {#sample-format}
 
