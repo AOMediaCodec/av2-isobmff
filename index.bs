@@ -556,7 +556,7 @@ The following applies to all [=coded extended layer units=] for each temporal la
             </tr>
             <tr>
                 <th><code>xlayer_id</code></th>
-                <th><code>chroma_format_idc</code></th>
+                <th><code>lcr_chroma_format_idc</code></th>
                 <th><code>mlayer_id</code></th>
                 <th><code>lcr_layer_type</code></th>
                 <th><code>lcr_auxiliary_type</code></th>
@@ -610,7 +610,7 @@ The following applies to all [=coded extended layer units=] for each temporal la
             </tr>
             <tr>
                 <th><code>xlayer_id</code></th>
-                <th><code>chroma_format_idc</code></th>
+                <th><code>lcr_chroma_format_idc</code></th>
                 <th><code>mlayer_id</code></th>
                 <th><code>lcr_layer_type</code></th>
                 <th><code>lcr_auxiliary_type</code></th>
