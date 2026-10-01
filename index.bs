@@ -572,6 +572,70 @@ TBD
 
 # Codecs Parameter String # {#codecsparam}
 
-TBD
+DASH and other applications require defined values for the 'Codecs' parameter specified in [[!RFC6381]] for ISO Media tracks. The codecs parameter string for the AOM AV1 codec is as follows:
+```
+<sample entry 4CC>.<profile>.<level><tier>.<bitDepth>.<monochrome>.<chromaSubsampling>.
+<colorPrimaries>.<transferCharacteristics>.<matrixCoefficients>.<videoFullRangeFlag>
+```
+
+All fields following the sample entry 4CC are expressed as double digit decimals, unless indicated otherwise. Leading or trailing zeros cannot be omitted.
+
+<assert>The profile parameter value, represented by a single digit decimal, SHALL equal the value of seq_profile in the [=Sequence Header OBU=]</assert>.
+
+<assert>The level parameter value SHALL equal the first level value indicated by [=seq_level_idx=] in the [=Sequence Header OBU=]</assert>.
+
+<assert>The tier parameter value SHALL be equal to <code>M</code> when the first [=seq_tier=] value in the [=Sequence Header OBU=] is equal to 0, and <code>H</code> when it is equal to 1</assert>.
+
+<assert>The bitDepth parameter value SHALL equal the value of BitDepth variable as defined in [[AV1]] derived from the [=Sequence Header OBU=]</assert>.
+
+<assert>The monochrome parameter value, represented by a single digit decimal, SHALL equal the value of mono_chrome in the [=Sequence Header OBU=]</assert>.
+
+<assert>The chromaSubsampling parameter value, represented by a three-digit decimal, SHALL have its first digit equal to subsampling_x and its second digit equal to subsampling_y</assert>. <assert>If both subsampling_x and subsampling_y are set to 1, then the third digit SHALL be equal to chroma_sample_position, otherwise it SHALL be set to 0</assert>.
+
+The colorPrimaries, transferCharacteristics, matrixCoefficients, and videoFullRangeFlag parameter values are set as follows:
+- <assert>If a 'colr' box with colour_type set to 'nclx' is present, the colorPrimaries, transferCharacteristics, matrixCoefficients, and videoFullRangeFlag parameter values SHALL equal the values of matching fields in the 'colr' box</assert>.
+- Otherwise, a 'colr' box with colour_type set to 'nclx' is absent.
+    - <assert>The videoFullRangeFlag parameter value SHALL equal the color_range flag in the [=Sequence Header OBU=]</assert>.
+    - <assert>If the color_description_present_flag is set to 1 in the [=Sequence Header OBU=], the colorPrimaries, transferCharacteristics, and matrixCoefficients parameter values SHALL equal the values of matching fields in the [=Sequence Header OBU=]</assert>.
+    - Otherwise, the color_description_present_flag is set to 0 in the [=Sequence Header OBU=]. <assert>The colorPrimaries, transferCharacteristics, and matrixCoefficients parameter values SHOULD be set to the default values below</assert>.
+
+NOTE: It is encouraged that a 'colr' box be present. The 'colr' box simplifies the task of the codecs parameter generator.
+
+NOTE: If the encoded video uses a color space that is not registered in [[CICP]] and the file doesn't explicitly code 2/2/2 either in the 'colr' box or in the [=Sequence Header OBU=] (with color_description_present_flag set to 1), the derived codecs parameter string will declare ITU-R BT.709 (1/1/1). To avoid this behavior, a 'colr' box should be used.
+
+The videoFullRangeFlag is represented by a single digit.
+
+<assert>If the codecs parameter string ends with ".0.110.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</assert>.
+
+For example, codecs="av01.0.04M.10.0.112.09.16.09.0" represents AV1 Main Profile, level 3.0, Main tier, 10-bit content, non-monochrome, with 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
+
+<assert>The parameters sample entry 4CC, profile, level, tier, and bitDepth are all mandatory fields</assert>. If any of these fields are empty, or not within their allowed range, the processing device SHOULD treat it as an error.
+
+<assert>All the other fields (including their leading '.') are optional, mutually inclusive (all or none) fields</assert>. If not specified then the values listed in the table below are assumed.
+
+<table class="def">
+<tr>
+<td>mono_chrome</td><td>0</td>
+</tr>
+<tr>
+<td>chromaSubsampling</td><td>110 (4:2:0)</td>
+</tr>
+<tr>
+<td>colorPrimaries</td><td>01 (ITU-R BT.709)</td>
+</tr>
+<tr>
+<td>transferCharacteristics</td><td>01 (ITU-R BT.709)</td>
+</tr>
+<tr>
+<td>matrixCoefficients</td><td>01 (ITU-R BT.709)</td>
+</tr>
+<tr>
+<td>videoFullRangeFlag</td><td>0 (studio swing representation)</td>
+</tr>
+</table>
+
+The string codecs="av01.0.01M.08" in this case would represent AV1 Main Profile, level 2.1, Main tier, 8-bit content with 4:2:0 chroma subsampling, ITU-R BT.709 color primaries, transfer characteristics, matrix coefficients, and studio swing representation.
+
+If any character that is not '.', digits, part of the AV1 4CC, or a tier value is encountered, the string SHALL be interpreted ignoring all the characters starting from that character.
 
 <div boilerplate="conformance"></div>
