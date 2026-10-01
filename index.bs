@@ -572,7 +572,7 @@ TBD
 
 # Codecs Parameter String # {#codecsparam}
 
-DASH and other applications require defined values for the 'Codecs' parameter specified in [[!RFC6381]] for ISO Media tracks. The codecs parameter string for the AOM AV1 codec is as follows:
+DASH and other applications require defined values for the 'Codecs' parameter specified in [[!RFC6381]] for ISO Media tracks. The codecs parameter string for the AOM AV2 codec is as follows:
 ```
 <sample entry 4CC>.<profile>.<level><tier>.<bitDepth>.<monochrome>.<chromaSubsampling>.
 <colorPrimaries>.<transferCharacteristics>.<matrixCoefficients>.<videoFullRangeFlag>
@@ -586,7 +586,7 @@ All fields following the sample entry 4CC are expressed as double digit decimals
 
 <assert>The tier parameter value SHALL be equal to <code>M</code> when the first [=seq_tier=] value in the [=Sequence Header OBU=] is equal to 0, and <code>H</code> when it is equal to 1</assert>.
 
-<assert>The bitDepth parameter value SHALL equal the value of BitDepth variable as defined in [[AV1]] derived from the [=Sequence Header OBU=]</assert>.
+<assert>The bitDepth parameter value SHALL equal the value of BitDepth variable as defined in [[AV2]] derived from the [=Sequence Header OBU=]</assert>.
 
 <assert>The monochrome parameter value, represented by a single digit decimal, SHALL equal the value of mono_chrome in the [=Sequence Header OBU=]</assert>.
 
@@ -607,7 +607,7 @@ The videoFullRangeFlag is represented by a single digit.
 
 <assert>If the codecs parameter string ends with ".0.110.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</assert>.
 
-For example, codecs="av01.0.04M.10.0.112.09.16.09.0" represents AV1 Main Profile, level 3.0, Main tier, 10-bit content, non-monochrome, with 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
+For example, codecs="av01.0.04M.10.0.112.09.16.09.0" represents AV2 Main Profile, level 3.0, Main tier, 10-bit content, non-monochrome, with 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
 
 <assert>The parameters sample entry 4CC, profile, level, tier, and bitDepth are all mandatory fields</assert>. If any of these fields are empty, or not within their allowed range, the processing device SHOULD treat it as an error.
 
@@ -634,8 +634,8 @@ For example, codecs="av01.0.04M.10.0.112.09.16.09.0" represents AV1 Main Profile
 </tr>
 </table>
 
-The string codecs="av01.0.01M.08" in this case would represent AV1 Main Profile, level 2.1, Main tier, 8-bit content with 4:2:0 chroma subsampling, ITU-R BT.709 color primaries, transfer characteristics, matrix coefficients, and studio swing representation.
+The string codecs="av01.0.01M.08" in this case would represent AV2 Main Profile, level 2.1, Main tier, 8-bit content with 4:2:0 chroma subsampling, ITU-R BT.709 color primaries, transfer characteristics, matrix coefficients, and studio swing representation.
 
-If any character that is not '.', digits, part of the AV1 4CC, or a tier value is encountered, the string SHALL be interpreted ignoring all the characters starting from that character.
+If any character that is not '.', digits, part of the AV2 4CC, or a tier value is encountered, the string SHALL be interpreted ignoring all the characters starting from that character.
 
 <div boilerplate="conformance"></div>
