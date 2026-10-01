@@ -138,8 +138,9 @@ url: https://av2.aomedia.org/v1.0.0/index.html#general_obu_semantics; spec: AV2;
     text: obu_size
 
 url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
-    text: seq_profile
-    text: timing_info_present_flag
+    text: seq_profile_idc
+    text: seq_level_idx
+    text: seq_tier
 
 url: https://av2.aomedia.org/v1.0.0/index.html#color_config_semantics; spec: AV2; type: dfn;
     text: high_bitdepth
@@ -541,9 +542,12 @@ The following applies to each [=coded extended layer unit=] in an [=AV2 sample=]
 
     <div class="example" id="sample-channel-ordering-example"><a class="self-link" href="#sample-channel-ordering-example"></a>An embedded layer with <code>mlayer_id</code> 0 and <code>CHROMA_FORMAT_420</code> contains the three first channels. Another embedded layer with <code>mlayer_id</code> 1 and <code>CHROMA_FORMAT_400</code> contains the fourth channel.</div>
 
-- <assert>If the 'pixi' box describes the Nth channel to be a color channel, the Nth channel in the [=AV2 sample=] SHALL be present and a color channel: if signalled, its associated <code>lcr_layer_type</code> SHALL be set to 0 (<code>TEXTURE_LAYER</code>).</assert>
-- <assert>If the 'pixi' box describes the Nth channel to be an alpha channel, the Nth channel in the [=AV2 sample=] SHALL be present and an alpha channel: if signalled, its associated <code>lcr_layer_type</code> SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 0 (<code>ALPHA_AUX</code>).</assert>
-- <assert>If the 'pixi' box describes the Nth channel to be a depth channel, the Nth channel in the [=AV2 sample=] SHALL be present and a depth channel: if signalled, its associated <code>lcr_layer_type</code> SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 1 (<code>DEPTH_AUX</code>).</assert>
+- <assert>If the 'pixi' box describes the Nth channel as used and specified (<code>channel_idc</code> values other than 0 and 1), the Nth channel in the [=AV2 sample=] SHALL be present.</assert>
+- <assert>If the 'pixi' box describes the Nth channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the Nth channel in the [=AV2 sample=] SHALL be a color channel: if signalled, the <code>lcr_layer_type</code> field of its associated Layer Configuration Record OBU SHALL be set to 0 (<code>TEXTURE_LAYER</code>).</assert>
+- <assert>If the 'pixi' box describes the Nth channel to be an alpha channel (<code>channel_idc</code> 5), the Nth channel in the [=AV2 sample=] SHALL be an alpha channel: if signalled, the <code>lcr_layer_type</code> field of its associated Layer Configuration Record OBU SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 0 (<code>ALPHA_AUX</code>).</assert>
+- <assert>If the 'pixi' box describes the Nth channel to be a depth channel (<code>channel_idc</code> 6), the Nth channel in the [=AV2 sample=] SHALL be a depth channel: if signalled, the <code>lcr_layer_type</code> field of its associated Layer Configuration Record OBU SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 1 (<code>DEPTH_AUX</code>).</assert>
+- <assert>If the 'pixi' box describes the Nth channel as used and specified (<code>channel_idc</code> values other than 0 and 1) with <code>subsampling_flag</code> set to 1, the Nth channel in the [=AV2 sample=] SHALL have the value of the <code>chroma_format_idc</code> field of its associated Sequence Header OBU correspond to the same meaning as the value of the 'pixi' box's Nth channel's <code>subsampling_type</code> value.</assert>
+- <assert>If the 'pixi' box describes the Nth channel as used and specified (<code>channel_idc</code> values other than 0 and 1) with <code>subsampling_flag</code> set to 1 and the Nth channel in the [=AV2 sample=] is associated with a Content Interpretation OBU with <code>ci_chroma_sample_position_present_flag</code> set to 1, the value of the <code>ci_chroma_sample_position_top</code> field of that Content Interpretation OBU SHALL correspond to the same meaning as the value of the 'pixi' box's Nth channel's <code>subsampling_location</code> value.</assert>
 
 <div class="example" id="sample-channel-type-example"><a class="self-link" href="#sample-channel-type-example"></a>A <code>PixelInformationBox</code> with <code>px_flags=1</code> and <code>channel_idc</code> set to 2, 3, 4, 1, 0, 0, 0, 5, 6 matches the following embedded layers: <code>TEXTURE_LAYER</code>/<code>CHROMA_FORMAT_444</code>, <code>AUX_LAYER</code>/<code>SEGMENTATION_AUX</code>/<code>CHROMA_FORMAT_400</code>, <code>AUX_LAYER</code>/<code>GAIN_MAP_AUX</code>/<code>CHROMA_FORMAT_420</code>, <code>AUX_LAYER</code>/<code>ALPHA_AUX</code>/<code>CHROMA_FORMAT_400</code>, <code>AUX_LAYER</code>/<code>DEPTH_AUX</code>/<code>CHROMA_FORMAT_400</code>.</div>
 
@@ -580,61 +584,65 @@ DASH and other applications require defined values for the 'Codecs' parameter sp
 
 All fields following the sample entry 4CC are expressed as double digit decimals, unless indicated otherwise. Leading or trailing zeros cannot be omitted.
 
-<assert>The profile parameter value, represented by a single digit decimal, SHALL equal the value of seq_profile in the [=Sequence Header OBU=]</assert>.
+<assert>The <code>profile</code> parameter value SHALL equal the value of [=seq_profile_idc=] in the first [=Sequence Header OBU=]</assert>.
 
-<assert>The level parameter value SHALL equal the first level value indicated by [=seq_level_idx=] in the [=Sequence Header OBU=]</assert>.
+<assert>The <code>level</code> parameter value SHALL equal the level value indicated by [=seq_level_idx=] in the first [=Sequence Header OBU=]</assert>.
 
-<assert>The tier parameter value SHALL be equal to <code>M</code> when the first [=seq_tier=] value in the [=Sequence Header OBU=] is equal to 0, and <code>H</code> when it is equal to 1</assert>.
+<assert>The <code>tier</code> parameter value SHALL be equal to <code>M</code> when the [=seq_tier=] value in the first [=Sequence Header OBU=] is equal to 0, and <code>H</code> when it is equal to 1</assert>.
 
-<assert>The bitDepth parameter value SHALL equal the value of BitDepth variable as defined in [[AV2]] derived from the [=Sequence Header OBU=]</assert>.
+<assert>The <code>bitDepth</code> parameter value SHALL equal the value of the <code>BitDepth</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=]</assert>.
 
-<assert>The monochrome parameter value, represented by a single digit decimal, SHALL equal the value of mono_chrome in the [=Sequence Header OBU=]</assert>.
+<assert>The <code>monochrome</code> parameter value, represented by <code>0</code> or <code>1</code>, SHALL equal the value of the <code>Monochrome</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=]</assert>.
 
-<assert>The chromaSubsampling parameter value, represented by a three-digit decimal, SHALL have its first digit equal to subsampling_x and its second digit equal to subsampling_y</assert>. <assert>If both subsampling_x and subsampling_y are set to 1, then the third digit SHALL be equal to chroma_sample_position, otherwise it SHALL be set to 0</assert>.
+The <code>chromaSubsampling</code> parameter value, represented by a three-digit decimal:
+1. <assert>SHALL have its first digit equal to the <code>SubsamplingX</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=]</assert>.
+2. <assert>SHALL have its second digit equal to the <code>SubsamplingY</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=]</assert>.
+3. <assert>If <code>SubsamplingX</code> is set to 1, a Content Interpretation OBU is present with the same <code>obu_tlayer_id</code>, <code>obu_mlayer_id</code>, <code>obu_xlayer_id</code> as the first [=Sequence Header OBU=], and <code>ci_chroma_sample_position_present_flag</code> is set to 1 in that Content Interpretation OBU, then the third digit SHALL be equal to <code>ci_chroma_sample_position_top</code> from that Content Interpretation OBU, otherwise it SHALL be set to 0</assert>.
 
-The colorPrimaries, transferCharacteristics, matrixCoefficients, and videoFullRangeFlag parameter values are set as follows:
-- <assert>If a 'colr' box with colour_type set to 'nclx' is present, the colorPrimaries, transferCharacteristics, matrixCoefficients, and videoFullRangeFlag parameter values SHALL equal the values of matching fields in the 'colr' box</assert>.
-- Otherwise, a 'colr' box with colour_type set to 'nclx' is absent.
-    - <assert>The videoFullRangeFlag parameter value SHALL equal the color_range flag in the [=Sequence Header OBU=]</assert>.
-    - <assert>If the color_description_present_flag is set to 1 in the [=Sequence Header OBU=], the colorPrimaries, transferCharacteristics, and matrixCoefficients parameter values SHALL equal the values of matching fields in the [=Sequence Header OBU=]</assert>.
-    - Otherwise, the color_description_present_flag is set to 0 in the [=Sequence Header OBU=]. <assert>The colorPrimaries, transferCharacteristics, and matrixCoefficients parameter values SHOULD be set to the default values below</assert>.
+<assert>The <code>colorPrimaries</code>, <code>transferCharacteristics</code>, <code>matrixCoefficients</code>, and <code>videoFullRangeFlag</code> parameter values SHALL equal the values of matching fields in the 'colr' box with the 'nclx' 'colour_type'</assert>.
 
-NOTE: It is encouraged that a 'colr' box be present. The 'colr' box simplifies the task of the codecs parameter generator.
+NOTE: A 'colr' box with the 'nclx' 'colour_type' is mandated to be present in [[#av2-sample-entry]].
 
-NOTE: If the encoded video uses a color space that is not registered in [[CICP]] and the file doesn't explicitly code 2/2/2 either in the 'colr' box or in the [=Sequence Header OBU=] (with color_description_present_flag set to 1), the derived codecs parameter string will declare ITU-R BT.709 (1/1/1). To avoid this behavior, a 'colr' box should be used.
+NOTE: The third digit values of the <code>chromaSubsampling</code> parameter differs from how they are defined in AV1-ISOBMFF. The values of the other fields of the 'Codecs' parameter have the same meaning in this document and in AV1-ISOBMFF.
 
-The videoFullRangeFlag is represented by a single digit.
+The <code>videoFullRangeFlag</code> is represented by <code>0</code> or <code>1</code>.
 
-<assert>If the codecs parameter string ends with ".0.110.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</assert>.
+<assert>If the codecs parameter string ends with ".0.116.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</assert>.
 
-For example, codecs="av01.0.04M.10.0.112.09.16.09.0" represents AV2 Main Profile, level 3.0, Main tier, 10-bit content, non-monochrome, with 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
+For example, codecs="av02.0.04M.10.0.112.09.16.09.0" represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 4.0, Main tier, 10-bit content, non-monochrome, with 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
 
-<assert>The parameters sample entry 4CC, profile, level, tier, and bitDepth are all mandatory fields</assert>. If any of these fields are empty, or not within their allowed range, the processing device SHOULD treat it as an error.
+<assert>The parameters <code>sample entry 4CC</code>, <code>profile</code>, <code>level</code>, <code>tier</code>, and <code>bitDepth</code> are all mandatory fields</assert>. If any of these fields are empty, or not within their allowed range, the processing device SHOULD treat it as an error.
 
 <assert>All the other fields (including their leading '.') are optional, mutually inclusive (all or none) fields</assert>. If not specified then the values listed in the table below are assumed.
 
 <table class="def">
-<tr>
-<td>mono_chrome</td><td>0</td>
-</tr>
-<tr>
-<td>chromaSubsampling</td><td>110 (4:2:0)</td>
-</tr>
-<tr>
-<td>colorPrimaries</td><td>01 (ITU-R BT.709)</td>
-</tr>
-<tr>
-<td>transferCharacteristics</td><td>01 (ITU-R BT.709)</td>
-</tr>
-<tr>
-<td>matrixCoefficients</td><td>01 (ITU-R BT.709)</td>
-</tr>
-<tr>
-<td>videoFullRangeFlag</td><td>0 (studio swing representation)</td>
-</tr>
+    <tr>
+        <td>mono_chrome</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>chromaSubsampling</td>
+        <td>116 (4:2:0 with <code>CSP_UNSPECIFIED</code> chroma sample position)</td>
+    </tr>
+    <tr>
+        <td>colorPrimaries</td>
+        <td>01 (ITU-R BT.709)</td>
+    </tr>
+    <tr>
+        <td>transferCharacteristics</td>
+        <td>01 (ITU-R BT.709)</td>
+    </tr>
+    <tr>
+        <td>matrixCoefficients</td>
+        <td>01 (ITU-R BT.709)</td>
+    </tr>
+    <tr>
+        <td>videoFullRangeFlag</td>
+        <td>0 (studio swing representation)</td>
+    </tr>
 </table>
 
-The string codecs="av01.0.01M.08" in this case would represent AV2 Main Profile, level 2.1, Main tier, 8-bit content with 4:2:0 chroma subsampling, ITU-R BT.709 color primaries, transfer characteristics, matrix coefficients, and studio swing representation.
+The string codecs="av02.0.01M.08" in this case would represent [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 2.1, Main tier, 8-bit content with 4:2:0 chroma subsampling, ITU-R BT.709 color primaries, transfer characteristics, matrix coefficients, and studio swing representation.
 
 If any character that is not '.', digits, part of the AV2 4CC, or a tier value is encountered, the string SHALL be interpreted ignoring all the characters starting from that character.
 
