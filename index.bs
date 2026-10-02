@@ -324,10 +324,10 @@ class AV2SampleEntry extends VisualSampleEntry('av02') {
 <assert>An [=AV2SampleEntry=] SHALL contain exactly one [=AV2CodecConfigurationBox=].</assert>
 
 <assert>An [=AV2SampleEntry=] SHALL contain exactly one 'colr' box with the 'nclx' 'colour_type'.</assert> Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, and <code>matrix_coefficients</code> carried in that 'colr' box:
-- <assert>SHOULD equal the corresponding effective value of the AV2 bitstream carried by the track if the latter is anything but 2 (<code>Unspecified</code>)</assert>;
-- <assert>SHALL take precedence over the corresponding effective value of the AV2 bitstream carried by the track</assert>.
+- <assert>SHOULD equal the corresponding effective value of the [=AV2 bitstream=] carried by the track if the latter is anything but 2 (<code>Unspecified</code>)</assert>;
+- <assert>SHALL take precedence over the corresponding effective value of the [=AV2 bitstream=] carried by the track</assert>.
 
-<assert>The value of <code>full_range_flag</code> carried in that 'colr' box SHOULD equal the corresponding effective value of the AV2 bitstream carried by the track and SHALL take precedence over the corresponding effective value of the AV2 bitstream carried by the track.</assert>
+<assert>The value of <code>full_range_flag</code> carried in that 'colr' box SHOULD equal the corresponding effective value of the [=AV2 bitstream=] carried by the track and SHALL take precedence over the corresponding effective value of the [=AV2 bitstream=] carried by the track.</assert>
 
 <assert>An [=AV2SampleEntry=] SHALL contain exactly one 'pixi' box. That box SHALL have the least significant bit of 'px_flags' enabled.</assert> The constraints described in [[#av2-sample-reconstruction]] apply to that [=AV2SampleEntry=].
 
@@ -358,8 +358,8 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 
 <assert>Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128()</code> <code>num_bytes_in_obu</code> value giving the byte length of that OBU, as specified in the [=Length delimited bitstream format=] from Annex B of [[!AV2]].</assert>
 
-<assert>The [=OBUs=] within an [=AV2CodecConfigurationBox=] SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]], with the following constraint:
-- the [=OBUs=] within an [=AV2CodecConfigurationBox=] SHALL NOT contain [=OBUs=] of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a>.</assert>
+<assert>The [=OBUs=] within an [=AV2CodecConfigurationBox=] SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]]</assert>, with the following constraint:
+- <assert>the [=OBUs=] within an [=AV2CodecConfigurationBox=] SHALL NOT contain [=OBUs=] of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a></assert>.
 
 <figure class="table" id="figure-table-obus">
   <table class='complex data'>
