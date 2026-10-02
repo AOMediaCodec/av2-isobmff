@@ -21,19 +21,23 @@ url: https://www.iso.org/standard/83102.html#; spec: ISOBMFF; type: dfn;
     text: Sample Auxiliary Information
 
 url: https://www.iso.org/standard/83102.html#; spec: ISOBMFF; type: property;
-    text: bitr
     text: btrt
     text: clli
+    text: colour_type
     text: colr
     text: ctts
+    text: iso3
     text: iso6
     text: mdcv
+    text: mvhd
     text: nclx
     text: pasp
+    text: pasr
     text: pixi
-    text: sgpd
-    text: stsd
-    text: saiz
+    text: stts
+
+url: https://www.iso.org/standard/89120.html#; spec: 23001-17; type: property;
+    text: ilce
 
 url: https://www.webmproject.org/vp9/mp4/#; spec: VP9; type: property;
     text: SmDm
@@ -196,6 +200,12 @@ url: https://www.iso.org/standard/68042.html#; spec: CENC; type: dfn;
 
 <pre class='biblio'>
 {
+    "23001-17": {
+        "title": "Information technology — MPEG systems technologies — Part 17: Carriage of uncompressed video and images in ISO base media file format",
+        "status": "Standard",
+        "publisher": "ISO",
+        "href": "https://www.iso.org/standard/89120.html"
+    },
     "AV2": {
         "href": "https://av2.aomedia.org/v1.0.0/index.html",
         "title": "AV2 Bitstream & Decoding Process Specification",
@@ -524,7 +534,12 @@ The [=AV2 sample=] boundary delimits the temporal unit.
 <assert>The [=OBUs=] within a <l spec=ISOBMFF>[=sample=]</l> SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]]</assert>, with the following constraint:
 - <assert>the [=OBUs=] within a <l spec=ISOBMFF>[=sample=]</l> SHALL NOT contain [=OBUs=] of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a></assert>.
 
-<p class="issue">Editor's note: the Content Interpretation OBU (<code>OBU_CONTENT_INTERPRETATION</code>) carries picture-level interpretation metadata (for example, colour description) that overlaps ISOBMFF container-level signalling such as the ColourInformationBox. Whether to carry it in the track or replace it entirely with container-level signalling is to be resolved in this version.</p>
+<assert><code>OBU_CONTENT_INTERPRETATION</code> SHALL NOT be present in an [=AV2 bitstream=] conformant to this specification.</assert> The following container-level signalling is available to replace the semantics of the following <code>OBU_CONTENT_INTERPRETATION</code> fields:
+- <code>ci_scan_type_idc</code>: 'ilce' sample group from ISO/IEC [[!23001-17]]
+- <code>ci_color_description_idc</code>, <code>ci_color_primaries</code>, <code>ci_transfer_characteristics</code>, <code>ci_matrix_coefficients</code>, and <code>ci_full_range_flag</code>: 'colr' box from [[!ISOBMFF]] with the 'nclx' 'colour_type'
+- <code>ci_chroma_sample_position_top</code>: 'pixi' box from [[!ISOBMFF]]
+- <code>ci_aspect_ratio_idc</code>, <code>ci_sar_width</code>, and <code>ci_sar_height</code>: 'iso3' brand, 'pasr' sample group, or 'pasp' box from [[!ISOBMFF]]
+- <code>timing_info()</code>: 'mvhd' and 'stts' boxes from [[!ISOBMFF]]
 
 ### Sync sample ### {#sync-sample}
 
