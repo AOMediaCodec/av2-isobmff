@@ -329,7 +329,7 @@ class AV2SampleEntry extends VisualSampleEntry('av02') {
 
 <assert>The value of <code>full_range_flag</code> carried in that 'colr' box SHOULD equal the corresponding effective value of the [=AV2 bitstream=] carried by the track and SHALL take precedence over the corresponding effective value of the [=AV2 bitstream=] carried by the track.</assert>
 
-<assert>An [=AV2SampleEntry=] SHALL contain exactly one 'pixi' box. That box SHALL have the least significant bit of 'px_flags' enabled.</assert> The constraints described in [[#av2-sample-reconstruction]] apply to that [=AV2SampleEntry=].
+<assert>An [=AV2SampleEntry=] SHALL contain exactly one 'pixi' box. That box SHALL have the least significant bit of 'px_flags' enabled.</assert> The constraints described in [[#layers]] apply to that [=AV2SampleEntry=].
 
 NOTE: An [=AV2SampleEntry=] may contain additional sub-boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'colr' with a 'colour_type' value other than 'nclx', 'pasp', 'clli', 'mdcv' or 'btrt'. They may be located before and/or after the [=AV2CodecConfigurationBox=].
 
