@@ -15,12 +15,12 @@ Metadata Order: This version, !*, *
 </pre>
 
 <pre class="anchors">
-url: https://www.iso.org/standard/83102.html#; spec: ISOBMFF; type: dfn;
+url: https://www.iso.org/standard/95141.html#; spec: ISOBMFF; type: dfn;
     text: sample
     text: VisualSampleEntry
     text: Sample Auxiliary Information
 
-url: https://www.iso.org/standard/83102.html#; spec: ISOBMFF; type: property;
+url: https://www.iso.org/standard/95141.html#; spec: ISOBMFF; type: property;
     text: bitr
     text: btrt
     text: clli
@@ -207,7 +207,7 @@ url: https://www.iso.org/standard/68042.html#; spec: CENC; type: dfn;
         "title": "Information technology — Coding of audio-visual objects — Part 12: ISO base media file format",
         "status": "Standard",
         "publisher": "ISO",
-        "href": "https://www.iso.org/standard/83102.html"
+        "href": "https://www.iso.org/standard/95141.html"
     },
     "CENC": {
         "title": "Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files",
