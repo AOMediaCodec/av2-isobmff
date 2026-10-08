@@ -142,12 +142,9 @@ url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_seman
     text: seq_level_idx
     text: seq_tier
 
-url: https://av2.aomedia.org/v1.0.0/index.html#color_config_semantics; spec: AV2; type: dfn;
-    text: high_bitdepth
-    text: twelve_bit
-    text: mono_chrome
-    text: subsampling_x
-    text: subsampling_y
+url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
+    text: chroma_format_idc
+    text: bit_depth_idc
 
 url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
     text: initial_display_delay_minus_1
@@ -293,8 +290,8 @@ NOTE: Non-monotonic output mode is new in AV2; AV1 supports only the monotonic m
 This section describes the basic data structures used to signal encapsulation of [=AV2 bitstreams=] in [[!ISOBMFF]] containers.
 
 There are two locations where [=OBUs=] can be found in a file conformant to this specification:
-- Some [=High-Level Syntax=] [=OBUs=], such as the [=Sequence Header OBU=], are carried in the [=AV2CodecConfigurationBox=] as described in [[#sample-entry-and-config]]. This corresponds to "availability through external means" as described in the [[!AV2]] specification. These [=OBUs=] apply to all <l spec=ISOBMFF>[=samples=]</l> of the corresponding [=AV2SampleEntry=].
-- The other [=OBUs=] are stored in <l spec=ISOBMFF>[=samples=]</l>. This corresponds to "presence in the bitstream" as described in the [[!AV2]] specification.
+- In [=out-of-band mode=], some [=High-Level Syntax=] [=OBUs=], such as the [=Sequence Header OBU=], are carried in the [=AV2CodecConfigurationBox=] as described in [[#sample-entry-and-config]]. This corresponds to "availability through external means" as described in the [[!AV2]] specification. These [=OBUs=] apply to all <l spec=ISOBMFF>[=samples=]</l> of the corresponding [=AV2SampleEntry=].
+- The other [=OBUs=], and all [=OBUs=] in [=in-band mode=], are stored in <l spec=ISOBMFF>[=samples=]</l>. This corresponds to "presence in the bitstream" as described in the [[!AV2]] specification.
 
 An <dfn>AV2 sample</dfn> is the union of a <l spec=ISOBMFF>[=sample=]</l> inclusive of the [=OBUs=] it carries, the [=OBUs=] carried in the [=AV2CodecConfigurationBox=] of the corresponding [=AV2SampleEntry=], and an implicit [=Temporal Delimiter OBU=].
 
@@ -339,19 +336,53 @@ NOTE: An [=AV2SampleEntry=] may contain additional sub-boxes permitted by [[!ISO
 The <dfn>AV2CodecConfigurationBox</dfn> carries the decoder initialisation data required to decode the [=AV2 samples=] of a track.
 
 ```cpp
-aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
+aligned(8) class AV2CodecConfigurationBox extends FullBox('av2C', 0, av2c_flags)
 {
-  unsigned int(8) reserved1 = 0;
-  unsigned int(8) config_obus_count_minus1;
-  for (i = 0; i < config_obus_count_minus1 + 1; ++i) {
+  unsigned int(5) profile_idc;
+  unsigned int(5) level_idx;
+  unsigned int(1) tier;
+  unsigned int(1) initial_presentation_delay_present;
+  if (initial_presentation_delay_present) {
+    unsigned int(4) initial_presentation_delay_minus_one;
+  } else {
+    unsigned int(4) reserved1 = 0;
+  }
+  if ((av2c_flags & multistream_present) != 0) {
+    unsigned int(16) max_canvas_width_minus_1;
+    unsigned int(16) max_canvas_height_minus_1;
+    unsigned int(3) max_num_substreams_minus2;
+    unsigned int(5) max_xlayer_cnt_minus1;
+    unsigned int(3) max_mlayer_cnt_minus1;
+    unsigned int(1) atlas_present;
+    unsigned int(1) alpha_atlas_present;
+    unsigned int(1) lcr_present;
+    unsigned int(2) reserved2 = 0;
+  }
+  unsigned int(8) config_obus_count;
+  for (i = 0; i < config_obus_count; ++i) {
     unsigned int(8) config_obu[];
   }
 }
 ```
 
-<assert><code>reserved</code> SHALL be set to 0. Readers SHALL ignore its value.</assert>
+<assert>The <code>reserved1</code> and <code>reserved2</code> fields SHALL be set to 0. Readers SHALL ignore its value.</assert>
 
-<code>config_obus_count_minus1</code> is the number of <code>config_obu</code> minus one.
+<code>av2c_flags</code> is a 24-bit field. The following flag is defined:
+- <code>multistream_present</code>: flag value 0x000001. When set, it indicates that the track carries a [=Multistream=] bitstream and that the multistream fields are present. <assert>It SHALL be set if and only if the track contains a Multi Stream Decoder Operation OBU (<code>OBU_MSDO</code>).</assert>
+
+<assert>All other bits of <code>av2c_flags</code> SHALL be set to 0. Readers SHALL ignore their value.</assert>
+
+<code>profile_idc</code>, <code>level_idx</code> and <code>tier</code> are the profile, level and tier required to decode the track. <assert>For a track that is not a [=Multistream=], they SHALL equal the maximum of <code>seq_profile_idc</code>, <code>seq_level_idx</code> and <code>seq_tier</code> over the [=Sequence Header OBUs=] applying to the [=AV2SampleEntry=].</assert> <assert>For a [=Multistream=] track, they SHALL equal the maximum of <code>multistream_profile_idc</code>, <code>multistream_level_idx</code> and <code>multistream_tier</code> over the Multi Stream Decoder Operation OBUs applying to the [=AV2SampleEntry=].</assert>
+
+<code>initial_presentation_delay_present</code> and <code>initial_presentation_delay_minus_one</code> signal, when present, the number of frames minus one that the decoder should wait after the first sample's decode before starting output.
+
+<code>max_canvas_width_minus_1</code> and <code>max_canvas_height_minus_1</code> are the maximum canvas dimensions, minus one, of any composition of the track. <code>max_num_substreams_minus2</code>, <code>max_xlayer_cnt_minus1</code> and <code>max_mlayer_cnt_minus1</code> are the maximum number of sub-streams minus two, extended layers minus one and embedded layers minus one, over the whole track. <code>atlas_present</code>, <code>alpha_atlas_present</code> and <code>lcr_present</code> indicate that the track contains, respectively, <code>OBU_ATLAS_SEGMENT</code> OBUs, alpha atlas segments and Layer Configuration Record OBUs.
+
+<assert>The summary fields of an [=AV2CodecConfigurationBox=] SHALL describe the maximum capability required to decode every [=AV2 sample=] associated with the corresponding [=AV2SampleEntry=].</assert>
+
+NOTE: Bit depth and chroma format are not repeated in the [=AV2CodecConfigurationBox=]: they are described by the mandatory 'pixi' box of the [=AV2SampleEntry=], as specified in [[#pixi-summary]].
+
+<code>config_obus_count</code> is the number of <code>config_obu</code>. A value of 0 selects the in-band carriage mode described in [[#carriage-modes]].
 
 <code>config_obu</code> is a byte array carrying one OBU and its length as described in [[#config_obu]].
 
@@ -503,9 +534,25 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
   <figcaption>List of AV2 OBU types and where they can be found</figcaption>
 </figure>
 
-<assert>For a [=Multistream=] bitstream, the [=Sequence Header OBU=] of each extended layer together with the stream's global configuration OBUs SHALL be carried by the associated [=AV2CodecConfigurationBox=], in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]].</assert>
+<assert>For a [=Multistream=] bitstream in [=out-of-band mode=], the [=Sequence Header OBU=] of each extended layer together with the stream's global configuration OBUs SHALL be carried by the associated [=AV2CodecConfigurationBox=], in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]].</assert>
 
 <p class="issue">Editor's note: for a [=Multistream=] bitstream, the [=AV2CodecConfigurationBox=] contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation. Also how profile / level is signalled to decoder API for layers. etc.</p>
+
+### Carriage modes ### {#carriage-modes}
+
+An [=AV2SampleEntry=] uses one of two carriage modes for the [=High-Level Syntax=] [=OBUs=] that it applies to:
+- <dfn>Out-of-band mode</dfn>: the [=High-Level Syntax=] [=OBUs=] are carried in the [=AV2CodecConfigurationBox=] (<code>config_obus_count</code> greater than 0).
+- <dfn>In-band mode</dfn>: the [=High-Level Syntax=] [=OBUs=], including the Multi Stream Decoder Operation and Atlas Segment [=OBUs=], are carried in the <l spec=ISOBMFF>[=samples=]</l> (<code>config_obus_count</code> equal to 0).
+
+<assert>All [=AV2SampleEntry=] of a track SHALL use the same carriage mode.</assert>
+
+<assert>In [=in-band mode=], the [=OBUs=] carried in <l spec=ISOBMFF>[=samples=]</l> SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]].</assert>
+
+### Configuration changes ### {#config-changes}
+
+In [=out-of-band mode=], a change of configuration <assert>SHOULD be signalled by a new [=AV2SampleEntry=]</assert>, selected through <code>sample_description_index</code> in the SampleToChunkBox (<code>stsc</code>) or the TrackFragmentHeaderBox (<code>tfhd</code>).
+
+In [=in-band mode=], a change of configuration is signalled by new [=High-Level Syntax=] [=OBUs=] in the next [=sync AV2 sample=]. <assert>In [=in-band mode=], the configuration SHALL NOT change at an [=AV2 sample=] that is not a [=sync AV2 sample=].</assert> The summary fields of the [=AV2CodecConfigurationBox=] describe the maximum capability required for the complete track.
 
 ## AV2 Sample Format ## {#sample-format}
 
@@ -533,6 +580,8 @@ An [=AV2 sample=] is a <dfn>sync AV2 sample</dfn> if, for every [=coded extended
 
 <assert>A [=sync AV2 sample=] SHALL be self-sufficient for starting decoding at that point for all layers: every OBU referenced by the coded frame OBUs of the [=sync AV2 sample=] SHALL be available either by being carried in the [=AV2CodecConfigurationBox=] of the active [=AV2SampleEntry=] or by being present in the <l spec=ISOBMFF>[=sample=]</l>, as required by the [=availability of HLS OBUs=] in [[!AV2]].</assert>
 
+<assert>In [=in-band mode=], a [=sync AV2 sample=] SHALL contain the Sequence Header, Multi Stream Decoder Operation and Atlas Segment [=OBUs=] required to decode it, and SHALL be a Random Access Point as defined in [[!AV2]].</assert>
+
 NOTE: In ISOBMFF terms, sync samples are signalled using the SyncSampleBox ('stss') in unfragmented tracks, or by setting <code>sample_is_non_sync_sample</code> equal to 0 in fragmented tracks. When every sample in a track is a sync sample, the SyncSampleBox is omitted in unfragmented tracks (per [[!ISOBMFF]]), and in fragmented tracks this is expressed through the default sample flags of the MovieExtendsBox ('trex') or TrackFragmentHeaderBox ('tfhd') with no per-sample override.
 
 ### Layers ### {#layers}
@@ -553,12 +602,45 @@ The following applies to each [=coded extended layer unit=] in an [=AV2 sample=]
 
 <div class="example" id="sample-channel-type-example2"><a class="self-link" href="#sample-channel-type-example2"></a>A <code>PixelInformationBox</code> with <code>px_flags=1</code> and <code>channel_idc</code> set to 7, 2, 3, 4 matches the following embedded layers: <code>TEXTURE_LAYER</code>/<code>CHROMA_FORMAT_400</code>, <code>TEXTURE_LAYER</code>/<code>CHROMA_FORMAT_444</code>.</div>
 
+### Summary information in the 'pixi' box ### {#pixi-summary}
+
+The [=AV2CodecConfigurationBox=] carries profile, level and tier but no bit depth or chroma format. Readers obtain them from the 'pixi' box of the [=AV2SampleEntry=], in addition to the channel rules of [[#layers]]:
+
+<figure class="table" id="figure-table-summary">
+  <table class='complex data'>
+    <tr><th>Information</th><th>Container-level source</th><th>Bitstream source</th></tr>
+    <tr><td>Bit depth per channel</td><td>'pixi' <code>bits_per_channel</code></td><td>[=bit_depth_idc=] of the [=Sequence Header OBU=], or <code>lcr_bit_depth_idc</code></td></tr>
+    <tr><td>Channel count and kind</td><td>'pixi' <code>num_channels</code>, <code>channel_idc</code></td><td><code>lcr_layer_type</code>, <code>lcr_auxiliary_type</code>, [=chroma_format_idc=]</td></tr>
+    <tr><td>Chroma format</td><td>'pixi' <code>subsampling_type</code></td><td>[=chroma_format_idc=] or <code>lcr_chroma_format_idc</code></td></tr>
+    <tr><td>Chroma sample position</td><td>'pixi' <code>subsampling_location</code></td><td><code>ci_chroma_sample_position_top</code> of the Content Interpretation OBU</td></tr>
+    <tr><td>Profile, level, tier</td><td>[=AV2CodecConfigurationBox=] summary fields</td><td>[=Sequence Header OBU=]</td></tr>
+    <tr><td>Colour primaries, transfer, matrix, range</td><td>'colr' with 'nclx'</td><td>[=Sequence Header OBU=] or Content Interpretation OBU</td></tr>
+  </table>
+  <figcaption>Where summary information is signalled</figcaption>
+</figure>
+
+<assert>The <code>num_channels</code> of the 'pixi' box SHALL equal the sum, over the embedded layers of each [=coded extended layer unit=], of 1 for each embedded layer with <code>CHROMA_FORMAT_400</code> and 3 for each other embedded layer.</assert>
+
+<assert>The <code>bits_per_channel</code> of each channel SHALL equal the bit depth of the embedded layer carrying it: 8 for <code>bit_depth_idc</code> 1, 10 for 0 and 12 for 2.</assert> Channels of different embedded layers, such as colour and alpha, MAY have different bit depths.
+
+<assert>For an embedded layer with a chroma format other than <code>CHROMA_FORMAT_400</code>, the 'pixi' entries of its second and third colour channels (<code>channel_idc</code> 3 and 4) SHALL have <code>subsampling_flag</code> equal to 1 and <code>subsampling_type</code> equal to 0 (4:4:4) for <code>CHROMA_FORMAT_444</code>, 1 (4:2:2) for <code>CHROMA_FORMAT_422</code> and 2 (4:2:0) for <code>CHROMA_FORMAT_420</code>.</assert>
+
+<assert>The 'pixi' entries of all other channels SHALL have <code>subsampling_flag</code> equal to 0 or <code>subsampling_type</code> equal to 0.</assert>
+
+<assert>The <code>component_format</code> of every channel SHALL indicate an unsigned integer format.</assert>
+
+<assert>For 4:2:0 chroma channels, <code>subsampling_location</code> values 0 to 5 SHALL correspond to <code>CSP_LEFT</code>, <code>CSP_CENTER</code>, <code>CSP_TOPLEFT</code>, <code>CSP_TOP</code>, <code>CSP_BOTTOMLEFT</code> and <code>CSP_BOTTOM</code> respectively.</assert>
+
+<assert>If the 'pixi' box disagrees with the bitstream on bit depth, channel count or chroma format, the file SHALL be considered non-conformant. The 'pixi' box does not take precedence over the bitstream.</assert>
+
+<p class="issue">Editor's note: 'pixi' semantics follow the draft FDIS of [[!ISOBMFF]] 9th edition (Tables 8 and 9) and need re-checking against the published text. Open: the <code>component_format</code> value for unsigned integer (ISO/IEC 23001-17); 4:2:2 <code>subsampling_location</code> mapping to AV2 chroma sample positions 0 and 1; <code>channel_idc</code> for channels with no defined meaning (segmentation, gain map).</p>
+
 ### AV2 sample reconstruction ### {#av2-sample-reconstruction}
 
 A byte sequence containing a conformant [[!AV2]] [=Temporal Unit=] using the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]] MAY be reconstructed from the [=OBUs=] of an [=AV2 sample=] by applying the following steps:
 1. Write a [=Temporal Delimiter OBU=], preceded by its <code>leb128()</code> length prefix.
 2. Write the [=OBUs=] carried in the <l spec=ISOBMFF>[=sample=]</l>, in the same order as present in the <l spec=ISOBMFF>[=sample=]</l>, each preceded by its <code>leb128()</code> length prefix as present in the <l spec=ISOBMFF>[=sample=]</l>.
-3. Insert each [=OBU=] carried in the [=AV2CodecConfigurationBox=] of the corresponding [=AV2SampleEntry=], preceded by its <code>leb128()</code> length prefix as present in the [=AV2SampleEntry=], between two <code>leb128()</code>-prefixed [=OBUs=] already present in the byte sequence, so that:
+3. In [=out-of-band mode=], insert each [=OBU=] carried in the [=AV2CodecConfigurationBox=] of the corresponding [=AV2SampleEntry=], preceded by its <code>leb128()</code> length prefix as present in the [=AV2SampleEntry=], between two <code>leb128()</code>-prefixed [=OBUs=] already present in the byte sequence, so that:
 
     - the relative order of the [=OBUs=] carried in an [=AV2CodecConfigurationBox=] SHALL be kept in the reconstructed byte sequence,
     - the reconstructed byte sequence SHALL conform to the [=ordering of OBUs in a temporal unit=] as specified in [[!AV2]], and
