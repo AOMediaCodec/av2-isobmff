@@ -451,13 +451,13 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
     </tr>
     <tr>
       <td><code>OBU_ATLAS_SEGMENT</code></td>
-      <td>SHALL NOT</td>
       <td>MAY</td>
+      <td>SHALL NOT</td>
     </tr>
     <tr>
       <td><code>OBU_OPERATING_POINT_SET</code></td>
-      <td>SHALL NOT</td>
       <td>MAY</td>
+      <td>SHALL NOT</td>
     </tr>
     <tr>
       <td><code>OBU_BRIDGE_FRAME</code></td>
@@ -466,8 +466,8 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
     </tr>
     <tr>
       <td><code>OBU_MSDO</code></td>
-      <td>SHALL NOT</td>
       <td>MAY</td>
+      <td>SHALL NOT</td>
     </tr>
     <tr>
       <td><code>OBU_RAS_FRAME</code></td>
@@ -502,8 +502,6 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
   </table>
   <figcaption>List of AV2 OBU types and where they can be found</figcaption>
 </figure>
-
-<assert>For a [=Multistream=] bitstream, the [=Sequence Header OBU=] of each extended layer together with the stream's global configuration OBUs SHALL be carried by the associated [=AV2CodecConfigurationBox=], in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]].</assert>
 
 <p class="issue">Editor's note: for a [=Multistream=] bitstream, the [=AV2CodecConfigurationBox=] contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation. Also how profile / level is signalled to decoder API for layers. etc.</p>
 
@@ -557,14 +555,10 @@ The following applies to each [=coded extended layer unit=] in an [=AV2 sample=]
 
 A byte sequence containing a conformant [[!AV2]] [=Temporal Unit=] using the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]] MAY be reconstructed from the [=OBUs=] of an [=AV2 sample=] by applying the following steps:
 1. Write a [=Temporal Delimiter OBU=], preceded by its <code>leb128()</code> length prefix.
-2. Write the [=OBUs=] carried in the <l spec=ISOBMFF>[=sample=]</l>, in the same order as present in the <l spec=ISOBMFF>[=sample=]</l>, each preceded by its <code>leb128()</code> length prefix as present in the <l spec=ISOBMFF>[=sample=]</l>.
-3. Insert each [=OBU=] carried in the [=AV2CodecConfigurationBox=] of the corresponding [=AV2SampleEntry=], preceded by its <code>leb128()</code> length prefix as present in the [=AV2SampleEntry=], between two <code>leb128()</code>-prefixed [=OBUs=] already present in the byte sequence, so that:
+2. Write the [=OBUs=] carried in the [=AV2CodecConfigurationBox=] of the corresponding [=AV2SampleEntry=], in the same order as present in the [=AV2CodecConfigurationBox=], each preceded by its <code>leb128()</code> length prefix as present in the [=AV2CodecConfigurationBox=].
+3. Write the [=OBUs=] carried in the <l spec=ISOBMFF>[=sample=]</l>, in the same order as present in the <l spec=ISOBMFF>[=sample=]</l>, each preceded by its <code>leb128()</code> length prefix as present in the <l spec=ISOBMFF>[=sample=]</l>.
 
-    - the relative order of the [=OBUs=] carried in an [=AV2CodecConfigurationBox=] SHALL be kept in the reconstructed byte sequence,
-    - the reconstructed byte sequence SHALL conform to the [=ordering of OBUs in a temporal unit=] as specified in [[!AV2]], and
-    - there SHALL NOT be an earlier insertion location for that [=OBU=] that would satisfy the above constraints.
-
-Note: AV2-ISOBMFF reader implementations do not have to reconstruct the contiguous byte sequence containing a conformant [=AV2 bitstream=] or [=Temporal Unit=] in memory upon decoding, but they must have all the data to do so: all [=OBUs=], and enough information to deterministically reorder the [=OBUs=] if necessary.
+Note: AV2-ISOBMFF reader implementations do not have to reconstruct the contiguous byte sequence containing a conformant [=AV2 bitstream=] or [=Temporal Unit=] in memory upon decoding.
 
 # CMAF AV2 track format # {#cmaf}
 
