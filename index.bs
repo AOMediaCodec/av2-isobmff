@@ -578,7 +578,7 @@ TBD
 
 DASH and other applications require defined values for the 'Codecs' parameter specified in [[!RFC6381]] for ISO Media tracks. The codecs parameter string for the AOM AV2 codec is as follows:
 ```
-<sample entry 4CC>.<profile>.<level><tier>.<bitDepth>.<monochrome>.<chromaSubsampling>.
+<sample entry 4CC>.<profile>.<level><tier>.<bitDepth>.<channelCount>.<chromaSubsampling>.
 <colorPrimaries>.<transferCharacteristics>.<matrixCoefficients>.<videoFullRangeFlag>
 ```
 
@@ -592,7 +592,7 @@ All fields following the sample entry 4CC are expressed as double digit decimals
 
 <assert>The <code>bitDepth</code> parameter value SHALL equal the value of the <code>BitDepth</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=]</assert>.
 
-<assert>The <code>monochrome</code> parameter value, represented by <code>0</code> or <code>1</code>, SHALL equal the value of the <code>Monochrome</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=]</assert>.
+<assert>The <code>channelCount</code> parameter value, represented by <code>1</code>, <code>2</code>, <code>3</code>, or <code>4</code>, SHALL equal the value of the <code>NumPlanes</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=] if there is no auxiliary image of <code>lcr_auxiliary_type</code> set to <code>ALPHA_AUX</code> associated with the color planes of the first [=Sequence Header OBU=], and SHALL equal that value plus one otherwise.</assert>.
 
 The <code>chromaSubsampling</code> parameter value, represented by a three-digit decimal:
 1. <assert>SHALL have its first digit equal to the <code>SubsamplingX</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=]</assert>.
@@ -607,9 +607,9 @@ NOTE: The third digit values of the <code>chromaSubsampling</code> parameter dif
 
 The <code>videoFullRangeFlag</code> is represented by <code>0</code> or <code>1</code>.
 
-<assert>If the codecs parameter string ends with ".0.116.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</assert>.
+<assert>If the codecs parameter string ends with ".3.116.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</assert>.
 
-For example, codecs="av02.0.04M.10.0.112.09.16.09.0" represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 4.0, Main tier, 10-bit content, non-monochrome, with 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
+For example, codecs="av02.0.04M.10.4.112.09.16.09.0" represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 4.0, Main tier, 10-bit content, non-monochrome and alpha, with 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
 
 <assert>The parameters <code>sample entry 4CC</code>, <code>profile</code>, <code>level</code>, <code>tier</code>, and <code>bitDepth</code> are all mandatory fields</assert>. If any of these fields are empty, or not within their allowed range, the processing device SHOULD treat it as an error.
 
@@ -617,8 +617,8 @@ For example, codecs="av02.0.04M.10.0.112.09.16.09.0" represents [[!AV2]] <code>M
 
 <table class="def">
     <tr>
-        <td>mono_chrome</td>
-        <td>0</td>
+        <td>channelCount</td>
+        <td>3</td>
     </tr>
     <tr>
         <td>chromaSubsampling</td>
