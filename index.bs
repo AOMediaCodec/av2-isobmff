@@ -1,4 +1,4 @@
-<pre class='metadata'>
+<pre class="metadata">
 Title: AV2 Codec ISO Media File Format Binding
 Status: WGD
 Text Macro: SPECVERSION v1.0.0
@@ -363,7 +363,7 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 - <assert>the [=OBUs=] within an [=AV2CodecConfigurationBox=] SHALL NOT contain [=OBUs=] of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a></assert>.
 
 <figure class="table" id="figure-table-obus">
-  <table class='complex data'>
+  <table class="complex data">
     <tr>
       <th>AV2 OBU type</th>
       <th>Be present in <code>AV2CodecConfigurationBox</code> (in <code>config_obu</code>)</th>
@@ -537,11 +537,8 @@ NOTE: In ISOBMFF terms, sync samples are signalled using the SyncSampleBox ('sts
 
 ### Layers ### {#layers}
 
-The following applies to each [=coded extended layer unit=] in an [=AV2 sample=] associated with a 'pixi' box:
-- The channels in the [=AV2 sample=] are considered to be ordered as if the embedded layers were concatenated in increasing <code>mlayer_id</code> order.
-
-    <div class="example" id="sample-channel-ordering-example"><a class="self-link" href="#sample-channel-ordering-example"></a>An embedded layer with <code>mlayer_id</code> 0 and <code>CHROMA_FORMAT_420</code> contains the three first channels. Another embedded layer with <code>mlayer_id</code> 1 and <code>CHROMA_FORMAT_400</code> contains the fourth channel.</div>
-
+The following applies to all [=coded extended layer units=] for each temporal layer in an [=AV2 sample=] associated with a 'pixi' box:
+- The channels in the [=AV2 sample=] are considered to be ordered as if the layers were concatenated in increasing <code>xlayer_id</code> order, then in increasing <code>mlayer_id</code> order.
 - <assert>If the 'pixi' box describes the Nth channel as used and specified (<code>channel_idc</code> values other than 0 and 1), the Nth channel in the [=AV2 sample=] SHALL be present.</assert>
 - <assert>If the 'pixi' box describes the Nth channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the Nth channel in the [=AV2 sample=] SHALL be a color channel: if signalled, the <code>lcr_layer_type</code> field of its associated Layer Configuration Record OBU SHALL be set to 0 (<code>TEXTURE_LAYER</code>).</assert>
 - <assert>If the 'pixi' box describes the Nth channel to be an alpha channel (<code>channel_idc</code> 5), the Nth channel in the [=AV2 sample=] SHALL be an alpha channel: if signalled, the <code>lcr_layer_type</code> field of its associated Layer Configuration Record OBU SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 0 (<code>ALPHA_AUX</code>).</assert>
@@ -549,9 +546,133 @@ The following applies to each [=coded extended layer unit=] in an [=AV2 sample=]
 - <assert>If the 'pixi' box describes the Nth channel as used and specified (<code>channel_idc</code> values other than 0 and 1) with <code>subsampling_flag</code> set to 1, the Nth channel in the [=AV2 sample=] SHALL have the value of the <code>chroma_format_idc</code> field of its associated Sequence Header OBU correspond to the same meaning as the value of the 'pixi' box's Nth channel's <code>subsampling_type</code> value.</assert>
 - <assert>If the 'pixi' box describes the Nth channel as used and specified (<code>channel_idc</code> values other than 0 and 1) with <code>subsampling_flag</code> set to 1 and the Nth channel in the [=AV2 sample=] is associated with a Content Interpretation OBU with <code>ci_chroma_sample_position_present_flag</code> set to 1, the value of the <code>ci_chroma_sample_position_top</code> field of that Content Interpretation OBU SHALL correspond to the same meaning as the value of the 'pixi' box's Nth channel's <code>subsampling_location</code> value.</assert>
 
-<div class="example" id="sample-channel-type-example"><a class="self-link" href="#sample-channel-type-example"></a>A <code>PixelInformationBox</code> with <code>px_flags=1</code> and <code>channel_idc</code> set to 2, 3, 4, 1, 0, 0, 0, 5, 6 matches the following embedded layers: <code>TEXTURE_LAYER</code>/<code>CHROMA_FORMAT_444</code>, <code>AUX_LAYER</code>/<code>SEGMENTATION_AUX</code>/<code>CHROMA_FORMAT_400</code>, <code>AUX_LAYER</code>/<code>GAIN_MAP_AUX</code>/<code>CHROMA_FORMAT_420</code>, <code>AUX_LAYER</code>/<code>ALPHA_AUX</code>/<code>CHROMA_FORMAT_400</code>, <code>AUX_LAYER</code>/<code>DEPTH_AUX</code>/<code>CHROMA_FORMAT_400</code>.</div>
+<div class="example" id="sample-channel-simple-example"><a class="self-link" href="#sample-channel-simple-example"></a>
+    Simple example with an embedded layer containing YUV 4:2:0 colour channels and an embedded layer containing the gain map.
+    <table class="complex data">
+        <thead>
+            <tr>
+                <th colspan=5>[=AV2 sample=] layer</th>
+                <th colspan=2>'pixi'</th>
+            </tr>
+            <tr>
+                <th><code>xlayer_id</code></th>
+                <th><code>chroma_format_idc</code></th>
+                <th><code>mlayer_id</code></th>
+                <th><code>lcr_layer_type</code></th>
+                <th><code>lcr_auxiliary_type</code></th>
+                <th>(<code>i</code>+1)th channel</th>
+                <th><code>channel_idc</code>: Meaning</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan=6>0</td>
+                <td rowspan=6><code>CHROMA_FORMAT_420</code></td>
+                <td rowspan=3>0</td>
+                <td rowspan=3 colspan=2><code>TEXTURE_LAYER</code></td>
+                <td>0</td>
+                <td>2: First colour channel (e.g. monochrome, <b>Y</b>, R, C)</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>3: Second colour channel (e.g. <b>U</b>, Cb, G, M)</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>4: Third colour channel (e.g. <b>V</b>, Cr, B, Y)</td>
+            </tr>
+            <tr>
+                <td rowspan=3>1</td>
+                <td rowspan=3><code>AUX_LAYER</code></td>
+                <td rowspan=3><code>GAIN_MAP_AUX</code></td>
+                <td>3</td>
+                <td>1: Unspecified</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>1: Unspecified</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>1: Unspecified</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-<div class="example" id="sample-channel-type-example2"><a class="self-link" href="#sample-channel-type-example2"></a>A <code>PixelInformationBox</code> with <code>px_flags=1</code> and <code>channel_idc</code> set to 7, 2, 3, 4 matches the following embedded layers: <code>TEXTURE_LAYER</code>/<code>CHROMA_FORMAT_400</code>, <code>TEXTURE_LAYER</code>/<code>CHROMA_FORMAT_444</code>.</div>
+<div class="example" id="sample-channel-complex-example"><a class="self-link" href="#sample-channel-complex-example"></a>
+    Complex example with an extended layer containing CMYK channels (each channel as an embedded layer), an extended layer containing alpha, and an extended layer containing segmentation and depth data.
+    <table class="complex data">
+        <thead>
+            <tr>
+                <th colspan=5>[=AV2 sample=] layer</th>
+                <th colspan=2>'pixi'</th>
+            </tr>
+            <tr>
+                <th><code>xlayer_id</code></th>
+                <th><code>chroma_format_idc</code></th>
+                <th><code>mlayer_id</code></th>
+                <th><code>lcr_layer_type</code></th>
+                <th><code>lcr_auxiliary_type</code></th>
+                <th>(<code>i</code>+1)th channel</th>
+                <th><code>channel_idc</code>: Meaning</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan=4>0</td>
+                <td rowspan=4><code>CHROMA_FORMAT_400</code></td>
+                <td>0</td>
+                <td colspan=2><code>TEXTURE_LAYER</code></td>
+                <td>0</td>
+                <td>2: First colour channel (e.g. monochrome, Y, R, <b>C</b>)</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td colspan=2><code>TEXTURE_LAYER</code></td>
+                <td>1</td>
+                <td>3: Second colour channel (e.g. U, Cb, G, <b>M</b>)</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td colspan=2><code>TEXTURE_LAYER</code></td>
+                <td>2</td>
+                <td>4: Third colour channel (e.g. V, Cr, B, <b>Y</b>)</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td colspan=2><code>TEXTURE_LAYER</code></td>
+                <td>3</td>
+                <td>7: Fourth colour channel (e.g. <b>K</b>)</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td><code>CHROMA_FORMAT_400</code></td>
+                <td>0</td>
+                <td><code>AUX_LAYER</code></td>
+                <td><code>ALPHA_AUX</code></td>
+                <td>4</td>
+                <td>5: Alpha</td>
+            </tr>
+            <tr>
+                <td rowspan=2>2</td>
+                <td rowspan=2><code>CHROMA_FORMAT_400</code></td>
+                <td>0</td>
+                <td><code>AUX_LAYER</code></td>
+                <td><code>SEGMENTATION_AUX</code></td>
+                <td>5</td>
+                <td>1: Unspecified</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td><code>AUX_LAYER</code></td>
+                <td><code>DEPTH_AUX</code></td>
+                <td>6</td>
+                <td>6: Depth</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 ### AV2 sample reconstruction ### {#av2-sample-reconstruction}
 
