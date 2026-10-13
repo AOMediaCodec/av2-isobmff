@@ -334,15 +334,17 @@ class AV2SampleEntry extends VisualSampleEntry('av02') {
 
 <assert>An [=AV2SampleEntry=] SHALL contain exactly one [=AV2CodecConfigurationBox=].</assert>
 
-<assert>An [=AV2SampleEntry=] SHALL contain exactly one 'colr' box with the 'nclx' 'colour_type'.</assert> Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, and <code>matrix_coefficients</code> carried in that 'colr' box:
+<assert>An [=AV2SampleEntry=] SHALL directly contain exactly one 'colr' box with the 'nclx' 'colour_type'.</assert> Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, and <code>matrix_coefficients</code> carried in that 'colr' box, for the [=AV2 sample=] layers or operating points it applies to:
 - <assert>SHOULD equal the corresponding effective value of the [=AV2 bitstream=] carried by the track if the latter is anything but 2 (<code>Unspecified</code>)</assert>;
 - <assert>SHALL take precedence over the corresponding effective value of the [=AV2 bitstream=] carried by the track</assert>.
 
-<assert>The value of <code>full_range_flag</code> carried in that 'colr' box SHOULD equal the corresponding effective value of the [=AV2 bitstream=] carried by the track and SHALL take precedence over the corresponding effective value of the [=AV2 bitstream=] carried by the track.</assert>
+<assert>The value of <code>full_range_flag</code> carried in that 'colr' box, for the [=AV2 sample=] layers or operating points it applies to, SHOULD equal the corresponding effective value of the [=AV2 bitstream=] carried by the track and SHALL take precedence over the corresponding effective value of the [=AV2 bitstream=] carried by the track.</assert>
 
-<assert>An [=AV2SampleEntry=] SHALL contain exactly one 'pixi' box. That box SHALL have the least significant bit of 'px_flags' enabled.</assert> The constraints described in [[#layers]] apply to that [=AV2SampleEntry=].
+<assert>An [=AV2SampleEntry=] SHALL directly contain exactly one 'pixi' box.</assert> <assert>'pixi' boxes in an [=AV2SampleEntry=] SHALL have the least significant bit of 'px_flags' enabled.</assert> The constraints described in [[#layers]] apply to that [=AV2SampleEntry=].
 
-NOTE: An [=AV2SampleEntry=] may contain additional sub-boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'colr' with a 'colour_type' value other than 'nclx', 'pasp', 'clli', 'mdcv' or 'btrt'. They may be located before and/or after the [=AV2CodecConfigurationBox=].
+NOTE: An [=AV2SampleEntry=] may directly contain additional boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'colr' with a 'colour_type' value other than 'nclx', 'pasp', 'clli', 'mdcv' or 'btrt'. They may be located before and/or after the [=AV2CodecConfigurationBox=].
+
+NOTE: An [=AV2SampleEntry=] may indirectly contain additional 'colr' boxes, for example when carried by the <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition to describe the colour properties of multiple layers.
 
 ### AV2 Codec Configuration Box ### {#av2c}
 
