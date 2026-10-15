@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="11a9b8eb2d491a772c560bdae6552e634d0cefc2" name="revision"/>
+<meta content="343c5fb31d9dc65b377c44e17f40d7c9aa28dc4d" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -3417,9 +3417,6 @@ figcaption.has-figure-number::before { content: none !important; }
 </li></ul>
 <span id="assert-e65456ec">When protected, <a data-link-type="dfn" href="#cmaf-av2-track" id="ref-for-cmaf-av2-track">CMAF AV2 Tracks</a> SHALL use the signaling defined in <a data-link-type="biblio" href="#biblio-cmaf" title="Information technology — Multimedia application format (MPEG-A) — Part 19: Common media application format (CMAF) for segmented media">[CMAF]</a>, which in turn relies on <a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files">[CENC]</a>, with the provisions specified in <a href="#CommonEncryption">§ 5 Common Encryption</a>.</span>
 <p class="back-to-toc-wrapper"><a class="back-to-toc" href="#toc">↑ Back to Table of Contents</a></p><h2 class="heading settled" data-level="5" id="CommonEncryption"><span class="secno">5. </span><span class="content">Common Encryption</span><a class="self-link" href="#CommonEncryption"></a></h2>
-   
-=========================
-
 <span id="assert-952f87ce"><a data-link-type="dfn" href="#cmaf-av2-track" id="ref-for-cmaf-av2-track①">CMAF AV2 Tracks</a> and non-segmented AV2 files MAY be protected</span>. <span id="assert-89e67c25">If protected, they SHALL conform to <a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files">[CENC]</a></span>. <span id="assert-2a42f17e">Files SHOULD be protected using the <code><a data-link-type="dfn" href="https://www.iso.org/standard/68042.html#" id="ref-for-something⑥③">cbcs</a></code> protection scheme</span> and <span id="assert-105dfb43">MAY be protected using the <code><a data-link-type="dfn" data-refhint-key="742c038d" href="https://www.iso.org/standard/68042.html#" id="ref-for-something⑥④">cenc</a></code> protection scheme</span>.
 
 <span id="assert-44221cba">When the protected scheme <code><a data-link-type="dfn" data-refhint-key="742c038d" href="https://www.iso.org/standard/68042.html#" id="ref-for-something⑥⑤">cenc</a></code> is used, samples SHALL be protected using subsample encryption</span> and <span id="assert-aa4aefdb">SHALL NOT use pattern encryption</span>.
@@ -3491,12 +3488,11 @@ figcaption.has-figure-number::before { content: none !important; }
 </li></ul>
 <p>Version 1 and version 2 of the <u class="link-error property" data-lt="saiz" title="LINK ERROR: No 'property' refs found for 'saiz'.">saiz</u> box as defined in <a data-link-type="biblio" href="#biblio-isobmff" title="Information technology — Coding of audio-visual objects — Part 12: ISO base media file format">[ISOBMFF]</a> <span class="rfc-keyword">SHALL</span> be supported.</p>
 <h3 class="heading settled" data-level="5.2" id="subsample-encryption-illustration"><span class="secno">5.2. </span><span class="content">Subsample Encryption Illustration</span><a class="self-link" href="#subsample-encryption-illustration"></a></h3>
-   
-Figure #1 illustrates Subsample based encryption of AV2.
+<a class="figure-ref" href="#figure-subsample-encryption">Figure 5.1</a> illustrates Subsample based encryption of AV2.
 
 
-   <figure>
-<img alt="Subsample-based AV2 encryption" src="images/subsample_encryption.svg"/>
+   <figure id="figure-subsample-encryption">
+<img alt="Subsample-based AV2 encryption" src="images/av2_subsample_encryption.svg"/>
 <figcaption class="has-figure-number"><strong>Figure 5.1: </strong>Subsample-based AV2 encryption.</figcaption>
 </figure>
 <p class="back-to-toc-wrapper"><a class="back-to-toc" href="#toc">↑ Back to Table of Contents</a></p><h2 class="heading settled" data-level="6" id="codecsparam"><span class="secno">6. </span><span class="content">Codecs Parameter String</span><a class="self-link" href="#codecsparam"></a></h2>
