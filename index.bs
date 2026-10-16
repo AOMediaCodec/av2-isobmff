@@ -491,18 +491,13 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
       <td>MAY</td>
     </tr>
     <tr>
-      <td><code>OBU_FILM_GRAIN</code>, when its contents do not change for the duration of the active [=AV2SampleEntry=]</td>
-      <td>MAY</td>
-      <td>SHOULD NOT</td>
-    </tr>
-    <tr>
-      <td><code>OBU_FILM_GRAIN</code>, otherwise</td>
-      <td>SHOULD NOT</td>
+      <td><code>OBU_FILM_GRAIN</code></td>
+      <td>SHALL NOT</td>
       <td>MAY</td>
     </tr>
     <tr>
       <td><code>OBU_CONTENT_INTERPRETATION</code></td>
-      <td>MAY</td>
+      <td>SHALL NOT</td>
       <td>SHALL NOT</td>
     </tr>
     <tr>
