@@ -719,9 +719,9 @@ If a [=CMAF Video Track=] uses the brand <code>[=av02=]</code>, it is called a <
 
 # Common Encryption # {#CommonEncryption}
 
-<assert>[=CMAF AV2 Tracks=] and non-segmented AV2 files MAY be protected</assert>. <assert>If protected, they SHALL conform to [[!CENC]]</assert>. <assert>Files SHOULD be protected using the <code>[=cbcs=]</code> protection scheme</assert> and <assert>MAY be protected using the <code>[=cenc=]</code> protection scheme</assert>.
+<p><assert>[=CMAF AV2 Tracks=] and non-segmented AV2 files MAY be protected</assert>. <assert>If protected, they SHALL conform to [[!CENC]]</assert>. <assert>Files SHOULD be protected using the <code>[=cbcs=]</code> protection scheme</assert> and <assert>MAY be protected using the <code>[=cenc=]</code> protection scheme</assert>.</p>
 
-<assert>When the protected scheme <code>[=cenc=]</code> is used, samples SHALL be protected using subsample encryption</assert> and <assert>SHALL NOT use pattern encryption</assert>.
+<p><assert>When the protected scheme <code>[=cenc=]</code> is used, samples SHALL be protected using subsample encryption</assert> and <assert>SHALL NOT use pattern encryption</assert>.</p>
 
 <assert>When the protected scheme <code>[=cbcs=]</code> is used, samples SHALL be protected using subsample encryption</assert> and <assert>SHALL use pattern encryption</assert>. [[!CENC]] recommends that the Block Pattern length be 10, i.e. <code>crypt_byte_block + skip_byte_block = 10</code>, where a Block is of size 16-bytes. In this specification, the combination of <code>crypt_byte_block</code> and <code>skip_byte_block</code> SHALL be one of the following, with the first one being recommended:
 - <assert><code>crypt_byte_block = 1</code> and <code>skip_byte_block = 9</code></assert>,
@@ -759,15 +759,6 @@ Within protected samples, the following constraints apply:
 		- <assert>All other parts of [=Tile Group OBUs=] and [=Frame OBUs=] SHALL be unprotected <span hidden>for cenc</span></assert>.
 
 Version 1 and version 2 of the 'saiz' box as defined in [[ISOBMFF]] SHALL be supported.
-
-Subsample Encryption Illustration {#subsample-encryption-illustration}
-------------------
-<a class="figure-ref" href="#figure-subsample-encryption">Figure</a> illustrates Subsample based encryption of AV2.
-
-<figure id="figure-subsample-encryption">
-  <img alt="Subsample-based AV2 encryption" src="images/av2_subsample_encryption.svg">
-  <figcaption>Subsample-based AV2 encryption.</figcaption>
-</figure>
 
 # Codecs Parameter String # {#codecsparam}
 
