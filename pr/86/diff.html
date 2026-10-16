@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version NORMALIZED" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="408caacbe9c26c70de5046d26118851c906e26a9" name="revision"/>
+<meta content="7c54e393911fcbd4dc050b5564c005c43a6478b2" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2869,12 +2869,6 @@ General
 Subsample
 Encryption
 constraints
-</ins></span></a></li><li><a href="#subsample-encryption-illustration"><span class="secno"><ins class="diff-new">
-5.2
-</ins></span><span class="content"><ins class="diff-new">
-Subsample
-Encryption
-Illustration
 </ins></span></a></li></ol>
 </li>
 <li>
@@ -7619,12 +7613,15 @@ Encryption
 <a class="self-link" href="#CommonEncryption">
 </a>
 </h2>
+<p>
+<del class="diff-old">TBD
+</del>
 <span id="assert-952f87ce">
 <a data-link-type="dfn" href="#cmaf-av2-track" id="ref-for-cmaf-av2-track①">
-<ins class="diff-new">CMAF
+<ins class="diff-chg">CMAF
 AV2
 Tracks
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 and
 non-segmented
 AV2
@@ -7632,48 +7629,48 @@ files
 MAY
 be
 protected
-</ins></span>.<span id="assert-89e67c25"><ins class="diff-new">
+</ins></span>.<span id="assert-89e67c25"><ins class="diff-chg">
 If
 protected,
 they
 SHALL
 conform
 to
-</ins><a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files"><ins class="diff-new">
+</ins><a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files"><ins class="diff-chg">
 [CENC]
-</ins></a></span>.<span id="assert-2a42f17e"><ins class="diff-new">
+</ins></a></span>.<span id="assert-2a42f17e"><ins class="diff-chg">
 Files
 SHOULD
 be
 protected
 using
 the
-</ins><code><a data-link-type="dfn" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥③"><ins class="diff-new">
+</ins><code><a data-link-type="dfn" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥③"><ins class="diff-chg">
 cbcs
-</ins></a></code><ins class="diff-new">
+</ins></a></code><ins class="diff-chg">
 protection
 scheme
-</ins></span><ins class="diff-new">
+</ins></span><ins class="diff-chg">
 and
-</ins><span id="assert-105dfb43"><ins class="diff-new">
+</ins><span id="assert-105dfb43"><ins class="diff-chg">
 MAY
 be
 protected
 using
 the
-</ins><code><a data-link-type="dfn" data-refhint-key="ca818b72" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥④"><ins class="diff-new">
+</ins><code><a data-link-type="dfn" data-refhint-key="ca818b72" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥④"><ins class="diff-chg">
 cenc
-</ins></a></code><ins class="diff-new">
+</ins></a></code><ins class="diff-chg">
 protection
 scheme
-</ins></span>.<span id="assert-44221cba"><ins class="diff-new">
+</ins></span>.</p><p><span id="assert-44221cba"><ins class="diff-chg">
 When
 the
 protected
 scheme
-</ins><code><a data-link-type="dfn" data-refhint-key="ca818b72" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑤"><ins class="diff-new">
+</ins><code><a data-link-type="dfn" data-refhint-key="ca818b72" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑤"><ins class="diff-chg">
 cenc
-</ins></a></code><ins class="diff-new">
+</ins></a></code><ins class="diff-chg">
 is
 used,
 samples
@@ -7683,22 +7680,22 @@ protected
 using
 subsample
 encryption
-</ins></span><ins class="diff-new">
+</ins></span><ins class="diff-chg">
 and
-</ins><span id="assert-aa4aefdb"><ins class="diff-new">
+</ins><span id="assert-aa4aefdb"><ins class="diff-chg">
 SHALL
 NOT
 use
 pattern
 encryption
-</ins></span>.<span id="assert-0113b336"><ins class="diff-new">
+</ins></span>.</p><span id="assert-0113b336"><ins class="diff-chg">
 When
 the
 protected
 scheme
-</ins><code><a data-link-type="dfn" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑥"><ins class="diff-new">
+</ins><code><a data-link-type="dfn" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑥"><ins class="diff-chg">
 cbcs
-</ins></a></code><ins class="diff-new">
+</ins></a></code><ins class="diff-chg">
 is
 used,
 samples
@@ -7708,16 +7705,16 @@ protected
 using
 subsample
 encryption
-</ins></span><ins class="diff-new">
+</ins></span><ins class="diff-chg">
 and
-</ins><span id="assert-95fbc893"><ins class="diff-new">
+</ins><span id="assert-95fbc893"><ins class="diff-chg">
 SHALL
 use
 pattern
 encryption
-</ins></span>.<a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files"><ins class="diff-new">
+</ins></span>.<a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files"><ins class="diff-chg">
 [CENC]
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 recommends
 that
 the
@@ -7727,13 +7724,13 @@ length
 be
 10,
 i.e.
-</ins><code><ins class="diff-new">
+</ins><code><ins class="diff-chg">
 crypt_byte_block
 +
 skip_byte_block
 =
 10
-</ins></code>,<ins class="diff-new">
+</ins></code>,<ins class="diff-chg">
 where
 a
 Block
@@ -7747,13 +7744,13 @@ specification,
 the
 combination
 of
-</ins><code><ins class="diff-new">
+</ins><code><ins class="diff-chg">
 crypt_byte_block
-</ins></code><ins class="diff-new">
+</ins></code><ins class="diff-chg">
 and
-</ins><code><ins class="diff-new">
+</ins><code><ins class="diff-chg">
 skip_byte_block
-</ins></code><ins class="diff-new">
+</ins></code><ins class="diff-chg">
 SHALL
 be
 one
@@ -7766,60 +7763,53 @@ first
 one
 being
 recommended:
-</ins><ul><li data-md=""><span id="assert-51e8a94d"><code><ins class="diff-new">
+</ins><ul><li data-md=""><span id="assert-51e8a94d"><code><ins class="diff-chg">
 crypt_byte_block
 =
 1
-</ins></code><ins class="diff-new">
+</ins></code><ins class="diff-chg">
 and
-</ins><code><ins class="diff-new">
+</ins><code><ins class="diff-chg">
 skip_byte_block
 =
 9
-</ins></code></span>,</li><li data-md=""><span id="assert-973b126b"><code><ins class="diff-new">
+</ins></code></span>,</li><li data-md=""><span id="assert-973b126b"><code><ins class="diff-chg">
 crypt_byte_block
 =
 5
-</ins></code><ins class="diff-new">
+</ins></code><ins class="diff-chg">
 and
-</ins><code><ins class="diff-new">
+</ins><code><ins class="diff-chg">
 skip_byte_block
 =
 5
-</ins></code></span>,</li><li data-md=""><span id="assert-0fbb54b0"><code><ins class="diff-new">
+</ins></code></span>,</li><li data-md=""><span id="assert-0fbb54b0"><code><ins class="diff-chg">
 crypt_byte_block
 =
 10
-</ins></code><ins class="diff-new">
+</ins></code><ins class="diff-chg">
 and
-</ins><code><ins class="diff-new">
+</ins><code><ins class="diff-chg">
 skip_byte_block
 =
 0
-</ins></code></span>.</li></ul><h3 class="heading settled" data-level="5.1" id="subsample-encryption"><span class="secno"><ins class="diff-new">
+</ins></code></span>.</li></ul><h3 class="heading settled" data-level="5.1" id="subsample-encryption"><span class="secno"><ins class="diff-chg">
 5.1.
-</ins></span><span class="content"><ins class="diff-new">
+</ins></span><span class="content"><ins class="diff-chg">
 General
 Subsample
 Encryption
 constraints
-</ins></span><a class="self-link" href="#subsample-encryption"></a></h3>
-<p>
-<del class="diff-old">TBD
-</del>
-<ins class="diff-chg">Within
+</ins></span><a class="self-link" href="#subsample-encryption"></a></h3><p><ins class="diff-chg">
+Within
 protected
 samples,
 the
 following
 constraints
 apply:
-</ins>
-</p>
-<ul>
-<li data-md="">
-<span id="assert-d84cddee">
-<ins class="diff-new">Protected
+</ins></p><ul><li data-md=""><span id="assert-d84cddee"><ins class="diff-chg">
+Protected
 samples
 SHALL
 be
@@ -7831,7 +7821,7 @@ or
 more
 contiguous
 subsamples
-</ins></span>.<ul><li data-md=""><span id="assert-38a31899"><ins class="diff-new">
+</ins></span>.<ul><li data-md=""><span id="assert-38a31899"><ins class="diff-chg">
 An
 OBU
 MAY
@@ -7842,7 +7832,7 @@ one
 or
 more
 subsamples
-</ins></span>,<ins class="diff-new">
+</ins></span>,<ins class="diff-chg">
 especially
 when
 it
@@ -7856,9 +7846,9 @@ However,
 as
 recommended
 in
-</ins><a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files"><ins class="diff-new">
+</ins><a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files"><ins class="diff-chg">
 [CENC]
-</ins></a>,<ins class="diff-new">
+</ins></a>,<ins class="diff-chg">
 subsample
 encryption
 entries
@@ -7903,7 +7893,7 @@ such
 protected
 OBU
 exists.
-</ins></li><li data-md=""><span id="assert-02d6b0e9"><ins class="diff-new">
+</ins></li><li data-md=""><span id="assert-02d6b0e9"><ins class="diff-chg">
 A
 large
 unprotected
@@ -7920,9 +7910,9 @@ size
 of
 a
 single
-</ins><a data-link-type="dfn" data-refhint-key="64058dae" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑦"><ins class="diff-new">
+</ins><a data-link-type="dfn" data-refhint-key="64058dae" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑦"><ins class="diff-chg">
 BytesOfClearData
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 field
 MAY
 be
@@ -7933,102 +7923,102 @@ subsamples
 with
 zero
 size
-</ins><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑧"><ins class="diff-new">
+</ins><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑧"><ins class="diff-chg">
 BytesOfProtectedData
-</ins></a></span>.</li></ul></li><li data-md=""><span id="assert-b8cabcad"><ins class="diff-new">
+</ins></a></span>.</li></ul></li><li data-md=""><span id="assert-b8cabcad"><ins class="diff-chg">
 All
-</ins><a data-link-type="dfn" data-refhint-key="4afb517e" href="https://av2.aomedia.org/v1.0.0/index.html#obu_header_syntax" id="ref-for-obu_header_syntax①⓪"><ins class="diff-new">
+</ins><a data-link-type="dfn" data-refhint-key="4afb517e" href="https://av2.aomedia.org/v1.0.0/index.html#obu_header_syntax" id="ref-for-obu_header_syntax①⓪"><ins class="diff-chg">
 OBU
 Headers
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 and
 associated
-</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_obu_semantics" id="ref-for-general_obu_semantics"><ins class="diff-new">
+</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_obu_semantics" id="ref-for-general_obu_semantics"><ins class="diff-chg">
 obu_size
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 fields
 SHALL
 be
 unprotected
-</ins></span>.</li><li data-md=""><span id="assert-97f8fe83"><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#temporal-delimiter-obu" id="ref-for-temporal-delimiter-obu④"><ins class="diff-new">
+</ins></span>.</li><li data-md=""><span id="assert-97f8fe83"><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#temporal-delimiter-obu" id="ref-for-temporal-delimiter-obu④"><ins class="diff-chg">
 Temporal
 Delimiter
 OBUs
-</ins></a>,<a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax⑥"><ins class="diff-new">
+</ins></a>,<a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax⑥"><ins class="diff-chg">
 Sequence
 Header
 OBUs
-</ins></a>,<ins class="diff-new">
+</ins></a>,<ins class="diff-chg">
 and
-</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#frame_header_syntax" id="ref-for-frame_header_syntax"><ins class="diff-new">
+</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#frame_header_syntax" id="ref-for-frame_header_syntax"><ins class="diff-chg">
 Frame
 Header
 OBUs
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 (including
 within
 a
-</ins><u class="link-error" data-lt="Frame OBU" title="LINK ERROR: No 'dfn' refs found for 'frame obu'."><ins class="diff-new">
+</ins><u class="link-error" data-lt="Frame OBU" title="LINK ERROR: No 'dfn' refs found for 'frame obu'."><ins class="diff-chg">
 Frame
 OBU
-</ins></u><ins class="diff-new">
+</ins></u><ins class="diff-chg">
 ),
 and
-</ins><u class="link-error" data-lt="Redundant Frame Header OBUs" title="LINK ERROR: No 'dfn' refs found for 'redundant frame header obus'."><ins class="diff-new">
+</ins><u class="link-error" data-lt="Redundant Frame Header OBUs" title="LINK ERROR: No 'dfn' refs found for 'redundant frame header obus'."><ins class="diff-chg">
 Redundant
 Frame
 Header
 OBUs
-</ins></u><ins class="diff-new">
+</ins></u><ins class="diff-chg">
 SHALL
 be
 unprotected
-</ins></span>.</li><li data-md=""><span id="assert-21c3c265"><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#metadata_obu_syntax" id="ref-for-metadata_obu_syntax①"><ins class="diff-new">
+</ins></span>.</li><li data-md=""><span id="assert-21c3c265"><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#metadata_obu_syntax" id="ref-for-metadata_obu_syntax①"><ins class="diff-chg">
 Metadata
 OBUs
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 SHALL
 NOT
 be
 protected
-</ins></span>.</li><li data-md=""><span id="assert-8750fa6f"><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_tile_group_payload_semantics" id="ref-for-general_tile_group_payload_semantics"><ins class="diff-new">
+</ins></span>.</li><li data-md=""><span id="assert-8750fa6f"><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_tile_group_payload_semantics" id="ref-for-general_tile_group_payload_semantics"><ins class="diff-chg">
 Tile
 Group
 OBUs
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 and
-</ins><u class="link-error" data-lt="Frame OBUs" title="LINK ERROR: No 'dfn' refs found for 'frame obus'."><ins class="diff-new">
+</ins><u class="link-error" data-lt="Frame OBUs" title="LINK ERROR: No 'dfn' refs found for 'frame obus'."><ins class="diff-chg">
 Frame
 OBUs
-</ins></u><ins class="diff-new">
+</ins></u><ins class="diff-chg">
 SHALL
 be
 protected
-</ins></span>.<ins class="diff-new">
+</ins></span>.<ins class="diff-chg">
 Within
-</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_tile_group_payload_semantics" id="ref-for-general_tile_group_payload_semantics①"><ins class="diff-new">
+</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_tile_group_payload_semantics" id="ref-for-general_tile_group_payload_semantics①"><ins class="diff-chg">
 Tile
 Group
 OBUs
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 or
-</ins><u class="link-error" data-lt="Frame OBUs" title="LINK ERROR: No 'dfn' refs found for 'frame obus'."><ins class="diff-new">
+</ins><u class="link-error" data-lt="Frame OBUs" title="LINK ERROR: No 'dfn' refs found for 'frame obus'."><ins class="diff-chg">
 Frame
 OBUs
-</ins></u>,<ins class="diff-new">
+</ins></u>,<ins class="diff-chg">
 the
 following
 applies:
-</ins><ul><li data-md=""><p><ins class="diff-new">
+</ins><ul><li data-md=""><p><ins class="diff-chg">
 for
 the
 protected
 scheme
-</ins><code><a data-link-type="dfn" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑨"><ins class="diff-new">
+</ins><code><a data-link-type="dfn" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑨"><ins class="diff-chg">
 cbcs
-</ins></a></code>:</p><ul><li data-md=""><span id="assert-61f691fe"><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦⓪"><ins class="diff-new">
+</ins></a></code>:</p><ul><li data-md=""><span id="assert-61f691fe"><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦⓪"><ins class="diff-chg">
 BytesOfProtectedData
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 SHALL
 start
 on
@@ -8043,26 +8033,26 @@ last
 byte
 of
 the
-</ins><code><ins class="diff-new">
+</ins><code><ins class="diff-chg">
 decode_tile
-</ins></code><ins class="diff-new">
+</ins></code><ins class="diff-chg">
 structure
 (including
 any
 trailing
 bits)
-</ins></span>.</li></ul><p class="note" role="note"><span class="marker"><ins class="diff-new">
+</ins></span>.</li></ul><p class="note" role="note"><span class="marker"><ins class="diff-chg">
 NOTE:
-</ins></span><ins class="diff-new">
+</ins></span><ins class="diff-chg">
 As
 a
 result
 of
 the
 above,
-</ins><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦①"><ins class="diff-new">
+</ins><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦①"><ins class="diff-chg">
 BytesOfProtectedData
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 is
 not
 necessarily
@@ -8078,22 +8068,22 @@ are
 included
 in
 the
-</ins><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦②"><ins class="diff-new">
+</ins><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦②"><ins class="diff-chg">
 BytesOfProtectedData
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 range,
 but
 per
-</ins><a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files"><ins class="diff-new">
+</ins><a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files"><ins class="diff-chg">
 [CENC]
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 the
 data
 is
 not
 be
 encrypted.
-</ins></p><ul><li data-md=""><span id="assert-6547e5e3"><ins class="diff-new">
+</ins></p><ul><li data-md=""><span id="assert-6547e5e3"><ins class="diff-chg">
 A
 subsample
 SHALL
@@ -8111,37 +8101,37 @@ less
 than
 16
 bytes
-</ins></span>.</li><li data-md=""><span id="assert-68939155"><ins class="diff-new">
+</ins></span>.</li><li data-md=""><span id="assert-68939155"><ins class="diff-chg">
 All
 other
 parts
 of
-</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_tile_group_payload_semantics" id="ref-for-general_tile_group_payload_semantics②"><ins class="diff-new">
+</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_tile_group_payload_semantics" id="ref-for-general_tile_group_payload_semantics②"><ins class="diff-chg">
 Tile
 Group
 OBUs
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 and
-</ins><u class="link-error" data-lt="Frame OBUs" title="LINK ERROR: No 'dfn' refs found for 'frame obus'."><ins class="diff-new">
+</ins><u class="link-error" data-lt="Frame OBUs" title="LINK ERROR: No 'dfn' refs found for 'frame obus'."><ins class="diff-chg">
 Frame
 OBUs
-</ins></u><ins class="diff-new">
+</ins></u><ins class="diff-chg">
 SHALL
 be
 unprotected
-</ins><span hidden=""><ins class="diff-new">
+</ins><span hidden=""><ins class="diff-chg">
 for
 cbcs
-</ins></span></span>.</li></ul></li><li data-md=""><p><ins class="diff-new">
+</ins></span></span>.</li></ul></li><li data-md=""><p><ins class="diff-chg">
 for
 the
 protected
 scheme
-</ins><code><a data-link-type="dfn" data-refhint-key="ca818b72" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦③"><ins class="diff-new">
+</ins><code><a data-link-type="dfn" data-refhint-key="ca818b72" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦③"><ins class="diff-chg">
 cenc
-</ins></a></code>:</p><ul><li data-md=""><span id="assert-da5e71ae"><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦④"><ins class="diff-new">
+</ins></a></code>:</p><ul><li data-md=""><span id="assert-da5e71ae"><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦④"><ins class="diff-chg">
 BytesOfProtectedData
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 SHALL
 be
 a
@@ -8149,9 +8139,9 @@ multiple
 of
 16
 bytes
-</ins></span>.</li><li data-md=""><span id="assert-839432b2"><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦⑤"><ins class="diff-new">
+</ins></span>.</li><li data-md=""><span id="assert-839432b2"><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦⑤"><ins class="diff-chg">
 BytesOfProtectedData
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 SHALL
 end
 on
@@ -8160,17 +8150,17 @@ last
 byte
 of
 the
-</ins><code><ins class="diff-new">
+</ins><code><ins class="diff-chg">
 decode_tile
-</ins></code><ins class="diff-new">
+</ins></code><ins class="diff-chg">
 structure
 (including
 any
 trailing
 bits)
-</ins></span>.</li><li data-md=""><span id="assert-b9de48fc"><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦⑥"><ins class="diff-new">
+</ins></span>.</li><li data-md=""><span id="assert-b9de48fc"><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦⑥"><ins class="diff-chg">
 BytesOfProtectedData
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 SHALL
 span
 all
@@ -8179,17 +8169,17 @@ complete
 blocks
 of
 the
-</ins><code><ins class="diff-new">
+</ins><code><ins class="diff-chg">
 decode_tile
-</ins></code><ins class="diff-new">
+</ins></code><ins class="diff-chg">
 structure
 (including
 any
 trailing
 bits)
-</ins></span>.</li></ul><p class="note" role="note"><span class="marker"><ins class="diff-new">
+</ins></span>.</li></ul><p class="note" role="note"><span class="marker"><ins class="diff-chg">
 NOTE:
-</ins></span><ins class="diff-new">
+</ins></span><ins class="diff-chg">
 As
 a
 result
@@ -8206,9 +8196,9 @@ it
 is
 possible
 that
-</ins><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦⑦"><ins class="diff-new">
+</ins><a data-link-type="dfn" data-refhint-key="6ee5ab68" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦⑦"><ins class="diff-chg">
 BytesOfProtectedData
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 does
 not
 start
@@ -8218,9 +8208,9 @@ first
 byte
 of
 the
-</ins><code><ins class="diff-new">
+</ins><code><ins class="diff-chg">
 decode_tile
-</ins></code><ins class="diff-new">
+</ins></code><ins class="diff-chg">
 structure,
 but
 some
@@ -8229,7 +8219,7 @@ of
 bytes
 following
 that.
-</ins></p><ul><li data-md=""><span id="assert-df6aa49f"><ins class="diff-new">
+</ins></p><ul><li data-md=""><span id="assert-df6aa49f"><ins class="diff-chg">
 A
 subsample
 SHALL
@@ -8241,9 +8231,9 @@ tile
 that
 has
 a
-</ins><code><ins class="diff-new">
+</ins><code><ins class="diff-chg">
 decode_tile
-</ins></code><ins class="diff-new">
+</ins></code><ins class="diff-chg">
 structure
 whose
 size
@@ -8258,7 +8248,7 @@ equal
 to
 16
 bytes
-</ins></span>.<span id="assert-e145e592"><ins class="diff-new">
+</ins></span>.<span id="assert-e145e592"><ins class="diff-chg">
 If
 it
 is
@@ -8271,9 +8261,9 @@ the
 rules
 above,
 the
-</ins><code><ins class="diff-new">
+</ins><code><ins class="diff-chg">
 decode_tile
-</ins></code><ins class="diff-new">
+</ins></code><ins class="diff-chg">
 structure
 is
 not
@@ -8287,9 +8277,9 @@ be
 included
 in
 the
-</ins><a data-link-type="dfn" data-refhint-key="64058dae" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦⑧"><ins class="diff-new">
+</ins><a data-link-type="dfn" data-refhint-key="64058dae" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑦⑧"><ins class="diff-chg">
 BytesOfClearData
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 field
 of
 a
@@ -8297,28 +8287,28 @@ surrounding
 subsample,
 if
 any
-</ins></span>.</li><li data-md=""><span id="assert-f7394188"><ins class="diff-new">
+</ins></span>.</li><li data-md=""><span id="assert-f7394188"><ins class="diff-chg">
 All
 other
 parts
 of
-</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_tile_group_payload_semantics" id="ref-for-general_tile_group_payload_semantics③"><ins class="diff-new">
+</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_tile_group_payload_semantics" id="ref-for-general_tile_group_payload_semantics③"><ins class="diff-chg">
 Tile
 Group
 OBUs
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 and
-</ins><u class="link-error" data-lt="Frame OBUs" title="LINK ERROR: No 'dfn' refs found for 'frame obus'."><ins class="diff-new">
+</ins><u class="link-error" data-lt="Frame OBUs" title="LINK ERROR: No 'dfn' refs found for 'frame obus'."><ins class="diff-chg">
 Frame
 OBUs
-</ins></u><ins class="diff-new">
+</ins></u><ins class="diff-chg">
 SHALL
 be
 unprotected
-</ins><span hidden=""><ins class="diff-new">
+</ins><span hidden=""><ins class="diff-chg">
 for
 cenc
-</ins></span></span>.</li></ul></li></ul></li></ul><p><ins class="diff-new">
+</ins></span></span>.</li></ul></li></ul></li></ul><p><ins class="diff-chg">
 Version
 1
 and
@@ -8326,43 +8316,21 @@ version
 2
 of
 the
-</ins><a class="css property" data-link-type="property" data-refhint-key="7b11590e" href="https://www.iso.org/standard/95141.html#" id="ref-for-something⑦⑨"><ins class="diff-new">
+</ins><a class="css property" data-link-type="property" data-refhint-key="7b11590e" href="https://www.iso.org/standard/95141.html#" id="ref-for-something⑦⑨"><ins class="diff-chg">
 saiz
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 box
 as
 defined
 in
-</ins><a data-link-type="biblio" href="#biblio-isobmff" title="Information technology — Coding of audio-visual objects — Part 12: ISO base media file format"><ins class="diff-new">
+</ins><a data-link-type="biblio" href="#biblio-isobmff" title="Information technology — Coding of audio-visual objects — Part 12: ISO base media file format"><ins class="diff-chg">
 [ISOBMFF]
-</ins></a><ins class="diff-new">
+</ins></a><ins class="diff-chg">
 SHALL
 be
 supported.
-</ins></p><h3 class="heading settled" data-level="5.2" id="subsample-encryption-illustration"><span class="secno"><ins class="diff-new">
-5.2.
-</ins></span><span class="content"><ins class="diff-new">
-Subsample
-Encryption
-Illustration
-</ins></span><a class="self-link" href="#subsample-encryption-illustration"></a></h3><a class="figure-ref" href="#figure-subsample-encryption"><ins class="diff-new">
-Figure
-5.1
-</ins></a><ins class="diff-new">
-illustrates
-Subsample
-based
-encryption
-of
-AV2.
-</ins><figure id="figure-subsample-encryption"><img alt="Subsample-based AV2 encryption" src="images/av2_subsample_encryption.svg"/><figcaption class="has-figure-number"><strong><ins class="diff-new">
-Figure
-5.1:
-</ins></strong><ins class="diff-new">
-Subsample-based
-AV2
-encryption.
-</ins></figcaption></figure>
+</ins>
+</p>
 <h2 class="heading settled" data-level="6" id="codecsparam">
 <span class="secno">
 6.

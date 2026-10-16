@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="408caacbe9c26c70de5046d26118851c906e26a9" name="revision"/>
+<meta content="7c54e393911fcbd4dc050b5564c005c43a6478b2" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2939,7 +2939,7 @@ figcaption.has-figure-number::before { content: none !important; }
 </p>
 <h1 class="no-ref p-name" id="title">AV2 Codec ISO Media File Format Binding</h1>
 <h2 class="heading no-num no-ref no-toc settled" id="profile-and-date"><span class="content">Working Group Draft,
-    <time class="dt-updated" datetime="2026-10-15">15 October 2026</time></span></h2>
+    <time class="dt-updated" datetime="2026-10-16">16 October 2026</time></span></h2>
 <div data-fill-with="spec-metadata">
 <dl>
 <dt>This version:
@@ -3002,7 +3002,6 @@ figcaption.has-figure-number::before { content: none !important; }
 <a href="#CommonEncryption"><span class="secno">5</span> <span class="content">Common Encryption</span></a>
 <ol class="toc">
 <li><a href="#subsample-encryption"><span class="secno">5.1</span> <span class="content">General Subsample Encryption constraints</span></a>
-</li><li><a href="#subsample-encryption-illustration"><span class="secno">5.2</span> <span class="content">Subsample Encryption Illustration</span></a>
 </li></ol>
 </li><li><a href="#codecsparam"><span class="secno">6</span> <span class="content">Codecs Parameter String</span></a>
 </li><li>
@@ -3417,10 +3416,8 @@ figcaption.has-figure-number::before { content: none !important; }
 </li></ul>
 <span id="assert-e65456ec">When protected, <a data-link-type="dfn" href="#cmaf-av2-track" id="ref-for-cmaf-av2-track">CMAF AV2 Tracks</a> SHALL use the signaling defined in <a data-link-type="biblio" href="#biblio-cmaf" title="Information technology — Multimedia application format (MPEG-A) — Part 19: Common media application format (CMAF) for segmented media">[CMAF]</a>, which in turn relies on <a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files">[CENC]</a>, with the provisions specified in <a href="#CommonEncryption">§ 5 Common Encryption</a>.</span>
 <p class="back-to-toc-wrapper"><a class="back-to-toc" href="#toc">↑ Back to Table of Contents</a></p><h2 class="heading settled" data-level="5" id="CommonEncryption"><span class="secno">5. </span><span class="content">Common Encryption</span><a class="self-link" href="#CommonEncryption"></a></h2>
-<span id="assert-952f87ce"><a data-link-type="dfn" href="#cmaf-av2-track" id="ref-for-cmaf-av2-track①">CMAF AV2 Tracks</a> and non-segmented AV2 files MAY be protected</span>. <span id="assert-89e67c25">If protected, they SHALL conform to <a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files">[CENC]</a></span>. <span id="assert-2a42f17e">Files SHOULD be protected using the <code><a data-link-type="dfn" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥③">cbcs</a></code> protection scheme</span> and <span id="assert-105dfb43">MAY be protected using the <code><a data-link-type="dfn" data-refhint-key="ca818b72" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥④">cenc</a></code> protection scheme</span>.
-
-<span id="assert-44221cba">When the protected scheme <code><a data-link-type="dfn" data-refhint-key="ca818b72" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑤">cenc</a></code> is used, samples SHALL be protected using subsample encryption</span> and <span id="assert-aa4aefdb">SHALL NOT use pattern encryption</span>.
-
+<p><span id="assert-952f87ce"><a data-link-type="dfn" href="#cmaf-av2-track" id="ref-for-cmaf-av2-track①">CMAF AV2 Tracks</a> and non-segmented AV2 files MAY be protected</span>. <span id="assert-89e67c25">If protected, they SHALL conform to <a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files">[CENC]</a></span>. <span id="assert-2a42f17e">Files SHOULD be protected using the <code><a data-link-type="dfn" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥③">cbcs</a></code> protection scheme</span> and <span id="assert-105dfb43">MAY be protected using the <code><a data-link-type="dfn" data-refhint-key="ca818b72" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥④">cenc</a></code> protection scheme</span>.</p>
+<p><span id="assert-44221cba">When the protected scheme <code><a data-link-type="dfn" data-refhint-key="ca818b72" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑤">cenc</a></code> is used, samples SHALL be protected using subsample encryption</span> and <span id="assert-aa4aefdb">SHALL NOT use pattern encryption</span>.</p>
 <span id="assert-0113b336">When the protected scheme <code><a data-link-type="dfn" href="https://www.iso.org/standard/84637.html#" id="ref-for-something⑥⑥">cbcs</a></code> is used, samples SHALL be protected using subsample encryption</span> and <span id="assert-95fbc893">SHALL use pattern encryption</span>. <a data-link-type="biblio" href="#biblio-cenc" title="Information technology — MPEG systems technologies — Part 7: Common encryption in ISO base media file format files">[CENC]</a> recommends that the Block Pattern length be 10, i.e. <code>crypt_byte_block + skip_byte_block = 10</code>, where a Block is of size 16-bytes. In this specification, the combination of <code>crypt_byte_block</code> and <code>skip_byte_block</code> SHALL be one of the following, with the first one being recommended:
 
    <ul>
@@ -3487,14 +3484,6 @@ figcaption.has-figure-number::before { content: none !important; }
 </li></ul>
 </li></ul>
 <p>Version 1 and version 2 of the <a class="css property" data-link-type="property" data-refhint-key="7b11590e" href="https://www.iso.org/standard/95141.html#" id="ref-for-something⑦⑨">saiz</a> box as defined in <a data-link-type="biblio" href="#biblio-isobmff" title="Information technology — Coding of audio-visual objects — Part 12: ISO base media file format">[ISOBMFF]</a> <span class="rfc-keyword">SHALL</span> be supported.</p>
-<h3 class="heading settled" data-level="5.2" id="subsample-encryption-illustration"><span class="secno">5.2. </span><span class="content">Subsample Encryption Illustration</span><a class="self-link" href="#subsample-encryption-illustration"></a></h3>
-<a class="figure-ref" href="#figure-subsample-encryption">Figure 5.1</a> illustrates Subsample based encryption of AV2.
-
-
-   <figure id="figure-subsample-encryption">
-<img alt="Subsample-based AV2 encryption" src="images/av2_subsample_encryption.svg"/>
-<figcaption class="has-figure-number"><strong>Figure 5.1: </strong>Subsample-based AV2 encryption.</figcaption>
-</figure>
 <p class="back-to-toc-wrapper"><a class="back-to-toc" href="#toc">↑ Back to Table of Contents</a></p><h2 class="heading settled" data-level="6" id="codecsparam"><span class="secno">6. </span><span class="content">Codecs Parameter String</span><a class="self-link" href="#codecsparam"></a></h2>
 <p>DASH and other applications require defined values for the <a class="css property" data-link-type="property" href="https://tools.ietf.org/html/rfc6381#" id="ref-for-something⑧⓪">Codecs</a> parameter specified in <a data-link-type="biblio" href="#biblio-rfc6381" title="The 'Codecs' and 'Profiles' Parameters for &quot;Bucket&quot; Media Types">[RFC6381]</a> for ISO Media tracks. The codecs parameter string for the AOM AV2 codec is as follows:</p>
 <pre>&lt;sample entry 4CC&gt;.&lt;profile&gt;.&lt;level&gt;&lt;tier&gt;.&lt;bitDepth&gt;.&lt;monochrome&gt;.&lt;chromaSubsampling&gt;.
