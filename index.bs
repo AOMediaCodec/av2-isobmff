@@ -372,7 +372,6 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 <assert>The [=OBUs=] within an [=AV2CodecConfigurationBox=] SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]]</assert>, with the following constraint:
 - <assert>the [=OBUs=] within an [=AV2CodecConfigurationBox=] SHALL NOT contain [=OBUs=] of the types forbidden there as stated in <a class="figure-ref" href="#figure-table-obus">Table</a></assert>.
 
-
 <figure class="table" id="figure-table-obus">
   <table class="complex data">
     <tr>
