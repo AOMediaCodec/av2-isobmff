@@ -68,7 +68,7 @@ url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_synta
 url: https://av2.aomedia.org/v1.0.0/index.html#temporal-delimiter-obu; spec: AV2; type: dfn;
     text: Temporal Delimiter OBU
 
-url: https://av2.aomedia.org/v1.0.0/index.html#tile_group_obu_semantics; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#tile_group_obu_syntax; spec: AV2; type: dfn;
     text: Tile Group OBU
 
 url: https://av2.aomedia.org/v1.0.0/index.html#metadata_obu_syntax; spec: AV2; type: dfn;
