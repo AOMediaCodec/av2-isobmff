@@ -345,7 +345,7 @@ class AV2SampleEntry extends VisualSampleEntry('av02') {
 
 NOTE: An [=AV2SampleEntry=] may directly contain additional boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'colr' with a 'colour_type' value other than 'nclx', 'pasp', 'clli', 'mdcv' or 'btrt'. They may be located before and/or after the [=AV2CodecConfigurationBox=].
 
-NOTE: An [=AV2SampleEntry=] may indirectly contain additional 'colr' boxes, for example when carried by the <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition to describe the colour properties of multiple layers.
+NOTE: An [=AV2SampleEntry=] may indirectly contain additional boxes, for example 'colr' when carried by the <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition to describe the colour properties of non-base layers.
 
 ### AV2 Codec Configuration Box ### {#av2c}
 
