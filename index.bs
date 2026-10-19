@@ -86,7 +86,7 @@ url: https://av2.aomedia.org/v1.0.0/index.html#padding_obu_syntax; spec: AV2; ty
 url: https://av2.aomedia.org/v1.0.0/index.html#frame_header_syntax; spec: AV2; type: dfn;
     text: Frame Header OBU
 
-url: https://av2.aomedia.org/v1.0.0/index.html#layer_config_record_obu_semantics; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#layer_config_record_obu_syntax; spec: AV2; type: dfn;
     text: Layer Configuration Record OBU
 
 url: https://av2.aomedia.org/v1.0.0/index.html#switch-frame; spec: AV2; type: dfn;
@@ -150,23 +150,14 @@ url: https://av2.aomedia.org/v1.0.0/index.html#general_obu_semantics; spec: AV2;
 
 url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
     text: seq_profile_idc
+    text: single_picture_header_flag
     text: seq_level_idx
     text: seq_tier
-
-url: https://av2.aomedia.org/v1.0.0/index.html#color_config_semantics; spec: AV2; type: dfn;
-    text: high_bitdepth
-    text: twelve_bit
-    text: mono_chrome
-    text: subsampling_x
-    text: subsampling_y
-
-url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
-    text: initial_display_delay_minus_1
-
-url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
+    text: chroma_format_idc
+    text: bit_depth_idc
     text: monotonic_output_order_flag
+    text: seq_initial_display_delay_minus_1
     text: film_grain_params_present
-    text: single_picture_header_flag
 
 url: https://av2.aomedia.org/v1.0.0/index.html#general_obu_syntax; spec: AV2; type: dfn
     text: Low Overhead Bitstream Format
