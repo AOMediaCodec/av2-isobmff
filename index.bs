@@ -334,13 +334,28 @@ A file conformant to this specification satisfies the following:
 
 ### AV2 Sample Entry ### {#av2-sample-entry}
 
-The <dfn>AV2SampleEntry</dfn> extends [=VisualSampleEntry=] and signals a track carrying [=AV2 samples=].
+The <dfn>AV2SampleEntry</dfn> extends [=VisualSampleEntry=] and signals a track carrying [=AV2 samples=]. There are two [=AV2SampleEntry=] flavours.
 
 ```cpp
-class AV2SampleEntry extends VisualSampleEntry('av02') {
-  AV2CodecConfigurationBox config;
+abstract class AV2SampleEntry(int codingname) extends VisualSampleEntry(codingname) {
+}
+
+class OutOfBandAV2SampleEntry extends AV2SampleEntry('av2E') {
+    OutOfBandAV2CodecConfigurationBox config;
+}
+
+class InBandAV2SampleEntry extends AV2SampleEntry('av2e') {
+    InBandAV2CodecConfigurationBox config;
 }
 ```
+
+An <dfn>OutOfBandAV2SampleEntry</dfn> contains an [=OutOfBandAV2CodecConfigurationBox=] and an <dfn>InBandAV2SampleEntry</dfn> contains an [=InBandAV2CodecConfigurationBox=].
+
+<assert>An [=InBandAV2SampleEntry=] MAY be used instead of an [=OutOfBandAV2SampleEntry=], if the content of an [=OBU=] of a type that may be carried by an [=OutOfBandAV2CodecConfigurationBox=] changes during the sequence, and if that sequence cannot be split into multiple [=OutOfBandAV2SampleEntries=]. Otherwise, an [=OutOfBandAV2SampleEntry=] SHOULD be used.</assert>
+
+An <dfn>OutOfBandAV2SampleEntry</dfn> contains an [=OutOfBandAV2CodecConfigurationBox=] and an <dfn>InBandAV2SampleEntry</dfn> contains an [=InBandAV2CodecConfigurationBox=].
+
+<p><assert>An [=InBandAV2SampleEntry=] MAY be used instead of an [=OutOfBandAV2SampleEntry=], if the content of an [=OBU=] of a type that may be carried by an [=OutOfBandAV2CodecConfigurationBox=] changes during the sequence, and if that sequence cannot be split into multiple [=OutOfBandAV2SampleEntries=]. Otherwise, an [=OutOfBandAV2SampleEntry=] SHOULD be used.</assert></p>
 
 <p><assert>An [=AV2SampleEntry=] SHALL contain exactly one [=AV2CodecConfigurationBox=].</assert></p>
 
@@ -362,19 +377,18 @@ The <dfn>AV2CodecConfigurationBox</dfn> carries the decoder initialisation data 
 
 #### Description
 
-<assert>An [=AV2SampleEntry=] containing an <dfn>OutOfBandAV2CodecConfigurationBox</dfn> SHALL be considered as carrying static "out-of-band" codec configuration data</assert> and respect the following constraints:
-- <assert>An [=OutOfBandAV2CodecConfigurationBox=] MAY carry [=OBUs=] of the following types: <code>OBU_MSDO</code>, <code>OBU_LAYER_CONFIGURATION_RECORD</code>, <code>OBU_OPERATING_POINT_SET</code>, <code>OBU_ATLAS_SEGMENT</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id equal</code> equal to <code>GLOBAL_XLAYER_ID</code> and <code>metadata_is_suffix</code> equal to 0, <code>OBU_METADATA_GROUP</code> with <code>metadata_is_suffix</code>=0, and <code>OBU_SEQUENCE_HEADER</code>.</assert>
-- <assert>An [=OutOfBandAV2CodecConfigurationBox=] SHALL NOT carry [=OBUs=] of the following types: <code>OBU_TEMPORAL_DELIMITER</code>, <code>OBU_CONTENT_INTERPRETATION</code>, <code>OBU_MULTI_FRAME_HEADER</code>, <code>OBU_BUFFER_REMOVAL_TIMING</code>, <code>OBU_QUANTIZATION_MATRIX</code>, <code>OBU_FILM_GRAIN</code>, <code>OBU_CLOSED_LOOP_KEY</code>, <code>OBU_OPEN_LOOP_KEY</code>, <code>OBU_LEADING_TILE_GROUP</code>, <code>OBU_REGULAR_TILE_GROUP</code>, <code>OBU_SWITCH</code>, <code>OBU_LEADING_TIP</code>, <code>OBU_REGULAR_TIP</code>, <code>OBU_BRIDGE_FRAME</code>, <code>OBU_RAS_FRAME</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id equal</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1, <code>OBU_METADATA_GROUP</code> with <code>obu_xlayer_id equal</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1, and <code>OBU_PADDING</code>.</assert>
-- <assert>There SHOULD NOT be any [=Metadata OBU=] carried by an [=OutOfBandAV2CodecConfigurationBox=] if a codec-agnostic carriage solution exists for that metadata.</assert>
-- <assert>The [=OBUs=] carried by an [=OutOfBandAV2CodecConfigurationBox=] SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]], with the [=grouped high level syntax block=] being present.</assert>
+<assert>An [=OutOfBandAV2CodecConfigurationBox=] MAY carry [=OBUs=] of the following types: <code>OBU_MSDO</code>, <code>OBU_LAYER_CONFIGURATION_RECORD</code>, <code>OBU_OPERATING_POINT_SET</code>, <code>OBU_ATLAS_SEGMENT</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id equal</code> equal to <code>GLOBAL_XLAYER_ID</code> and <code>metadata_is_suffix</code> equal to 0, <code>OBU_METADATA_GROUP</code> with <code>metadata_is_suffix</code>=0, and <code>OBU_SEQUENCE_HEADER</code>.</assert>
 
-<assert>An [=AV2SampleEntry=] containing an <dfn>InBandAV2CodecConfigurationBox</dfn> SHALL be considered as allowing dynamic "in-band" codec configuration data</assert> and respect the following constraints:
-- <assert>An [=InBandAV2CodecConfigurationBox=] MAY be used instead of an [=OutOfBandAV2CodecConfigurationBox=], if the content of an [=OBU=] of a type that may be carried by an [=OutOfBandAV2CodecConfigurationBox=] changes during the sequence, and if that sequence cannot be split into multiple sample entries. Otherwise, an [=OutOfBandAV2CodecConfigurationBox=] SHOULD be used.</assert>
+<assert>An [=OutOfBandAV2CodecConfigurationBox=] SHALL NOT carry [=OBUs=] of the following types: <code>OBU_TEMPORAL_DELIMITER</code>, <code>OBU_CONTENT_INTERPRETATION</code>, <code>OBU_MULTI_FRAME_HEADER</code>, <code>OBU_BUFFER_REMOVAL_TIMING</code>, <code>OBU_QUANTIZATION_MATRIX</code>, <code>OBU_FILM_GRAIN</code>, <code>OBU_CLOSED_LOOP_KEY</code>, <code>OBU_OPEN_LOOP_KEY</code>, <code>OBU_LEADING_TILE_GROUP</code>, <code>OBU_REGULAR_TILE_GROUP</code>, <code>OBU_SWITCH</code>, <code>OBU_LEADING_TIP</code>, <code>OBU_REGULAR_TIP</code>, <code>OBU_BRIDGE_FRAME</code>, <code>OBU_RAS_FRAME</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id equal</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1, <code>OBU_METADATA_GROUP</code> with <code>obu_xlayer_id equal</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1, and <code>OBU_PADDING</code>.</assert>
+
+<assert>There SHOULD NOT be any [=Metadata OBU=] carried by an [=OutOfBandAV2CodecConfigurationBox=] if a codec-agnostic carriage solution exists for that metadata.</assert>
+
+<assert>The [=OBUs=] carried by an [=OutOfBandAV2CodecConfigurationBox=] SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]], with the [=grouped high level syntax block=] being present.</assert>
 
 #### Syntax
 
 ```cpp
-aligned(8) class AV2CodecConfigurationBox(int codingname) extends Box(codingname)
+abstract class AV2CodecConfigurationBox(int codingname) extends Box(codingname)
 {
 }
 
