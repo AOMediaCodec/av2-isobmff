@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="25389a6cdd8544159a85e81ec98a3a59175d5ec8" name="revision"/>
+<meta content="76be24ff76b6f5625065be4143b2f9d172cbf276" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -3470,11 +3470,11 @@ figcaption.has-figure-number::before { content: none !important; }
 </li><li data-md="">
 <p>The <code>videoFullRangeFlag</code> is represented by <code>0</code> or <code>1</code>.</p>
 </li></ul>
-<span id="assert-f5c8b4f5">If the codecs parameter string ends with ".3.116.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</span>.
+<span id="assert-736739bd">If the codecs parameter string ends with ".3.22.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</span>.
 
 
    <div class="example" id="codec-string-example"><a class="self-link" href="#codec-string-example"></a><a class="self-link" href="#codec-string-example"></a>
-<code>codecs="av02.0.04M.10.4.112.09.16.09.0"</code> represents <a data-link-type="biblio" href="#biblio-av2" title="AV2 Bitstream &amp; Decoding Process Specification">[AV2]</a> <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 4.0, Main tier, 10-bit content, non-monochrome and alpha, with 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
+<code>codecs="av02.0.04M.10.4.22.09.16.09.0"</code> represents <a data-link-type="biblio" href="#biblio-av2" title="AV2 Bitstream &amp; Decoding Process Specification">[AV2]</a> <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 4.0, Main tier, 10-bit content, non-monochrome and alpha, with 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
 </div>
 <p><span id="assert-b5f97346">The parameters <code>sample entry 4CC</code>, <code>profile</code>, <code>level</code>, <code>tier</code>, and <code>bitDepth</code> are all mandatory fields.</span> <span id="assert-0901b125">If any of these fields is empty, or not within its allowed range, the processing device SHOULD treat it as an error.</span> <span id="assert-5b6b4cea">All the other fields (including their leading '.') are optional, mutually inclusive (all or none) fields.</span> If not specified then the values listed in the table below are assumed.</p>
 <table class="def">
