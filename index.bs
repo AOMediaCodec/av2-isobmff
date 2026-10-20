@@ -349,11 +349,11 @@ class InBandAV2SampleEntry extends AV2SampleEntry('av2e') {
 }
 ```
 
-An <dfn>OutOfBandAV2SampleEntry</dfn> contains an [=OutOfBandAV2CodecConfigurationBox=] and an <dfn>InBandAV2SampleEntry</dfn> contains an [=InBandAV2CodecConfigurationBox=].
+<p>An <dfn>OutOfBandAV2SampleEntry</dfn> contains an [=OutOfBandAV2CodecConfigurationBox=] and an <dfn>InBandAV2SampleEntry</dfn> contains an [=InBandAV2CodecConfigurationBox=].</p>
 
-<assert>An [=InBandAV2SampleEntry=] MAY be used instead of an [=OutOfBandAV2SampleEntry=], if the content of an [=OBU=] of a type that may be carried by an [=OutOfBandAV2CodecConfigurationBox=] changes during the sequence, and if that sequence cannot be split into multiple [=OutOfBandAV2SampleEntries=]. Otherwise, an [=OutOfBandAV2SampleEntry=] SHOULD be used.</assert>
+<p><assert>An [=InBandAV2SampleEntry=] MAY be used instead of an [=OutOfBandAV2SampleEntry=], if the content of an [=OBU=] of a type that may be carried by an [=OutOfBandAV2CodecConfigurationBox=] changes during the sequence, and if that sequence cannot be split into multiple [=OutOfBandAV2SampleEntries=]. Otherwise, an [=OutOfBandAV2SampleEntry=] SHOULD be used.</assert></p>
 
-An <dfn>OutOfBandAV2SampleEntry</dfn> contains an [=OutOfBandAV2CodecConfigurationBox=] and an <dfn>InBandAV2SampleEntry</dfn> contains an [=InBandAV2CodecConfigurationBox=].
+<p>An <dfn>OutOfBandAV2SampleEntry</dfn> contains an [=OutOfBandAV2CodecConfigurationBox=] and an <dfn>InBandAV2SampleEntry</dfn> contains an [=InBandAV2CodecConfigurationBox=].</p>
 
 <p><assert>An [=InBandAV2SampleEntry=] MAY be used instead of an [=OutOfBandAV2SampleEntry=], if the content of an [=OBU=] of a type that may be carried by an [=OutOfBandAV2CodecConfigurationBox=] changes during the sequence, and if that sequence cannot be split into multiple [=OutOfBandAV2SampleEntries=]. Otherwise, an [=OutOfBandAV2SampleEntry=] SHOULD be used.</assert></p>
 
@@ -377,13 +377,13 @@ The <dfn>AV2CodecConfigurationBox</dfn> carries the decoder initialisation data 
 
 #### Description
 
-<assert>An [=OutOfBandAV2CodecConfigurationBox=] MAY carry [=OBUs=] of the following types: <code>OBU_MSDO</code>, <code>OBU_LAYER_CONFIGURATION_RECORD</code>, <code>OBU_OPERATING_POINT_SET</code>, <code>OBU_ATLAS_SEGMENT</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id equal</code> equal to <code>GLOBAL_XLAYER_ID</code> and <code>metadata_is_suffix</code> equal to 0, <code>OBU_METADATA_GROUP</code> with <code>metadata_is_suffix</code>=0, and <code>OBU_SEQUENCE_HEADER</code>.</assert>
+<p><assert>An [=OutOfBandAV2CodecConfigurationBox=] MAY carry [=OBUs=] of the following types: <code>OBU_MSDO</code>, <code>OBU_LAYER_CONFIGURATION_RECORD</code>, <code>OBU_OPERATING_POINT_SET</code>, <code>OBU_ATLAS_SEGMENT</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id equal</code> equal to <code>GLOBAL_XLAYER_ID</code> and <code>metadata_is_suffix</code> equal to 0, <code>OBU_METADATA_GROUP</code> with <code>metadata_is_suffix</code>=0, and <code>OBU_SEQUENCE_HEADER</code>.</assert></p>
 
-<assert>An [=OutOfBandAV2CodecConfigurationBox=] SHALL NOT carry [=OBUs=] of the following types: <code>OBU_TEMPORAL_DELIMITER</code>, <code>OBU_CONTENT_INTERPRETATION</code>, <code>OBU_MULTI_FRAME_HEADER</code>, <code>OBU_BUFFER_REMOVAL_TIMING</code>, <code>OBU_QUANTIZATION_MATRIX</code>, <code>OBU_FILM_GRAIN</code>, <code>OBU_CLOSED_LOOP_KEY</code>, <code>OBU_OPEN_LOOP_KEY</code>, <code>OBU_LEADING_TILE_GROUP</code>, <code>OBU_REGULAR_TILE_GROUP</code>, <code>OBU_SWITCH</code>, <code>OBU_LEADING_TIP</code>, <code>OBU_REGULAR_TIP</code>, <code>OBU_BRIDGE_FRAME</code>, <code>OBU_RAS_FRAME</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id equal</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1, <code>OBU_METADATA_GROUP</code> with <code>obu_xlayer_id equal</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1, and <code>OBU_PADDING</code>.</assert>
+<p><assert>An [=OutOfBandAV2CodecConfigurationBox=] SHALL NOT carry [=OBUs=] of the following types: <code>OBU_TEMPORAL_DELIMITER</code>, <code>OBU_CONTENT_INTERPRETATION</code>, <code>OBU_MULTI_FRAME_HEADER</code>, <code>OBU_BUFFER_REMOVAL_TIMING</code>, <code>OBU_QUANTIZATION_MATRIX</code>, <code>OBU_FILM_GRAIN</code>, <code>OBU_CLOSED_LOOP_KEY</code>, <code>OBU_OPEN_LOOP_KEY</code>, <code>OBU_LEADING_TILE_GROUP</code>, <code>OBU_REGULAR_TILE_GROUP</code>, <code>OBU_SWITCH</code>, <code>OBU_LEADING_TIP</code>, <code>OBU_REGULAR_TIP</code>, <code>OBU_BRIDGE_FRAME</code>, <code>OBU_RAS_FRAME</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id equal</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1, <code>OBU_METADATA_GROUP</code> with <code>obu_xlayer_id equal</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1, and <code>OBU_PADDING</code>.</assert></p>
 
-<assert>There SHOULD NOT be any [=Metadata OBU=] carried by an [=OutOfBandAV2CodecConfigurationBox=] if a codec-agnostic carriage solution exists for that metadata.</assert>
+<p><assert>There SHOULD NOT be any [=Metadata OBU=] carried by an [=OutOfBandAV2CodecConfigurationBox=] if a codec-agnostic carriage solution exists for that metadata.</assert></p>
 
-<assert>The [=OBUs=] carried by an [=OutOfBandAV2CodecConfigurationBox=] SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]], with the [=grouped high level syntax block=] being present.</assert>
+<p><assert>The [=OBUs=] carried by an [=OutOfBandAV2CodecConfigurationBox=] SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]], with the [=grouped high level syntax block=] being present.</assert></p>
 
 #### Syntax
 
@@ -494,9 +494,9 @@ The following container-level signalling is available to replace the semantics o
 
 ### Sync sample ### {#sync-sample}
 
-An [=AV2 sample=] is a <dfn>sync AV2 sample</dfn> if, for every [=coded extended layer unit=] present in the [=AV2 sample=], the first coded frame OBU of that coded extended layer unit has <code>obu_type</code> equal to <code>OBU_CLOSED_LOOP_KEY</code>. Such an [=AV2 sample=] is a [=Closed Random Access=] point for the carried bitstream and corresponds to a SAP of type 1 or 2 as defined in Annex I of [[!ISOBMFF]].
+<p>An [=AV2 sample=] is a <dfn>sync AV2 sample</dfn> if, for every [=coded extended layer unit=] present in the [=AV2 sample=], the first coded frame OBU of that coded extended layer unit has <code>obu_type</code> equal to <code>OBU_CLOSED_LOOP_KEY</code>. Such an [=AV2 sample=] is a [=Closed Random Access=] point for the carried bitstream and corresponds to a SAP of type 1 or 2 as defined in Annex I of [[!ISOBMFF]].</p>
 
-<assert>A [=sync AV2 sample=] SHALL be self-sufficient for starting decoding at that point for all layers: every OBU referenced by the coded frame OBUs of the [=sync AV2 sample=] SHALL be available either by being carried in the [=AV2CodecConfigurationBox=] of the active [=AV2SampleEntry=] or by being present in the <l spec=ISOBMFF>[=sample=]</l>, as required by the [=availability of HLS OBUs=] in [[!AV2]].</assert>
+<p><assert>A [=sync AV2 sample=] SHALL be self-sufficient for starting decoding at that point for all layers: every OBU referenced by the coded frame OBUs of the [=sync AV2 sample=] SHALL be available either by being carried in the [=AV2CodecConfigurationBox=] of the active [=AV2SampleEntry=] or by being present in the <l spec=ISOBMFF>[=sample=]</l>, as required by the [=availability of HLS OBUs=] in [[!AV2]].</assert></p>
 
 NOTE: In ISOBMFF terms, sync samples are signalled using the SyncSampleBox ('stss') in unfragmented tracks, or by setting <code>sample_is_non_sync_sample</code> equal to 0 in fragmented tracks. When every sample in a track is a sync sample, the SyncSampleBox is omitted in unfragmented tracks (per [[!ISOBMFF]]), and in fragmented tracks this is expressed through the default sample flags of the MovieExtendsBox ('trex') or TrackFragmentHeaderBox ('tfhd') with no per-sample override.
 
@@ -653,7 +653,7 @@ Note: AV2-ISOBMFF reader implementations do not have to reconstruct the contiguo
 
 NOTE: It is important to note that while the <code>[=cmf2=]</code> brand does not introduce any new requirements compared to the previously defined <code>[=cmfc=]</code> brand, it further restricts the <code>[=cmfc=]</code> constraints.
 
-<assert>For compatibility reasons, when the <code>[=cmf2=]</code> brand is used, the <code>[=cmfc=]</code> brand SHOULD also be included in the <code>FileTypeBox</code>.</assert>
+<p><assert>For compatibility reasons, when the <code>[=cmf2=]</code> brand is used, the <code>[=cmfc=]</code> brand SHOULD also be included in the <code>FileTypeBox</code>.</assert></p>
 
 If a [=CMAF Video Track=] uses the brand <code>[=av02=]</code>, it is called a <dfn>CMAF AV2 Track</dfn> and the following constraints, defining the <dfn>CMAF Media Profile for AV2</dfn>, apply:
 - <assert>it SHALL use an [=AV2SampleEntry=], possibly transformed by encryption as specified in [[#CommonEncryption]]</assert>;
@@ -666,7 +666,7 @@ If a [=CMAF Video Track=] uses the brand <code>[=av02=]</code>, it is called a <
     - <code>bit_depth_idc</code>
     - <code>seq_initial_display_delay_minus_1</code>
 
-<assert>When protected, [=CMAF AV2 Tracks=] SHALL use the signaling defined in [[!CMAF]], which in turn relies on [[!CENC]], with the provisions specified in [[#CommonEncryption]].</assert>
+<p><assert>When protected, [=CMAF AV2 Tracks=] SHALL use the signaling defined in [[!CMAF]], which in turn relies on [[!CENC]], with the provisions specified in [[#CommonEncryption]].</assert></p>
 
 # Common Encryption # {#CommonEncryption}
 
@@ -741,7 +741,7 @@ All fields following the sample entry 4CC are expressed as double digit decimals
 
 - The <code>videoFullRangeFlag</code> is represented by <code>0</code> or <code>1</code>.
 
-<assert>If the codecs parameter string ends with ".0.116.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</assert>.
+<p><assert>If the codecs parameter string ends with ".0.116.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</assert>.</p>
 
 <div class="example" id="codec-string-example"><a class="self-link" href="#codec-string-example"></a>
 <code>codecs="av02.0.04M.10.0.22.09.16.09.0"</code> represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 4.0, Main tier, 10-bit content, non-monochrome, 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
