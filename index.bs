@@ -349,11 +349,7 @@ class InBandAV2SampleEntry extends AV2SampleEntry('av2e') {
 }
 ```
 
-<p>An <dfn>OutOfBandAV2SampleEntry</dfn> contains an [=OutOfBandAV2CodecConfigurationBox=] and an <dfn>InBandAV2SampleEntry</dfn> contains an [=InBandAV2CodecConfigurationBox=].</p>
-
-<p><assert>An [=InBandAV2SampleEntry=] MAY be used instead of an [=OutOfBandAV2SampleEntry=], if the content of an [=OBU=] of a type that may be carried by an [=OutOfBandAV2CodecConfigurationBox=] changes during the sequence, and if that sequence cannot be split into multiple [=OutOfBandAV2SampleEntries=]. Otherwise, an [=OutOfBandAV2SampleEntry=] SHOULD be used.</assert></p>
-
-<p>An <dfn>OutOfBandAV2SampleEntry</dfn> contains an [=OutOfBandAV2CodecConfigurationBox=] and an <dfn>InBandAV2SampleEntry</dfn> contains an [=InBandAV2CodecConfigurationBox=].</p>
+<p>An <dfn>OutOfBandAV2SampleEntry</dfn> contains an <dfn>OutOfBandAV2CodecConfigurationBox</dfn> and an <dfn>InBandAV2SampleEntry</dfn> contains an <dfn>InBandAV2CodecConfigurationBox</dfn>.</p>
 
 <p><assert>An [=InBandAV2SampleEntry=] MAY be used instead of an [=OutOfBandAV2SampleEntry=], if the content of an [=OBU=] of a type that may be carried by an [=OutOfBandAV2CodecConfigurationBox=] changes during the sequence, and if that sequence cannot be split into multiple [=OutOfBandAV2SampleEntries=]. Otherwise, an [=OutOfBandAV2SampleEntry=] SHOULD be used.</assert></p>
 
