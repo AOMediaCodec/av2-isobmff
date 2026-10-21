@@ -89,6 +89,9 @@ url: https://av2.aomedia.org/v1.0.0/index.html#frame_header_syntax; spec: AV2; t
 url: https://av2.aomedia.org/v1.0.0/index.html#layer_config_record_obu_semantics; spec: AV2; type: dfn;
     text: Layer Configuration Record OBU
 
+url: https://av2.aomedia.org/v1.0.0/index.html#operating_point_set_obu_semantics; spec: AV2; type: dfn;
+    text: Operating Point Set OBU
+
 url: https://av2.aomedia.org/v1.0.0/index.html#switch-frame; spec: AV2; type: dfn;
     text: Switch OBU
 
@@ -491,6 +494,46 @@ The following container-level signalling is available to replace the semantics o
 - <code>ci_chroma_sample_position_top</code>: 'pixi' box from [[!ISOBMFF]]
 - <code>ci_aspect_ratio_idc</code>, <code>ci_sar_width</code>, and <code>ci_sar_height</code>: 'iso3' brand, 'pasr' sample group, or 'pasp' box from [[!ISOBMFF]]
 - <code>timing_info()</code>: 'mvhd' and 'stts' boxes from [[!ISOBMFF]]
+
+### Redundant information
+
+The following table lists fields that can be found at the container level and at the codec level.
+
+<figure class="table" id="figure-table-summary">
+    <table class='complex data'>
+        <tr>
+            <th>Information</th>
+            <th>Container-level source</th>
+            <th>Bitstream source</th>
+        </tr>
+        <tr>
+            <td>Bit depth per channel</td>
+            <td>'pixi' <code>bits_per_channel</code></td>
+            <td>[=Sequence Header OBU=] <code>bit_depth_idc</code>, and [=Layer Configuration Record OBU=] <code>lcr_bit_depth_idc</code></td>
+        </tr>
+        <tr>
+            <td>Channel count and kind</td>
+            <td>'pixi' <code>num_channels</code>, <code>channel_idc</code></td>
+            <td>[=Sequence Header OBU=] <code>chroma_format_idc</code>, and [=Layer Configuration Record OBU=] <code>lcr_chroma_format_idc</code>, <code>lcr_layer_type</code>, <code>lcr_auxiliary_type</code></td>
+        </tr>
+        <tr>
+            <td>Chroma format</td>
+            <td>'pixi' <code>subsampling_type</code></td>
+            <td>[=Sequence Header OBU=] <code>chroma_format_idc</code>, and [=Layer Configuration Record OBU=] <code>lcr_chroma_format_idc</code></td>
+        </tr>
+        <tr>
+            <td>Profile, level, tier</td>
+            <td>[=InBandAV2CodecConfigurationBox=]</td>
+            <td>[=Sequence Header OBU=], [=Operating Point Set OBU=], and [=Multi Stream Decoder Operation OBU=]</td>
+        </tr>
+        <tr>
+            <td>Colour primaries, transfer, matrix, range</td>
+            <td>'colr' with 'nclx'</td>
+            <td>[=Sequence Header OBU=], [=Layer Configuration Record OBU=], and [=Operating Point Set OBU=]</td>
+        </tr>
+    </table>
+    <figcaption>Non-exhaustive list of potentially redundant information</figcaption>
+</figure>
 
 ### Sync sample ### {#sync-sample}
 
