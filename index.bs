@@ -68,7 +68,7 @@ url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_synta
 url: https://av2.aomedia.org/v1.0.0/index.html#temporal-delimiter-obu; spec: AV2; type: dfn;
     text: Temporal Delimiter OBU
 
-url: https://av2.aomedia.org/v1.0.0/index.html#general_tile_group_payload_semantics; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#tile_group_obu_syntax; spec: AV2; type: dfn;
     text: Tile Group OBU
 
 url: https://av2.aomedia.org/v1.0.0/index.html#metadata_obu_syntax; spec: AV2; type: dfn;
@@ -82,9 +82,6 @@ url: https://av2.aomedia.org/v1.0.0/index.html#metadata_group_obu_syntax; spec: 
 
 url: https://av2.aomedia.org/v1.0.0/index.html#padding_obu_syntax; spec: AV2; type: dfn;
     text: Padding OBU
-
-url: https://av2.aomedia.org/v1.0.0/index.html#frame_header_syntax; spec: AV2; type: dfn;
-    text: Frame Header OBU
 
 url: https://av2.aomedia.org/v1.0.0/index.html#layer_config_record_obu_syntax; spec: AV2; type: dfn;
     text: Layer Configuration Record OBU
@@ -144,10 +141,6 @@ url: https://av2.aomedia.org/v1.0.0/index.html#singlestream; spec: AV2; type: df
 url: https://av2.aomedia.org/v1.0.0/index.html#multistream; spec: AV2; type: dfn;
     text: Multistream
 
-url: https://av2.aomedia.org/v1.0.0/index.html#general_obu_semantics; spec: AV2; type: dfn;
-    text: obu_has_size_field
-    text: obu_size
-
 url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_semantics; spec: AV2; type: dfn;
     text: seq_profile_idc
     text: single_picture_header_flag
@@ -159,11 +152,11 @@ url: https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_seman
     text: seq_initial_display_delay_minus_1
     text: film_grain_params_present
 
-url: https://av2.aomedia.org/v1.0.0/index.html#general_obu_syntax; spec: AV2; type: dfn
-    text: Low Overhead Bitstream Format
-
 url: https://av2.aomedia.org/v1.0.0/index.html#annex_b; spec: AV2; type: dfn;
     text: Length delimited bitstream format
+
+url: https://av2.aomedia.org/v1.0.0/index.html#length_delimited_bitstream_semantics; spec: AV2; type: dfn;
+    text: num_bytes_in_obu
 
 url: https://av2.aomedia.org/v1.0.0/index.html#ordering_of_obus_temporal_unit; spec: AV2; type: dfn;
     text: ordering of OBUs in a temporal unit
@@ -196,8 +189,6 @@ url: https://www.iso.org/standard/84637.html#; spec: CENC; type: dfn;
     text: BytesOfClearData
     text: cbcs
     text: cenc
-    text: cbc1
-    text: cens
 </pre>
 
 <pre class='biblio'>
@@ -664,31 +655,31 @@ If a [=CMAF Video Track=] uses the brand <code>[=av02=]</code>, it is called a <
 
 <p><assert>When the protected scheme <code>[=cenc=]</code> is used, samples SHALL be protected using subsample encryption</assert> and <assert>SHALL NOT use pattern encryption</assert>.</p>
 
-<assert>When the protected scheme <code>[=cbcs=]</code> is used, samples SHALL be protected using subsample encryption</assert> and <assert>SHALL use pattern encryption</assert>. [[!CENC]] recommends that the Block Pattern length be 10, i.e. <code>crypt_byte_block + skip_byte_block = 10</code>, where a Block is of size 16-bytes. In this specification, the combination of <code>crypt_byte_block</code> and <code>skip_byte_block</code> SHALL be one of the following, with the first one being recommended:
+<assert>When the protected scheme <code>[=cbcs=]</code> is used, samples SHALL be protected using subsample encryption</assert> and <assert>SHALL use pattern encryption</assert>. [[!CENC]] recommends that the Block Pattern length be 10, i.e. <code>crypt_byte_block + skip_byte_block = 10</code>, where a Block is of size 16 bytes. In this specification, the combination of <code>crypt_byte_block</code> and <code>skip_byte_block</code> SHALL be one of the following, with the first one being recommended:
 - <assert><code>crypt_byte_block = 1</code> and <code>skip_byte_block = 9</code></assert>,
 - <assert><code>crypt_byte_block = 5</code> and <code>skip_byte_block = 5</code></assert>,
 - <assert><code>crypt_byte_block = 10</code> and <code>skip_byte_block = 0</code></assert>.
 
+Version 1 and version 2 of the 'saiz' box as defined in [[ISOBMFF]] SHALL be supported.
 
 General Subsample Encryption constraints {#subsample-encryption}
 --------------------------------------
 
 Within protected samples, the following constraints apply:
 - <assert>Protected samples SHALL be exactly spanned by one or more contiguous subsamples</assert>.
-	- <assert>An OBU MAY be spanned by one or more subsamples</assert>, especially when it has multiple ranges of protected data. However, as recommended in [[!CENC]], subsample encryption entries SHOULD be as compactly represented as possible. For example, only one subsample encryption entry should be created for multiple consecutive unprotected OBUs as well as the first unprotected and protected parts of the following protected OBU, if such protected OBU exists.
+	- <assert>An OBU MAY be spanned by one or more subsamples</assert>, especially when it has multiple ranges of protected data. However, as recommended in [[!CENC]], subsample encryption entries SHOULD be as compactly represented as possible. For example, only one subsample encryption entry should be created for multiple consecutive unprotected OBUs as well as the first unprotected and protected parts of the following protected OBU, if such a protected OBU exists.
 	- <assert>A large unprotected OBU whose data size is larger than the maximum size of a single [=BytesOfClearData=] field MAY be spanned by multiple subsamples with zero size [=BytesOfProtectedData=]</assert>.
 
-- <assert>All [=OBU Headers=] and associated [=obu_size=] fields SHALL be unprotected</assert>.
-- <assert>[=Temporal Delimiter OBUs=], [=Sequence Header OBUs=], and [=Frame Header OBUs=] (including within a [=Frame OBU=]), and [=Redundant Frame Header OBUs=] SHALL be unprotected</assert>.
-- <assert>[=Metadata OBUs=] SHALL NOT be protected</assert>.
-- <assert>[=Tile Group OBUs=] and [=Frame OBUs=] SHALL be protected</assert>. Within [=Tile Group OBUs=] or [=Frame OBUs=], the following applies:
+- <assert>All [=num_bytes_in_obu=] fields and [=OBU Headers=] SHALL be unprotected</assert>.
+- <assert>[=Tile Group OBUs=] (the collection of OBU types identifed by the <code>is_tile_group()</code> helper function) SHALL be protected</assert>. <assert>All other OBU types SHALL be unprotected</assert>.
+- Within [=Tile Group OBUs=], the following applies:
 	- for the protected scheme <code>[=cbcs=]</code>:
 		- <assert>[=BytesOfProtectedData=] SHALL start on the first byte and end on the last byte of the <code>decode_tile</code> structure (including any trailing bits)</assert>.
 
-	    NOTE: As a result of the above, [=BytesOfProtectedData=] is not necessarily a multiple of 16 bytes and partial blocks are included in the [=BytesOfProtectedData=] range, but per [[!CENC]] the data is not be encrypted.
+	    NOTE: As a result of the above, [=BytesOfProtectedData=] is not necessarily a multiple of 16 bytes and partial blocks are included in the [=BytesOfProtectedData=] range, but per [[!CENC]] the data is not encrypted.
 
 	    - <assert>A subsample SHALL be created for each tile, even if its size is less than 16 bytes</assert>.
-		- <assert>All other parts of [=Tile Group OBUs=] and [=Frame OBUs=] SHALL be unprotected <span hidden>for cbcs</span></assert>.
+		- <assert>All other parts of [=Tile Group OBUs=] SHALL be unprotected <span hidden>for cbcs</span></assert>.
 
 	- for the protected scheme <code>[=cenc=]</code>:
 	    - <assert>[=BytesOfProtectedData=] SHALL be a multiple of 16 bytes</assert>.
@@ -696,10 +687,8 @@ Within protected samples, the following constraints apply:
 	    - <assert>[=BytesOfProtectedData=] SHALL span all complete 16-byte blocks of the <code>decode_tile</code> structure (including any trailing bits)</assert>.
 
 	    NOTE: As a result of the above, partial blocks are not used and it is possible that [=BytesOfProtectedData=] does not start at the first byte of the <code>decode_tile</code> structure, but some number of bytes following that.
-	    - <assert>A subsample SHALL be created for each tile that has a <code>decode_tile</code> structure whose size (including any trailing bits) is larger or equal to 16 bytes</assert>. <assert>If it is less than 16 bytes, per the rules above, the <code>decode_tile</code> structure is not encrypted and the corresponding bytes SHOULD be included in the [=BytesOfClearData=] field of a surrounding subsample, if any</assert>.
-		- <assert>All other parts of [=Tile Group OBUs=] and [=Frame OBUs=] SHALL be unprotected <span hidden>for cenc</span></assert>.
-
-Version 1 and version 2 of the 'saiz' box as defined in [[ISOBMFF]] SHALL be supported.
+	    - <assert>A subsample SHALL be created for each tile that has a <code>decode_tile</code> structure whose size (including any trailing bits) is greater than or equal to 16 bytes</assert>. <assert>If it is less than 16 bytes, per the rules above, the <code>decode_tile</code> structure is not encrypted and the corresponding bytes SHOULD be included in the [=BytesOfClearData=] field of a surrounding subsample, if any</assert>.
+		- <assert>All other parts of [=Tile Group OBUs=] SHALL be unprotected <span hidden>for cenc</span></assert>.
 
 # Codecs Parameter String # {#codecsparam}
 
