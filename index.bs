@@ -625,6 +625,8 @@ The following applies to all [=coded extended layer units=] for each temporal la
     </table>
 </div>
 
+<p class="issue">Editor's note: 'pixi' semantics follow the FDIS of [[!ISOBMFF]] 9th edition (Tables 8 and 9) and need re-checking against the published text. Open issues: the <code>component_format</code> value for unsigned integer (ISO/IEC 23001-17); <code>channel_idc</code> for channels with no defined meaning (segmentation, gain map).</p>
+
 ### AV2 sample reconstruction ### {#av2-sample-reconstruction}
 
 A byte sequence containing a conformant [[!AV2]] [=Temporal Unit=] using the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]] MAY be reconstructed from the [=OBUs=] of an [=AV2 sample=] by applying the following steps:
