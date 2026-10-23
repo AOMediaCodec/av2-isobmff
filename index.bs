@@ -638,7 +638,7 @@ The following applies to all [=coded extended layer units=] for each temporal la
     </table>
 </div>
 
-<p class="issue">Editor's note: 'pixi' semantics follow the draft FDIS of [[!ISOBMFF]] 9th edition (Tables 8 and 9) and need re-checking against the published text. Open: the <code>component_format</code> value for unsigned integer (ISO/IEC 23001-17); <code>channel_idc</code> for channels with no defined meaning (segmentation, gain map).</p>
+<p class="issue">Editor's note: 'pixi' semantics follow the FDIS of [[!ISOBMFF]] 9th edition (Tables 8 and 9) and need re-checking against the published text. Open issues: the <code>component_format</code> value for unsigned integer (ISO/IEC 23001-17); <code>channel_idc</code> for channels with no defined meaning (segmentation, gain map).</p>
 
 ### AV2 sample reconstruction ### {#av2-sample-reconstruction}
 
