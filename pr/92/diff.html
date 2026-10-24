@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version NORMALIZED" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="1fc82102e23e9c031f4414f8e956e059fa678856" name="revision"/>
+<meta content="187f678f87a50799c9772e4d35273aa661a832b4" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -7758,7 +7758,7 @@ value.
 </span>
 </li>
 <li data-md="">
-<span id="assert-9c78fe0f">
+<span id="assert-becb76e7">
 <ins class="diff-new">If
 the
 </ins><a class="css property" data-link-type="property" data-refhint-key="dd9960c0" href="https://www.iso.org/standard/95141.html#" id="ref-for-something⑥③"><ins class="diff-new">
@@ -7799,10 +7799,11 @@ value
 of
 the
 </ins><code><ins class="diff-new">
-bit_depth_idc
+BitDepth
 </ins></code><ins class="diff-new">
-field
-of
+variable
+computed
+from
 its
 associated
 </ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax①⑥"><ins class="diff-new">
@@ -7810,12 +7811,8 @@ Sequence
 Header
 OBU
 </ins></a><ins class="diff-new">
-correspond
+equal
 to
-the
-same
-meaning
-as
 the
 value
 of
@@ -7836,11 +7833,13 @@ NOTE:
 Channels
 of
 different
+types
+of
 embedded
 layers,
 such
 as
-colour
+texture
 and
 alpha,
 may
