@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="6286f21939f9879dafe3d423080d29e3334c19e7" name="revision"/>
+<meta content="9d1ad0630319f50f55f5c2f1baf45da26399bc73" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -3484,7 +3484,7 @@ figcaption.has-figure-number::before { content: none !important; }
     </li><li data-md=""><span id="assert-81f6cd1f">The <code>bitDepth</code> parameter value SHALL equal the value of the <code>BitDepth</code> variable as defined in <a data-link-type="biblio" href="#biblio-av2" title="AV2 Bitstream &amp; Decoding Process Specification">[AV2]</a> derived from the first <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax②⓪">Sequence Header OBU</a></span>.
 
 
-    </li><li data-md=""><span id="assert-32b4bbb6">The <code>channelCount</code> parameter value, represented by <code>1</code>, <code>2</code>, <code>3</code>, or <code>4</code>, SHALL equal the value of the <code>NumPlanes</code> variable as defined in <a data-link-type="biblio" href="#biblio-av2" title="AV2 Bitstream &amp; Decoding Process Specification">[AV2]</a> derived from the first <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax②①">Sequence Header OBU</a> if the <a class="css property" data-link-type="property" data-refhint-key="dd9960c0" href="https://www.iso.org/standard/95141.html#" id="ref-for-something⑨⑥">pixi</a> box associated with the first <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax②②">Sequence Header OBU</a> has no <code>channel_idc</code> set to 5 (Alpha), and SHALL equal that value plus one otherwise.</span>.
+    </li><li data-md=""><span id="assert-90299e01">If the <a class="css property" data-link-type="property" data-refhint-key="dd9960c0" href="https://www.iso.org/standard/95141.html#" id="ref-for-something⑨⑥">pixi</a> box associated with the first <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax②①">Sequence Header OBU</a> has no <code>channel_idc</code> set to 5 (Alpha), then the <code>channelCount</code> parameter value, represented by <code>1</code>, <code>2</code>, <code>3</code>, or <code>4</code>, SHALL equal the value plus one of the <code>NumPlanes</code> variable as defined in <a data-link-type="biblio" href="#biblio-av2" title="AV2 Bitstream &amp; Decoding Process Specification">[AV2]</a> derived from that <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax②②">Sequence Header OBU</a>, otherwise it SHALL match <code>NumPlanes</code>.</span>.
 
 
     </li><li data-md="">

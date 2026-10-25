@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version NORMALIZED" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="6286f21939f9879dafe3d423080d29e3334c19e7" name="revision"/>
+<meta content="9d1ad0630319f50f55f5c2f1baf45da26399bc73" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -9923,12 +9923,40 @@ OBU
 </span>.
 </li>
 <li data-md="">
-<span id="assert-32b4bbb6">
-The
+<del class="diff-old">The
+</del>
+<span id="assert-90299e01">
+<ins class="diff-chg">If
+the
+</ins><a class="css property" data-link-type="property" data-refhint-key="dd9960c0" href="https://www.iso.org/standard/95141.html#" id="ref-for-something⑨⑥"><ins class="diff-chg">
+pixi
+</ins></a><ins class="diff-chg">
+box
+associated
+with
+the
+first
+</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax②①"><ins class="diff-chg">
+Sequence
+Header
+OBU
+</ins></a><ins class="diff-chg">
+has
+no
+</ins>
 <code>
 <del class="diff-old">monochrome
 </del>
-<ins class="diff-chg">channelCount
+<ins class="diff-chg">channel_idc
+</ins></code><ins class="diff-chg">
+set
+to
+5
+(Alpha),
+then
+the
+</ins><code><ins class="diff-chg">
+channelCount
 </ins>
 </code>
 parameter
@@ -9955,6 +9983,9 @@ SHALL
 equal
 the
 value
+<ins class="diff-new">plus
+one
+</ins>
 of
 the
 <code>
@@ -9972,46 +10003,22 @@ in
 </a>
 derived
 from
-the
+<del class="diff-old">the
 first
-<a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax②①">
+</del>
+<ins class="diff-chg">that
+</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax②②">
 Sequence
 Header
 OBU
-</a>
-<ins class="diff-chg">if
-the
-</ins><a class="css property" data-link-type="property" data-refhint-key="dd9960c0" href="https://www.iso.org/standard/95141.html#" id="ref-for-something⑨⑥"><ins class="diff-chg">
-pixi
-</ins></a><ins class="diff-chg">
-box
-associated
-with
-the
-first
-</ins><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#general_sequence_header_obu_syntax" id="ref-for-general_sequence_header_obu_syntax②②"><ins class="diff-chg">
-Sequence
-Header
-OBU
-</ins></a><ins class="diff-chg">
-has
-no
-</ins><code><ins class="diff-chg">
-channel_idc
-</ins></code><ins class="diff-chg">
-set
-to
-5
-(Alpha),
-and
+</a>,
+<ins class="diff-chg">otherwise
+it
 SHALL
-equal
-that
-value
-plus
-one
-otherwise.
-</ins>
+match
+</ins><code><ins class="diff-chg">
+NumPlanes
+</ins></code>.
 </span>.
 </li>
 <li data-md="">
