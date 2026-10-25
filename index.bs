@@ -748,7 +748,7 @@ Version 1 and version 2 of the 'saiz' box as defined in [[ISOBMFF]] SHALL be sup
 
 DASH and other applications require defined values for the 'Codecs' parameter specified in [[!RFC6381]] for ISO Media tracks. The codecs parameter string for the AOM AV2 codec is as follows:
 ```
-<sample entry 4CC>.<profile>.<level><tier>.<bitDepth>.<monochrome>.<chromaSubsampling>.
+<sample entry 4CC>.<profile>.<level><tier>.<bitDepth>.<channelCount>.<chromaSubsampling>.
 <colorPrimaries>.<transferCharacteristics>.<matrixCoefficients>.<videoFullRangeFlag>
 ```
 
@@ -762,7 +762,7 @@ All fields following the sample entry 4CC are expressed as double digit decimals
 
 - <assert>The <code>bitDepth</code> parameter value SHALL equal the value of the <code>BitDepth</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=]</assert>.
 
-- <assert>The <code>monochrome</code> parameter value, represented by <code>0</code> or <code>1</code>, SHALL equal the value of the <code>Monochrome</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=]</assert>.
+- <assert>If the 'pixi' box associated with the first [=Sequence Header OBU=] has no <code>channel_idc</code> set to 5 (Alpha), then the <code>channelCount</code> parameter value, represented by <code>1</code>, <code>2</code>, <code>3</code>, or <code>4</code>, SHALL equal the value plus one of the <code>NumPlanes</code> variable as defined in [[!AV2]] derived from that [=Sequence Header OBU=], otherwise it SHALL match <code>NumPlanes</code>.</assert>.
 
 - The <code>chromaSubsampling</code> parameter value, represented by a two-digit decimal:
     1. <assert>SHALL have its first digit equal to the <code>subsampling_type</code> value of the channels with <code>channel_idc</code> set to 3 (Second colour channel) and 4 (Third colour channel) in the 'pixi' box associated with the [=AV2 sample=] if that <code>subsampling_type</code> value is signaled, and 0 otherwise</assert>.
@@ -774,18 +774,18 @@ All fields following the sample entry 4CC are expressed as double digit decimals
 
 - The <code>videoFullRangeFlag</code> is represented by <code>0</code> or <code>1</code>.
 
-<p><assert>If the codecs parameter string ends with ".0.116.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</assert>.</p>
+<p><assert>If the codecs parameter string ends with ".3.22.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</assert>.</p>
 
 <div class="example" id="codec-string-example"><a class="self-link" href="#codec-string-example"></a>
-<code>codecs="av02.0.04M.10.0.22.09.16.09.0"</code> represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 4.0, Main tier, 10-bit content, non-monochrome, 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
+<code>codecs="av02.0.04M.10.4.22.09.16.09.0"</code> represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 4.0, Main tier, 10-bit content, non-monochrome and alpha, with 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
 </div>
 
 <p><assert>The parameters <code>sample entry 4CC</code>, <code>profile</code>, <code>level</code>, <code>tier</code>, and <code>bitDepth</code> are all mandatory fields.</assert> <assert>If any of these fields is empty, or not within its allowed range, the processing device SHOULD treat it as an error.</assert> <assert>All the other fields (including their leading '.') are optional, mutually inclusive (all or none) fields.</assert> If not specified then the values listed in the table below are assumed.</p>
 
 <table class="def">
     <tr>
-        <td>mono_chrome</td>
-        <td>0</td>
+        <td>channelCount</td>
+        <td>3</td>
     </tr>
     <tr>
         <td>chromaSubsampling</td>
