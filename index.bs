@@ -762,7 +762,7 @@ All fields following the sample entry 4CC are expressed as double digit decimals
 
 - <assert>The <code>bitDepth</code> parameter value SHALL equal the value of the <code>BitDepth</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=]</assert>.
 
-- <assert>The <code>channelCount</code> parameter value, represented by <code>1</code>, <code>2</code>, <code>3</code>, or <code>4</code>, SHALL equal the value of the <code>NumPlanes</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=] if the 'pixi' box associated with the first [=Sequence Header OBU=] has no <code>channel_idc</code> set to 5 (Alpha), and SHALL equal that value plus one otherwise.</assert>.
+- <assert>If the 'pixi' box associated with the first [=Sequence Header OBU=] has no <code>channel_idc</code> set to 5 (Alpha), then the <code>channelCount</code> parameter value, represented by <code>1</code>, <code>2</code>, <code>3</code>, or <code>4</code>, SHALL equal the value plus one of the <code>NumPlanes</code> variable as defined in [[!AV2]] derived from that [=Sequence Header OBU=], otherwise it SHALL match <code>NumPlanes</code>.</assert>.
 
 - The <code>chromaSubsampling</code> parameter value, represented by a two-digit decimal:
     1. <assert>SHALL have its first digit equal to the <code>subsampling_type</code> value of the channels with <code>channel_idc</code> set to 3 (Second colour channel) and 4 (Third colour channel) in the 'pixi' box associated with the [=AV2 sample=] if that <code>subsampling_type</code> value is signaled, and 0 otherwise</assert>.
