@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="14f891de95976d70f22b6c26eb682ccb7a10a33c" name="revision"/>
+<meta content="bf3f8b3248932a23225253b148e5616568bc4e68" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -3412,7 +3412,7 @@ figcaption.has-figure-number::before { content: none !important; }
     </li><li data-md=""><span id="assert-0fbb54b0"><code>crypt_byte_block = 10</code> and <code>skip_byte_block = 0</code></span>.
 
    </li></ul>
-<p>Version 1 and version 2 of the <a class="css property" data-link-type="property" data-refhint-key="7b11590e" href="https://www.iso.org/standard/95141.html#" id="ref-for-something⑧④">saiz</a> box as defined in <a data-link-type="biblio" href="#biblio-isobmff" title="Information technology — Coding of audio-visual objects — Part 12: ISO base media file format">[ISOBMFF]</a> <span class="rfc-keyword">SHALL</span> be supported.</p>
+<p><span id="assert-5358473a">Version 1 and version 2 of the <a class="css property" data-link-type="property" data-refhint-key="7b11590e" href="https://www.iso.org/standard/95141.html#" id="ref-for-something⑧④">saiz</a> box as defined in <a data-link-type="biblio" href="#biblio-isobmff" title="Information technology — Coding of audio-visual objects — Part 12: ISO base media file format">[ISOBMFF]</a> SHALL be supported</span>.</p>
 <h3 class="heading settled" data-level="5.1" id="subsample-encryption"><span class="secno">5.1. </span><span class="content">General Subsample Encryption constraints</span><a class="self-link" href="#subsample-encryption"></a></h3>
 <p>Within protected samples, the following constraints apply:</p>
 <ul>
@@ -3427,7 +3427,7 @@ figcaption.has-figure-number::before { content: none !important; }
      </li></ul>
 </li><li data-md=""><span id="assert-19fa8511">All <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#length_delimited_bitstream_semantics" id="ref-for-length_delimited_bitstream_semantics">num_bytes_in_obu</a> fields and <a data-link-type="dfn" data-refhint-key="4afb517e" href="https://av2.aomedia.org/v1.0.0/index.html#obu_header_syntax" id="ref-for-obu_header_syntax①⓪">OBU Headers</a> SHALL be unprotected</span>.
 
-    </li><li data-md=""><span id="assert-eeb8086d"><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#tile_group_obu_syntax" id="ref-for-tile_group_obu_syntax">Tile Group OBUs</a> (the collection of OBU types identifed by the <code>is_tile_group()</code> helper function) SHALL be protected</span>. <span id="assert-5ceed1eb">All other OBU types SHALL be unprotected</span>.
+    </li><li data-md=""><span id="assert-02ea528b"><a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#tile_group_obu_syntax" id="ref-for-tile_group_obu_syntax">Tile Group OBUs</a> (the collection of OBU types identified by the <code>is_tile_group()</code> helper function) SHALL be protected as specified below</span>. <span id="assert-5ceed1eb">All other OBU types SHALL be unprotected</span>.
 
     </li><li data-md="">
 <p>Within <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#tile_group_obu_syntax" id="ref-for-tile_group_obu_syntax①">Tile Group OBUs</a>, the following applies:</p>
