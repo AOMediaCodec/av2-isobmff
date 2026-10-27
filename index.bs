@@ -707,7 +707,7 @@ If a [=CMAF Video Track=] uses the brand <code>[=av02=]</code>, it is called a <
 - <assert><code>crypt_byte_block = 5</code> and <code>skip_byte_block = 5</code></assert>,
 - <assert><code>crypt_byte_block = 10</code> and <code>skip_byte_block = 0</code></assert>.
 
-Version 1 and version 2 of the 'saiz' box as defined in [[ISOBMFF]] SHALL be supported.
+<p><assert>Version 1 and version 2 of the 'saiz' box as defined in [[!ISOBMFF]] SHALL be supported</assert>.</p>
 
 General Subsample Encryption constraints {#subsample-encryption}
 --------------------------------------
@@ -718,7 +718,7 @@ Within protected samples, the following constraints apply:
 	- <assert>A large unprotected OBU whose data size is larger than the maximum size of a single [=BytesOfClearData=] field MAY be spanned by multiple subsamples with zero size [=BytesOfProtectedData=]</assert>.
 
 - <assert>All [=num_bytes_in_obu=] fields and [=OBU Headers=] SHALL be unprotected</assert>.
-- <assert>[=Tile Group OBUs=] (the collection of OBU types identifed by the <code>is_tile_group()</code> helper function) SHALL be protected</assert>. <assert>All other OBU types SHALL be unprotected</assert>.
+- <assert>[=Tile Group OBUs=] (the collection of OBU types identified by the <code>is_tile_group()</code> helper function) SHALL be protected as specified below</assert>. <assert>All other OBU types SHALL be unprotected</assert>.
 - Within [=Tile Group OBUs=], the following applies:
 	- for the protected scheme <code>[=cbcs=]</code>:
 		- <assert>[=BytesOfProtectedData=] SHALL start on the first byte and end on the last byte of the <code>decode_tile</code> structure (including any trailing bits)</assert>.
