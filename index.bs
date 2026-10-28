@@ -176,6 +176,15 @@ url: https://av2.aomedia.org/v1.0.0/index.html#grouped-high-level-syntax-block; 
 url: https://av2.aomedia.org/v1.0.0/index.html#ordering_of_obus_extended_layer; spec: AV2; type: dfn;
     text: coded extended layer unit
 
+url: https://av2.aomedia.org/v1.0.0/index.html#layer; spec: AV2; type: dfn;
+    text: layer
+
+url: https://av2.aomedia.org/v1.0.0/index.html#base-layer; spec: AV2; type: dfn;
+    text: base layer
+
+url: https://av2.aomedia.org/v1.0.0/index.html#enhancement-layer; spec: AV2; type: dfn;
+    text: enhancement layer
+
 url: https://av2.aomedia.org/v1.0.0/index.html#sample; spec: AV2; type: dfn;
     text: sample
 
@@ -338,23 +347,27 @@ class InBandAV2SampleEntry extends AV2SampleEntry('av2e') {
 
 <p><assert>An [=InBandAV2SampleEntry=] MAY be used instead of an [=OutOfBandAV2SampleEntry=], if the content of an [=OBU=] of a type that may be carried by an [=OutOfBandAV2CodecConfigurationBox=] changes during the sequence, and if that sequence cannot be split into multiple [=OutOfBandAV2SampleEntries=]. Otherwise, an [=OutOfBandAV2SampleEntry=] SHOULD be used.</assert></p>
 
-<p><assert>An [=AV2SampleEntry=] SHALL contain exactly one [=AV2CodecConfigurationBox=].</assert></p>
+<p><assert>An [=AV2SampleEntry=] SHALL contain exactly one [=AV2CodecConfigurationBox=].</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by the [=AV2CodecConfigurationBox=].</assert></p>
 
-<assert>An [=AV2SampleEntry=] SHALL directly contain exactly one 'colr' box with the 'nclx' 'colour_type'.</assert> Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, and <code>matrix_coefficients</code> carried in that 'colr' box, for the [=AV2 sample=] layers or operating points it applies to:
+<p><assert>Unless explicitly stated otherwise in the definition of a box, the direct child boxes of an [=AV2SampleEntry=] describe all [=base layers=] in that [=AV2SampleEntry=].</assert></p>
+
+<assert>Each [=base layer=] in an [=AV2SampleEntry=] SHALL be described by exactly one 'colr' box with the 'nclx' 'colour_type'.</assert> Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, and <code>matrix_coefficients</code> carried in that 'colr' box, for the [=layers=] or operating points it applies to:
 - <assert>SHOULD equal the corresponding effective value of the [=AV2 bitstream=] carried by the track if the latter is anything but 2 (<code>Unspecified</code>)</assert>;
 - <assert>SHALL take precedence over the corresponding effective value of the [=AV2 bitstream=] carried by the track</assert>.
 
-<p><assert>The value of <code>full_range_flag</code> carried in that 'colr' box, for the [=AV2 sample=] layers or operating points it applies to, SHOULD equal the corresponding effective value of the [=AV2 bitstream=] carried by the track and SHALL take precedence over the corresponding effective value of the [=AV2 bitstream=] carried by the track.</assert></p>
+<p><assert>The value of <code>full_range_flag</code> carried in that 'colr' box, for the [=layers=] or operating points it applies to, SHOULD equal the corresponding effective value of the [=AV2 bitstream=] carried by the track and SHALL take precedence over the corresponding effective value of the [=AV2 bitstream=] carried by the track.</assert></p>
 
-<p><assert>An [=AV2SampleEntry=] SHALL directly contain exactly one 'pixi' box.</assert> <assert>'pixi' boxes in an [=AV2SampleEntry=] SHALL have the least significant bit of 'px_flags' enabled.</assert> The constraints described in [[#layers]] apply to that [=AV2SampleEntry=].</p>
+<p><assert>Each [=base layer=] in an [=AV2SampleEntry=] SHALL be described by exactly one 'pixi' box.</assert> <assert>'pixi' boxes in an [=AV2SampleEntry=] SHALL have the least significant bit of 'px_flags' enabled.</assert> The constraints described in [[#layers]] apply to that [=AV2SampleEntry=].</p>
 
-NOTE: An [=AV2SampleEntry=] may directly contain additional boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'colr' with a 'colour_type' value other than 'nclx', 'pasp', 'clli', 'mdcv' or 'btrt'. They may be located before and/or after the [=AV2CodecConfigurationBox=].
+NOTE: An [=AV2SampleEntry=] may contain additional direct child boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'colr' with a 'colour_type' value other than 'nclx', 'pasp', 'clli', 'mdcv' or 'btrt'. They may be located before and/or after the [=AV2CodecConfigurationBox=].
 
-NOTE: An [=AV2SampleEntry=] may indirectly contain additional boxes, for example 'colr' when carried by the <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition to describe the colour properties of non-base layers.
+NOTE: An [=AV2SampleEntry=] may contain additional boxes, for example 'colr' when carried by the <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition to describe the colour properties of [=enhancement layers=].
 
 ### AV2 Codec Configuration Box ### {#av2c}
 
 The <dfn>AV2CodecConfigurationBox</dfn> carries the decoder initialisation data required to decode the [=AV2 samples=] of a track. There are two [=AV2CodecConfigurationBox=] flavours.
+
+An [=AV2CodecConfigurationBox=] that is the direct child box of an [=AV2SampleEntry=] describes all [=layers=] in that [=AV2SampleEntry=].
 
 #### Description
 
@@ -523,14 +536,15 @@ NOTE: In ISOBMFF terms, sync samples are signalled using the SyncSampleBox ('sts
 
 ### Layers ### {#layers}
 
-The following applies to all [=coded extended layer units=] for each temporal layer in an [=AV2 sample=] associated with a 'pixi' box:
-- The channels in the [=AV2 sample=] are considered to be ordered as if the layers were concatenated in increasing <code>xlayer_id</code> order, then in increasing <code>mlayer_id</code> order.
-- <assert>If the 'pixi' box describes the Nth channel, the Nth channel in the [=AV2 sample=] SHALL be present.</assert>
-- <assert>If the 'pixi' box describes the Nth channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the Nth channel in the [=AV2 sample=] SHALL be a color channel: if signalled, the <code>lcr_layer_type</code> field of its associated Layer Configuration Record OBU SHALL be set to 0 (<code>TEXTURE_LAYER</code>).</assert>
-- <assert>If the 'pixi' box describes the Nth channel to be an alpha channel (<code>channel_idc</code> 5), the Nth channel in the [=AV2 sample=] SHALL be an alpha channel: if signalled, the <code>lcr_layer_type</code> field of its associated Layer Configuration Record OBU SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 0 (<code>ALPHA_AUX</code>).</assert>
-- <assert>If the 'pixi' box describes the Nth channel to be a depth channel (<code>channel_idc</code> 6), the Nth channel in the [=AV2 sample=] SHALL be a depth channel: if signalled, the <code>lcr_layer_type</code> field of its associated Layer Configuration Record OBU SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 1 (<code>DEPTH_AUX</code>).</assert>
-- <assert>If the 'pixi' box describes the Nth channel as used and specified (<code>channel_idc</code> values other than 0 and 1) with <code>subsampling_flag</code> set to 1, the Nth channel in the [=AV2 sample=] SHALL have the value of the <code>chroma_format_idc</code> field of its associated Sequence Header OBU correspond to the same meaning as the value of the 'pixi' box's Nth channel's <code>subsampling_type</code> value.</assert>
-- <assert>If the 'pixi' box describes the Nth channel, the Nth channel in the [=AV2 sample=] SHALL have the value of the <code>BitDepth</code> variable computed from its associated [=Sequence Header OBU=] equal to the value of the 'pixi' box's Nth channel's <code>bits_per_channel</code> value.</assert>
+In an [=AV2 sample=], the following applies to all extended and embedded layers of each temporal layer associated with a 'pixi' box:
+- The channel at index <code>i</code> in the 'pixi' box corresponds to the (<code>i</code>+1)th channel among the extended and embedded layers associated with the 'pixi' box. This is the case for each <code>tlayer_id</code> unique value.
+- The channels in the [=AV2 sample=] associated with that 'pixi' box are considered to be ordered as if the extended and embedded layers were concatenated in increasing <code>xlayer_id</code> order, then in increasing <code>mlayer_id</code> order.
+- <assert>If the 'pixi' box describes a channel, the corresponding channel in the [=AV2 sample=] SHALL be present.</assert>
+- <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the corresponding channel in the [=AV2 sample=] SHALL be a color channel: if signalled, the <code>lcr_layer_type</code> field of its associated [=Layer Configuration Record OBU=] SHALL be set to 0 (<code>TEXTURE_LAYER</code>).</assert>
+- <assert>If the 'pixi' box describes a channel to be an alpha channel (<code>channel_idc</code> 5), the corresponding channel in the [=AV2 sample=] SHALL be an alpha channel: if signalled, the <code>lcr_layer_type</code> field of its associated [=Layer Configuration Record OBU=] SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 0 (<code>ALPHA_AUX</code>).</assert>
+- <assert>If the 'pixi' box describes a channel to be a depth channel (<code>channel_idc</code> 6), the corresponding channel in the [=AV2 sample=] SHALL be a depth channel: if signalled, the <code>lcr_layer_type</code> field of its associated [=Layer Configuration Record OBU=] SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 1 (<code>DEPTH_AUX</code>).</assert>
+- <assert>If the 'pixi' box describes a channel as used and specified (<code>channel_idc</code> values other than 0 and 1) with <code>subsampling_flag</code> set to 1, the corresponding channel in the [=AV2 sample=] SHALL have the value of the <code>chroma_format_idc</code> field of its associated [=Sequence Header OBU=] correspond to the same meaning as the value of the 'pixi' box's corresponding channel's <code>subsampling_type</code> value.</assert>
+- <assert>If the 'pixi' box describes a channel, the corresponding channel in the [=AV2 sample=] SHALL have the value of the <code>BitDepth</code> variable computed from its associated [=Sequence Header OBU=] equal to the value of the 'pixi' box's channel's <code>bits_per_channel</code> value.</assert>
 
     NOTE: Channels of different types of embedded layers, such as texture and alpha, may have different bit depths.
 
