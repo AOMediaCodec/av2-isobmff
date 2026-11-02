@@ -561,18 +561,17 @@ In an [=AV2 sample=], the following applies to all [=extended layers=] and [=emb
 
 <div class="example" id="sample-channel-simple-example"><a class="self-link" href="#sample-channel-simple-example"></a>
     Simple example with an embedded layer containing YUV 4:2:0 colour channels and an embedded layer containing the gain map.
-    <table class="complex data">
+    <table class="complex data" style="line-height: 1;">
         <thead>
             <tr>
-                <th colspan=5>[=AV2 sample=] layer</th>
+                <th colspan=4>[=AV2 sample=] layer</th>
                 <th colspan=2>'pixi'</th>
             </tr>
-            <tr>
+            <tr style="font-size: 0.8rem;">
                 <th><code>xlayer_id</code></th>
                 <th><code>lcr_chroma_format_idc</code></th>
                 <th><code>mlayer_id</code></th>
-                <th><code>lcr_layer_type</code></th>
-                <th><code>lcr_auxiliary_type</code></th>
+                <th><code>lcr_layer_type</code>, <code>lcr_auxiliary_type</code></th>
                 <th>(<code>i</code>+1)th channel</th>
                 <th><code>channel_idc</code>: Meaning</th>
             </tr>
@@ -582,7 +581,7 @@ In an [=AV2 sample=], the following applies to all [=extended layers=] and [=emb
                 <td rowspan=6>0</td>
                 <td rowspan=6><code>CHROMA_FORMAT_420</code></td>
                 <td rowspan=3>0</td>
-                <td rowspan=3 colspan=2><code>TEXTURE_LAYER</code></td>
+                <td rowspan=3><code>TEXTURE_LAYER</code></td>
                 <td>1st</td>
                 <td>2: First colour channel (e.g. monochrome, <b>Y</b>, R, C)</td>
             </tr>
@@ -596,8 +595,7 @@ In an [=AV2 sample=], the following applies to all [=extended layers=] and [=emb
             </tr>
             <tr>
                 <td rowspan=3>1</td>
-                <td rowspan=3><code>AUX_LAYER</code></td>
-                <td rowspan=3><code>GAIN_MAP_AUX</code></td>
+                <td rowspan=3><code>AUX_LAYER</code>, <code>GAIN_MAP_AUX</code></td>
                 <td>4th</td>
                 <td>1: Unspecified</td>
             </tr>
@@ -615,18 +613,17 @@ In an [=AV2 sample=], the following applies to all [=extended layers=] and [=emb
 
 <div class="example" id="sample-channel-complex-example"><a class="self-link" href="#sample-channel-complex-example"></a>
     Complex example with an extended layer containing CMYK channels (each channel as an embedded layer), an extended layer containing alpha, and an extended layer containing segmentation and depth data.
-    <table class="complex data">
+    <table class="complex data" style="line-height: 1;">
         <thead>
             <tr>
-                <th colspan=5>[=AV2 sample=] layer</th>
+                <th colspan=4>[=AV2 sample=] layer</th>
                 <th colspan=2>'pixi'</th>
             </tr>
-            <tr>
+            <tr style="font-size: 0.8rem;">
                 <th><code>xlayer_id</code></th>
                 <th><code>lcr_chroma_format_idc</code></th>
                 <th><code>mlayer_id</code></th>
-                <th><code>lcr_layer_type</code></th>
-                <th><code>lcr_auxiliary_type</code></th>
+                <th><code>lcr_layer_type</code>, <code>lcr_auxiliary_type</code></th>
                 <th>(<code>i</code>+1)th channel</th>
                 <th><code>channel_idc</code>: Meaning</th>
             </tr>
@@ -636,25 +633,25 @@ In an [=AV2 sample=], the following applies to all [=extended layers=] and [=emb
                 <td rowspan=4>0</td>
                 <td rowspan=4><code>CHROMA_FORMAT_400</code></td>
                 <td>0</td>
-                <td colspan=2><code>TEXTURE_LAYER</code></td>
+                <td><code>TEXTURE_LAYER</code></td>
                 <td>1st</td>
                 <td>2: First colour channel (e.g. monochrome, Y, R, <b>C</b>)</td>
             </tr>
             <tr>
                 <td>1</td>
-                <td colspan=2><code>TEXTURE_LAYER</code></td>
+                <td><code>TEXTURE_LAYER</code></td>
                 <td>2nd</td>
                 <td>3: Second colour channel (e.g. U, Cb, G, <b>M</b>)</td>
             </tr>
             <tr>
                 <td>2</td>
-                <td colspan=2><code>TEXTURE_LAYER</code></td>
+                <td><code>TEXTURE_LAYER</code></td>
                 <td>3rd</td>
                 <td>4: Third colour channel (e.g. V, Cr, B, <b>Y</b>)</td>
             </tr>
             <tr>
                 <td>3</td>
-                <td colspan=2><code>TEXTURE_LAYER</code></td>
+                <td><code>TEXTURE_LAYER</code></td>
                 <td>4th</td>
                 <td>7: Fourth colour channel (e.g. <b>K</b>)</td>
             </tr>
@@ -662,8 +659,7 @@ In an [=AV2 sample=], the following applies to all [=extended layers=] and [=emb
                 <td>1</td>
                 <td><code>CHROMA_FORMAT_400</code></td>
                 <td>0</td>
-                <td><code>AUX_LAYER</code></td>
-                <td><code>ALPHA_AUX</code></td>
+                <td><code>AUX_LAYER</code>, <code>ALPHA_AUX</code></td>
                 <td>5th</td>
                 <td>5: Alpha</td>
             </tr>
@@ -671,21 +667,21 @@ In an [=AV2 sample=], the following applies to all [=extended layers=] and [=emb
                 <td rowspan=2>2</td>
                 <td rowspan=2><code>CHROMA_FORMAT_400</code></td>
                 <td>0</td>
-                <td><code>AUX_LAYER</code></td>
-                <td><code>SEGMENTATION_AUX</code></td>
+                <td><code>AUX_LAYER</code>, <code>SEGMENTATION_AUX</code></td>
                 <td>6th</td>
                 <td>1: Unspecified</td>
             </tr>
             <tr>
                 <td>1</td>
-                <td><code>AUX_LAYER</code></td>
-                <td><code>DEPTH_AUX</code></td>
+                <td><code>AUX_LAYER</code>, <code>DEPTH_AUX</code></td>
                 <td>7th</td>
                 <td>6: Depth</td>
             </tr>
         </tbody>
     </table>
 </div>
+
+Other examples may be found in [[#annex-a]].
 
 <p class="issue">Editor's note: 'pixi' semantics follow the FDIS of [[!ISOBMFF]] 9th edition (Tables 8 and 9) and need re-checking against the published text. Open issues: the <code>component_format</code> value for unsigned integer (ISO/IEC 23001-17); <code>channel_idc</code> for channels with no defined meaning (segmentation, gain map).</p>
 
@@ -830,5 +826,154 @@ The string codecs="av02.0.01M.08" in this case would represent [[!AV2]] <code>Ma
 </div>
 
 If any character that is not '.', digits, part of the AV2 4CC, or a tier value is encountered, the string SHALL be interpreted ignoring all the characters starting from that character.
+
+Annex: Layer composition examples (informative) {#annex-a}
+==========================================================
+
+The examples below present 'pixi' mappings for the usages from Annex G of [[!AV2]].
+
+<div class="example" id="av2-annex-g2-pixi-example"><a class="self-link" href="#av2-annex-g2-pixi-example"></a>
+    <a href="https://av2.aomedia.org/v1.0.0/index.html#annex_g_360_viewport_example">360-degree viewport-dependent streaming with subpictures</a>
+    <table class="complex data" style="line-height: 1;">
+        <thead>
+            <tr>
+                <th colspan=4>[=AV2 sample=] layer</th>
+                <th colspan=2>'pixi'</th>
+            </tr>
+            <tr style="font-size: 0.8rem;">
+                <th><code>xlayer_id</code></th>
+                <th><code>lcr_chroma_format_idc</code></th>
+                <th><code>mlayer_id</code></th>
+                <th><code>lcr_layer_type</code>, <code>lcr_auxiliary_type</code></th>
+                <th>(<code>i</code>+1)th channel</th>
+                <th><code>channel_idc</code>: Meaning</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan=9>0</td>
+                <td rowspan=9><code>CHROMA_FORMAT_420</code></td>
+                <td rowspan=3>0</td>
+                <td rowspan=3><code>TEXTURE_LAYER</code></td>
+                <td>1st</td>
+                <td>2: Y</td>
+            </tr>
+            <tr>
+                <td>2nd</td>
+                <td>3: U</td>
+            </tr>
+            <tr>
+                <td>3rd</td>
+                <td>4: V</td>
+            </tr>
+            <tr>
+                <td rowspan=3>1</td>
+                <td rowspan=3><code>AUX_LAYER</code>, <code>ALPHA_AUX</code></td>
+                <td>4th</td>
+                <td>5: Alpha</td>
+            </tr>
+            <tr>
+                <td>5th</td>
+                <td>0: Unused</td>
+            </tr>
+            <tr>
+                <td>6th</td>
+                <td>0: Unused</td>
+            </tr>
+            <tr>
+                <td rowspan=3>2</td>
+                <td rowspan=3><code>AUX_LAYER</code>, <code>DEPTH_AUX</code></td>
+                <td>7th</td>
+                <td>6: Depth</td>
+            </tr>
+            <tr>
+                <td>8th</td>
+                <td>0: Unused</td>
+            </tr>
+            <tr>
+                <td>9th</td>
+                <td>0: Unused</td>
+            </tr>
+        </tbody>
+    </table>
+
+    In the example above, only the extended layer 0 is described by the 'pixi' box. The atlas composition informs the decoder that the other extended layers have the same embedded layer layout as the extended layer 0, so there is no need to also describe them in the 'pixi' box. For extra description, the 'pixi' box could repeat the scheme above for each extended layer, describing each of the 81 channels.
+
+    Alternatively, the direct sample entry child 'pixi' box could only describe YUV of the first embedded layer of the first extended layer, and the <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition maps that 'pixi' box to an operating point containing the first embedded layer of each extended layer. Another 'pixi' box is mapped to another operating point containing the second embedded layer of each extended layer (alpha). The pattern can be repeated for depth.
+
+    The chroma channels of the alpha and depth layers are tagged as "Unused". The <code>lcr_chroma_format_idc</code> field is set at the extended layer level, so the alpha and depth embedded layers cannot be 4:0:0.
+</div>
+
+<div class="example" id="av2-annex-g3-pixi-example"><a class="self-link" href="#av2-annex-g3-pixi-example"></a>
+    <a href="https://av2.aomedia.org/v1.0.0/index.html#annex_g_subpicture_example">Subpicture composition example</a>
+    <table class="complex data" style="line-height: 1;">
+        <thead>
+            <tr>
+                <th colspan=4>[=AV2 sample=] layer</th>
+                <th colspan=2>'pixi'</th>
+            </tr>
+            <tr style="font-size: 0.8rem;">
+                <th><code>xlayer_id</code></th>
+                <th><code>lcr_chroma_format_idc</code></th>
+                <th><code>mlayer_id</code></th>
+                <th><code>lcr_layer_type</code>, <code>lcr_auxiliary_type</code></th>
+                <th>(<code>i</code>+1)th channel</th>
+                <th><code>channel_idc</code>: Meaning</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan=3>0</td>
+                <td rowspan=3><code>CHROMA_FORMAT_420</code></td>
+                <td rowspan=3>0</td>
+                <td rowspan=3><code>TEXTURE_LAYER</code></td>
+                <td>1st</td>
+                <td>2: Y</td>
+            </tr>
+            <tr>
+                <td>2nd</td>
+                <td>3: U</td>
+            </tr>
+            <tr>
+                <td>3rd</td>
+                <td>4: V</td>
+            </tr>
+            <tr>
+                <td rowspan=3>1</td>
+                <td rowspan=3><code>CHROMA_FORMAT_420</code></td>
+                <td rowspan=3>0</td>
+                <td rowspan=3><code>TEXTURE_LAYER</code></td>
+                <td>4th</td>
+                <td>2: Y</td>
+            </tr>
+            <tr>
+                <td>5th</td>
+                <td>3: U</td>
+            </tr>
+            <tr>
+                <td>6th</td>
+                <td>4: V</td>
+            </tr>
+            <tr>
+                <td rowspan=3>2</td>
+                <td rowspan=3><code>CHROMA_FORMAT_420</code></td>
+                <td rowspan=3>0</td>
+                <td rowspan=3><code>TEXTURE_LAYER</code></td>
+                <td>7th</td>
+                <td>2: Y</td>
+            </tr>
+            <tr>
+                <td>8th</td>
+                <td>3: U</td>
+            </tr>
+            <tr>
+                <td>9th</td>
+                <td>4: V</td>
+            </tr>
+        </tbody>
+    </table>
+
+    In the example above, each extended layer is described by the 'pixi' box. Alternatively, only the first one could be described.
+</div>
 
 <div boilerplate="conformance"></div>
