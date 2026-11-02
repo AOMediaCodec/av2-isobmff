@@ -415,7 +415,7 @@ aligned(8) class InBandAV2CodecConfigurationBox extends AV2CodecConfigurationBox
 
 <p class="issue">Editor's note: The exact fields to carry in InBandAV2CodecConfigurationBox should be studied further.</p>
 
-#### Semantics
+#### Semantics #### {#av2c-semantics}
 
 <p><assert><code>reserved1</code> SHALL be set to 0. Readers SHALL ignore its value.</assert></p>
 
@@ -764,71 +764,23 @@ Within protected samples, the following constraints apply:
 
 DASH and other applications require defined values for the 'Codecs' parameter specified in [[!RFC6381]] for ISO Media tracks. The codecs parameter string for the AOM AV2 codec is as follows:
 ```
-<sample entry 4CC>.<profile>.<level><tier>.<bitDepth>.<channelCount>.<chromaSubsampling>.
-<colorPrimaries>.<transferCharacteristics>.<matrixCoefficients>.<videoFullRangeFlag>
+<sample_entry_4cc>.<max_profile_idc><max_level_idx><max_tier>
 ```
 
-All fields following the sample entry 4CC are expressed as double digit decimals, unless indicated otherwise. Leading or trailing zeros cannot be omitted.
+<p><assert>The <code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code> parameters have the same semantics as described in [[#av2c-semantics]], and the associated [=AV2 bitstream=] SHALL respect the same constraints.</assert></p>
 
-- <assert>The <code>profile</code> parameter value SHALL equal the value of [=seq_profile_idc=] in the first [=Sequence Header OBU=]</assert>.
-
-- <assert>The <code>level</code> parameter value SHALL equal the level value indicated by [=seq_level_idx=] in the first [=Sequence Header OBU=]</assert>.
-
-- <assert>The <code>tier</code> parameter value SHALL be equal to <code>M</code> when the [=seq_tier=] value in the first [=Sequence Header OBU=] is equal to 0, and <code>H</code> when it is equal to 1</assert>.
-
-- <assert>The <code>bitDepth</code> parameter value SHALL equal the value of the <code>BitDepth</code> variable as defined in [[!AV2]] derived from the first [=Sequence Header OBU=]</assert>.
-
-- <assert>The <code>channelCount</code> parameter value is represented by <code>1</code>, <code>2</code>, <code>3</code>, or <code>4</code></assert>. <assert>If the 'pixi' box associated with the first [=Sequence Header OBU=] has a <code>channel_idc</code> set to 5 (Alpha), then the <code>channelCount</code> parameter value SHALL equal one plus the value of the <code>NumPlanes</code> variable as defined in [[!AV2]] derived from that [=Sequence Header OBU=], otherwise it SHALL match <code>NumPlanes</code>.</assert>.
-
-- The <code>chromaSubsampling</code> parameter value, represented by a two-digit decimal:
-    1. <assert>SHALL have its first digit equal to the <code>subsampling_type</code> value of the channels with <code>channel_idc</code> set to 3 (Second colour channel) and 4 (Third colour channel) in the 'pixi' box associated with the [=AV2 sample=] if that <code>subsampling_type</code> value is signaled, and 0 otherwise</assert>.
-    2. <assert>SHALL have its second digit equal to the <code>subsampling_location</code> value of the channels with <code>channel_idc</code> set to 3 (Second colour channel) and 4 (Third colour channel) in the 'pixi' box associated with the [=AV2 sample=] if that <code>subsampling_location</code> value is signaled, and 0 otherwise</assert>.
-
-- <assert>The <code>colorPrimaries</code>, <code>transferCharacteristics</code>, <code>matrixCoefficients</code>, and <code>videoFullRangeFlag</code> parameter values SHALL equal the values of matching fields in the 'colr' box with the 'nclx' 'colour_type'</assert>.
-
-    NOTE: A 'colr' box with the 'nclx' 'colour_type' is mandated to be present in [[#av2-sample-entry]].
-
-- The <code>videoFullRangeFlag</code> is represented by <code>0</code> or <code>1</code>.
-
-<p><assert>If the codecs parameter string ends with ".3.22.01.01.01.0" (containing all the default values below), that trailing part of the string SHOULD be omitted</assert>.</p>
+- The <code>max_profile_idc</code> parameter value is represented by a single digit ranging from `0` to `9` for the values between 0 and 9 inclusive, and ranging from `A` to `L` for the values between 10 and 31 inclusive.
+- The <code>max_level_idx</code> parameter value is represented by a single digit ranging from `0` to `9` for the values between 0 and 9 inclusive, and ranging from `A` to `L` for the values between 10 and 31 inclusive.
+- The <code>max_tier</code> parameter value is represented by a single digit `M` for the value 0, and `H` for the value 1.
 
 <div class="example" id="codec-string-example"><a class="self-link" href="#codec-string-example"></a>
-<code>codecs="av02.0.04M.10.4.22.09.16.09.0"</code> represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 4.0, Main tier, 10-bit content, non-monochrome and alpha, with 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.2100 color primaries, ITU-R BT.2100 PQ transfer characteristics, ITU-R BT.2100 YCbCr color matrix, and studio swing representation.
+<code>codecs="av02.00M"</code> represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 2.0, Main tier.
 </div>
 
-<p><assert>The parameters <code>sample entry 4CC</code>, <code>profile</code>, <code>level</code>, <code>tier</code>, and <code>bitDepth</code> are all mandatory fields.</assert> <assert>If any of these fields is empty, or not within its allowed range, the processing device SHOULD treat it as an error.</assert> <assert>All the other fields (including their leading '.') are optional, mutually inclusive (all or none) fields.</assert> If not specified then the values listed in the table below are assumed.</p>
-
-<table class="def">
-    <tr>
-        <td>channelCount</td>
-        <td>3</td>
-    </tr>
-    <tr>
-        <td>chromaSubsampling</td>
-        <td>22 (4:2:0 chroma subsampling co-located with (0, 0) luma sample)</td>
-    </tr>
-    <tr>
-        <td>colorPrimaries</td>
-        <td>01 (ITU-R BT.709)</td>
-    </tr>
-    <tr>
-        <td>transferCharacteristics</td>
-        <td>01 (ITU-R BT.709)</td>
-    </tr>
-    <tr>
-        <td>matrixCoefficients</td>
-        <td>01 (ITU-R BT.709)</td>
-    </tr>
-    <tr>
-        <td>videoFullRangeFlag</td>
-        <td>0 (studio swing representation)</td>
-    </tr>
-</table>
-
-<div class="example" id="codec-string-example2"><a class="self-link" href="#codec-string-example2"></a>
-The string codecs="av02.0.01M.08" in this case would represent [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 2.1, Main tier, 8-bit content, 4:2:0 chroma subsampling co-located with (0, 0) luma sample, ITU-R BT.709 color primaries, transfer characteristics, matrix coefficients, and studio swing representation.
+<div class="example" id="codec-string-example"><a class="self-link" href="#codec-string-example2"></a>
+<code>codecs="av02.4AH"</code> represents [[!AV2]] <code>Main_444_10_IP1</code> profile at Interoperability Point 2, level 6.0, High tier.
 </div>
 
-If any character that is not '.', digits, part of the AV2 4CC, or a tier value is encountered, the string SHALL be interpreted ignoring all the characters starting from that character.
+<p><assert>All parameters are mandatory fields.</assert> <assert>If any of these fields is empty, or not within its allowed range, the processing device SHOULD treat it as an error.</assert></p>
 
 <div boilerplate="conformance"></div>
