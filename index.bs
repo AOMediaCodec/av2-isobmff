@@ -89,6 +89,9 @@ url: https://av2.aomedia.org/v1.0.0/index.html#layer_config_record_obu_syntax; s
 url: https://av2.aomedia.org/v1.0.0/index.html#operating_point_set_obu_syntax; spec: AV2; type: dfn;
     text: Operating Point Set OBU
 
+url: https://av2.aomedia.org/v1.0.0/index.html#atlas_segment_info_obu_syntax spec: AV2; type: dfn;
+    text: Atlas Segment Info OBU
+
 url: https://av2.aomedia.org/v1.0.0/index.html#switch-frame; spec: AV2; type: dfn;
     text: Switch OBU
 
@@ -360,10 +363,10 @@ class InBandAV2SampleEntry extends AV2SampleEntry('av2e') {
 <p><assert>An [=AV2SampleEntry=] SHALL contain at least one 'colr' box with the 'nclx' 'colour_type'.</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by at most one 'colr' box with the 'nclx' 'colour_type'.</assert></p>
 
 Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, and <code>matrix_coefficients</code> carried in a 'colr' box with the 'nclx' 'colour_type', for the [=layers=] it applies to:
-- <assert>SHOULD equal the corresponding effective value of the [=AV2 bitstream=] carried by the track if the latter is anything but 2 (<code>Unspecified</code>)</assert>;
-- <assert>SHALL take precedence over the corresponding effective value of the [=AV2 bitstream=] carried by the track</assert>.
+- <assert>SHALL equal the corresponding effective value carried by the associated [=AV2 bitstream=] as described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>, unless that value is equal to 2 (<code>Unspecified</code>)</assert>;
+- <assert>SHALL take precedence over the corresponding effective value carried by the associated [=AV2 bitstream=]</assert>.
 
-<p><assert>The value of <code>full_range_flag</code> carried in a 'colr' box with the 'nclx' 'colour_type', for the [=layers=] it applies to, SHOULD equal the corresponding effective value of the [=AV2 bitstream=] carried by the track and SHALL take precedence over the corresponding effective value of the [=AV2 bitstream=] carried by the track.</assert></p>
+<p><assert>The value of <code>full_range_flag</code> carried in a 'colr' box with the 'nclx' 'colour_type', for the [=layers=] it applies to, SHALL equal the corresponding effective value carried by the associated [=AV2 bitstream=] as described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert></p>
 
 <p><assert>An [=AV2SampleEntry=] SHALL contain at least one 'pixi' box.</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by at most one 'pixi' box.</assert> <assert>'pixi' boxes in an [=AV2SampleEntry=] SHALL have the least significant bit of 'px_flags' enabled.</assert> The constraints described in [[#layers]] apply to that [=AV2SampleEntry=].</p>
 
@@ -498,7 +501,7 @@ The following container-level signalling is available to replace the semantics o
 
 The following table lists fields that can be found at the container level and in the bitstream.
 
-<figure class="table" id="figure-table-summary">
+<figure class="table" id="figure-redundant-information">
     <table class='complex data'>
         <tr>
             <th>Information</th>
@@ -506,33 +509,59 @@ The following table lists fields that can be found at the container level and in
             <th>Bitstream source</th>
         </tr>
         <tr>
-            <td>Bit depth per channel</td>
-            <td>'pixi' <code>bits_per_channel</code></td>
-            <td>[=Sequence Header OBU=] <code>bit_depth_idc</code>, and [=Layer Configuration Record OBU=] <code>lcr_bit_depth_idc</code></td>
+            <td rowspan=2>Bit depth per channel</td>
+            <td rowspan=2>'pixi' <code>bits_per_channel</code></td>
+            <td>[=Sequence Header OBU=] <code>bit_depth_idc</code></td>
         </tr>
         <tr>
-            <td>Channel count and types</td>
-            <td>'pixi' <code>num_channels</code>, <code>channel_idc</code></td>
-            <td>[=Sequence Header OBU=] <code>chroma_format_idc</code>, and [=Layer Configuration Record OBU=] <code>lcr_chroma_format_idc</code>, <code>lcr_layer_type</code>, <code>lcr_auxiliary_type</code></td>
+            <td>[=Layer Configuration Record OBU=] <code>lcr_bit_depth_idc</code></td>
         </tr>
         <tr>
-            <td>Chroma format</td>
-            <td>'pixi' <code>subsampling_type</code></td>
-            <td>[=Sequence Header OBU=] <code>chroma_format_idc</code>, and [=Layer Configuration Record OBU=] <code>lcr_chroma_format_idc</code></td>
+            <td rowspan=4>Channel count and types</td>
+            <td rowspan=4>'pixi' <code>num_channels</code>, <code>channel_idc</code></td>
+            <td>[=Sequence Header OBU=] <code>chroma_format_idc</code> (one or three channels)</td>
         </tr>
         <tr>
-            <td>Profile, level, tier</td>
-            <td>[=InBandAV2CodecConfigurationBox=]</td>
-            <td>[=Sequence Header OBU=], [=Operating Point Set OBU=], and [=Multi Stream Decoder Operation OBU=]</td>
+            <td>[=Layer Configuration Record OBU=] <code>lcr_chroma_format_idc</code>, <code>lcr_layer_type</code>, <code>lcr_auxiliary_type</code> (alpha, depth, segmentation, or gain map [=embedded layer=])</td>
         </tr>
         <tr>
-            <td>Colour primaries, transfer characteristics, matrix coefficients, full range flag</td>
-            <td>'colr' with 'nclx'</td>
-            <td>[=Layer Configuration Record OBU=] and [=Operating Point Set OBU=]</td>
+            <td>[=Atlas Segment Info OBU=] <code>ats_msi_alpha_segment_flag</code> (alpha [=extended layer=])</td>
+        </tr>
+        <tr>
+            <td>[=Operating Point Set OBU=] <code>ops_intent</code> (alpha, depth, or gain map [=extended layer=])</td>
+        </tr>
+        <tr>
+            <td rowspan=2>Chroma format</td>
+            <td rowspan=2>'pixi' <code>subsampling_type</code></td>
+            <td>[=Sequence Header OBU=] <code>chroma_format_idc</code></td>
+        </tr>
+        <tr>
+            <td>[=Layer Configuration Record OBU=] <code>lcr_chroma_format_idc</code></td>
+        </tr>
+        <tr>
+            <td rowspan=3>Profile, level, tier</td>
+            <td rowspan=3>[=InBandAV2CodecConfigurationBox=]</td>
+            <td>[=Sequence Header OBU=]</td>
+        </tr>
+        <tr>
+            <td>[=Operating Point Set OBU=]</td>
+        </tr>
+        <tr>
+            <td>[=Multi Stream Decoder Operation OBU=]</td>
+        </tr>
+        <tr>
+            <td rowspan=2>Colour primaries, transfer characteristics, matrix coefficients, full range flag</td>
+            <td rowspan=2>'colr' with 'nclx'</td>
+            <td>[=Layer Configuration Record OBU=]</td>
+        </tr>
+        <tr>
+            <td>[=Operating Point Set OBU=]</td>
         </tr>
     </table>
     <figcaption>Non-exhaustive list of potentially redundant information</figcaption>
 </figure>
+
+NOTE: In AV2, CICP information can also be carried by a [=Content Interpretation OBU=], but this OBU type is forbidden in files conformant to this specification.
 
 ### Sync sample ### {#sync-sample}
 
@@ -550,12 +579,12 @@ In an [=AV2 sample=], the following applies to all [=extended layers=] and [=emb
 - <assert>If the 'pixi' box describes a channel, the corresponding channel in the [=AV2 sample=] SHALL be present.</assert>
 - <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the corresponding channel in the [=AV2 sample=] SHALL be a color channel: if signalled, the <code>lcr_layer_type</code> field of its associated [=Layer Configuration Record OBU=] SHALL be set to 0 (<code>TEXTURE_LAYER</code>).</assert>
 - <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the [=layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL be described by a 'colr' box.</assert>
-- <assert>If the 'pixi' box describes a channel to be an alpha channel (<code>channel_idc</code> 5), the corresponding channel in the [=AV2 sample=] SHALL be an alpha channel: if signalled, the <code>lcr_layer_type</code> field of its associated [=Layer Configuration Record OBU=] SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 0 (<code>ALPHA_AUX</code>).</assert>
-- <assert>If the 'pixi' box describes a channel to be a depth channel (<code>channel_idc</code> 6), the corresponding channel in the [=AV2 sample=] SHALL be a depth channel: if signalled, the <code>lcr_layer_type</code> field of its associated [=Layer Configuration Record OBU=] SHALL be set to 1 (<code>AUX_LAYER</code>) and <code>lcr_auxiliary_type</code> to 1 (<code>DEPTH_AUX</code>).</assert>
+- <assert>If the 'pixi' box describes a channel to be an alpha channel (<code>channel_idc</code> 5), the [=layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL be signalled as alpha by at least one of the means described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert>
+- <assert>If the 'pixi' box describes a channel to be an depth channel (<code>channel_idc</code> 6), the [=layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL be signalled as depth by at least one of the means described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert>
 - <assert>If the 'pixi' box describes a channel as used and specified (<code>channel_idc</code> values other than 0 and 1) with <code>subsampling_flag</code> set to 1, the corresponding channel in the [=AV2 sample=] SHALL have the value of the <code>chroma_format_idc</code> field of its associated [=Sequence Header OBU=] correspond to the same meaning as the value of the 'pixi' box's corresponding channel's <code>subsampling_type</code> value.</assert>
 - <assert>If the 'pixi' box describes a channel, the corresponding channel in the [=AV2 sample=] SHALL have the value of the <code>BitDepth</code> variable computed from its associated [=Sequence Header OBU=] equal to the value of the 'pixi' box's channel's <code>bits_per_channel</code> value.</assert>
 
-    NOTE: Channels of different types of [=embedded layers=], such as texture and alpha, may have different bit depths.
+    NOTE: Channels of different types of [=layers=], such as texture and alpha, may have different bit depths.
 
 - <assert>The <code>component_format</code> of every channel in the 'pixi' box SHALL indicate an unsigned integer format.</assert>
 
