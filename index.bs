@@ -483,8 +483,6 @@ The following applies to a <l spec=ISOBMFF>[=sample=]</l> associated with an [=A
 
 - <assert>The <l spec=ISOBMFF>[=sample=]</l> SHOULD NOT carry an [=OBU=] of a type among the types allowed to be carried in an [=OutOfBandAV2CodecConfigurationBox=].</assert>
 
-    <p class="issue">Editor's note: Is this fine to advise against OBU repetitions? Can HLS OBUs be forbidden entirely in samples when an [=OutOfBandAV2CodecConfigurationBox=] is present?</p>
-
 ### Content Interpretation OBU
 
 The following container-level signalling is available to replace the semantics of the following [=Content Interpretation OBU=] fields:
