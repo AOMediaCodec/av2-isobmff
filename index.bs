@@ -284,7 +284,7 @@ An [=AV2 bitstream=] is composed of a sequence of [=OBUs=] (Open Bitstream Units
 
 Every OBU begins with a 1- or 2-byte header that carries the [=obu_type=] and the temporal layer identifier [=obu_tlayer_id=]. When the OBU header extension is present (i.e. when [=obu_header_extension_flag=] is equal to 1 in that header), two additional layer identifiers are carried: the embedded layer identifier [=obu_mlayer_id=] and the extended layer identifier [=obu_xlayer_id=]. Depending on its type, an OBU can carry configuration information (e.g., a [=Sequence Header OBU=] or [=Layer Configuration Record OBU=]), metadata, or coded video data.
 
-A Temporal Unit MAY contain multiple coded pictures but only one is output. AV2 defines a number of coded-frame OBU types, including [=Closed Loop Key OBUs=], [=Open Loop Key OBUs=], regular and leading tile-group OBUs, [=Switch OBUs=], <code>OBU_RAS_FRAME</code>, [=Bridge Frame OBUs=], and TIP (Temporally Interpolated Prediction) frames.
+A Temporal Unit MAY contain multiple coded pictures and MAY output multiple pictures. AV2 defines a number of coded-frame OBU types, including [=Closed Loop Key OBUs=], [=Open Loop Key OBUs=], regular and leading tile-group OBUs, [=Switch OBUs=], <code>OBU_RAS_FRAME</code>, [=Bridge Frame OBUs=], and TIP (Temporally Interpolated Prediction) frames.
 
 Frames that can be decoded without reference to other frames are [=Key Frames=] (carried in a [=Closed Loop Key OBU=] or an [=Open Loop Key OBU=]) and [=Intra frames=]. All other coded frames - including [=Inter Frames=], [=Switch Frames=], RAS frames, Bridge frames, TIP frames, and frames with [=show_existing_frame=] equal to 1 - have coding dependencies on other frames in the same or previous Temporal Units.
 
