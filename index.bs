@@ -693,8 +693,9 @@ In an [=AV2 sample=], the following applies to all [=extended layers=] and [=emb
 
 A byte sequence containing a conformant [[!AV2]] [=Temporal Unit=] using the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]] MAY be reconstructed from the [=OBUs=] of an [=AV2 sample=] by applying the following steps:
 1. Write a [=Temporal Delimiter OBU=], preceded by its <code>leb128()</code> length prefix.
-2. Write the [=OBUs=] carried in the [=OutOfBandAV2CodecConfigurationBox=], if any, of the corresponding [=AV2SampleEntry=], in the same order as present in the [=OutOfBandAV2CodecConfigurationBox=], each preceded by its <code>leb128()</code> length prefix as present in the [=OutOfBandAV2CodecConfigurationBox=].
-3. Write the [=OBUs=] carried in the <l spec=ISOBMFF>[=sample=]</l>, in the same order as present in the <l spec=ISOBMFF>[=sample=]</l>, each preceded by its <code>leb128()</code> length prefix as present in the <l spec=ISOBMFF>[=sample=]</l>.
+2. Combine the [=OBUs=] carried in the [=OutOfBandAV2CodecConfigurationBox=], if any, of the corresponding [=AV2SampleEntry=] (omitting any [=OBU=] that is already present in the <l spec=ISOBMFF>[=sample=]</l>) and the [=OBUs=] carried in the <l spec=ISOBMFF>[=sample=]</l> in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]] (preserving their relative order within the [=OutOfBandAV2CodecConfigurationBox=] and within the <l spec=ISOBMFF>[=sample=]</l>), and write each [=OBU=] preceded by its <code>leb128()</code> length prefix.
+
+Note: When reconstructing a contiguous [[!AV2]] bitstream from a sequence of [=AV2 samples=], the [=OBUs=] carried in the [=OutOfBandAV2CodecConfigurationBox=] only need to be included in [=AV2 samples=] that are random access points (where the [=availability of HLS OBUs=] in [[!AV2]] requires high-level syntax [=OBUs=] to be present in the [=Temporal Unit=]) or where the active [=AV2SampleEntry=] changes, rather than in every non-random-access [=AV2 sample=].
 
 Note: AV2-ISOBMFF reader implementations do not have to reconstruct the contiguous byte sequence containing a conformant [=AV2 bitstream=] or [=Temporal Unit=] in memory upon decoding.
 
