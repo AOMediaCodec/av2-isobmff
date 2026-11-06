@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="463e9c63901d09ce2da90667362fa2af2eb81426" name="revision"/>
+<meta content="b10ee5eda308b120bd333bfd0e31a6d0f1e915f4" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -3649,32 +3649,6 @@ The string codecs="av02.0.01M.08" in this case would represent <a data-link-type
        </td><td>3: U
       </td></tr><tr>
 <td>3rd
-       </td><td>4: V
-      </td></tr><tr>
-<td rowspan="3">1
-       </td><td rowspan="3"><code>CHROMA_FORMAT_420</code>
-</td><td rowspan="3">0
-       </td><td rowspan="3"><code>TEXTURE_LAYER</code>
-</td><td>4th
-       </td><td>2: Y
-      </td></tr><tr>
-<td>5th
-       </td><td>3: U
-      </td></tr><tr>
-<td>6th
-       </td><td>4: V
-      </td></tr><tr>
-<td rowspan="3">2
-       </td><td rowspan="3"><code>CHROMA_FORMAT_420</code>
-</td><td rowspan="3">0
-       </td><td rowspan="3"><code>TEXTURE_LAYER</code>
-</td><td>7th
-       </td><td>2: Y
-      </td></tr><tr>
-<td>8th
-       </td><td>3: U
-      </td></tr><tr>
-<td>9th
        </td><td>4: V
     </td></tr></tbody></table>
 <p>In this example, only the extended layer 0 is described by the <a class="css property" data-link-type="property" data-refhint-key="dd9960c0" href="https://www.iso.org/standard/95141.html#" id="ref-for-something①②⑦">pixi</a> box. The atlas composition informs the decoder that the other extended layers have the same channel layout as the extended layer 0, so there is no need to also describe them in the <a class="css property" data-link-type="property" data-refhint-key="dd9960c0" href="https://www.iso.org/standard/95141.html#" id="ref-for-something①②⑧">pixi</a> box.</p>
