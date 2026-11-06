@@ -542,9 +542,30 @@ NOTE: In ISOBMFF terms, sync samples are signalled using the SyncSampleBox ('sts
 
 ### Layers ### {#layers}
 
+#### Ordering and identification #### {#layer-order}
+
+<p>Codec-agnostic boxes in an [=AV2SampleEntry=] may refer to layers by their positions or through single-integer identifiers. Codec-agnostic boxes in an [=AV2SampleEntry=] may also refer to reconstruction points through single-integer identifiers. This section defines how this is mapped to [[!AV2]] [=layers=] and operating points.</p>
+
+<p>[=Layers=] are considered to be ordered in increasing <code>xlayer_id</code> order, and in increasing <code>mlayer_id</code> order within each extended layer. [=Temporal layers=] are out of the scope of this ordering.</p>
+
+<p>A single integer identifying one layer is considered to contain the 0-based position of that [=layer=] in the order specified above.</p>
+
+NOTE: The <code>layer_id</code> field of the <code>LayerSelectorProperty</code> as defined in ISO/IEC 23008-12 (HEIF) is a single integer identifying a layer.
+
+NOTE: The <code>target_id</code> field of the <code>LayerPropertyAssociationBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition is a single integer identifying a layer when the <code>target_type</code> flag is set to 0.
+
+<p>A single integer identifying a set of layers is considered to contain a bit set, where the Nth least significant bit set to 1 means the Nth [=layer=] in the order specified above is included in the set, and where that bit set to 0 means that [=layer=] is excluded from the set.</p>
+
+<p>A single integer identifying a reconstruction point is considered to contain the 0-based index <code>i</code> of the [=operating point=] in the three least significant bits, the <code>ops_id</code> in the next four least significant bits, and the <code>obu_xlayer_id</code> in the next five least significant bits. <assert>The three least significant bits SHALL NOT be all zeros.</assert></p>
+
+NOTE: The <code>target_id</code> field of the <code>LayerPropertyAssociationBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition is a single integer identifying a reconstruction point when the <code>target_type</code> flag is set to 1.
+
+<p>When <code>layer_id_method_idc</code> is set to 1, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies a single layer as defined above. When <code>layer_id_method_idc</code> is set to 2, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies a set of layers as defined above. When <code>layer_id_method_idc</code> is set to 3, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies a reconstruction point as defined above.</p>
+
+#### Channels
+
 In an [=AV2 sample=], the following applies to all [=extended layers=] and [=embedded layers=] associated with a 'pixi' box:
-- The channel at index <code>i</code> in the 'pixi' box corresponds to the (<code>i</code>+1)th channel among the channels of the extended and embedded layers associated with the 'pixi' box. This is the case for each [=temporal layer=] if any.
-- The channels of the [=layers=] associated with that 'pixi' box are considered to be ordered as if the channels of the extended and embedded layers were concatenated in increasing <code>xlayer_id</code> order, then in increasing <code>mlayer_id</code> order.
+- The channel at index <code>i</code> in the 'pixi' box corresponds to the (<code>i</code>+1)th channel among the channels of the extended and embedded layers associated with the 'pixi' box as if concatenated in the order specified in [[#layer-order]].
 - <assert>If the 'pixi' box describes a channel, the corresponding channel in the [=AV2 sample=] SHALL be present.</assert>
 - <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the corresponding channel in the [=AV2 sample=] SHALL be a color channel: if signalled, the <code>lcr_layer_type</code> field of its associated [=Layer Configuration Record OBU=] SHALL be set to 0 (<code>TEXTURE_LAYER</code>).</assert>
 - <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the [=layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL be described by a 'colr' box.</assert>
