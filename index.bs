@@ -191,8 +191,11 @@ url: https://av2.aomedia.org/v1.0.0/index.html#embedded-layer; spec: AV2; type: 
 url: https://av2.aomedia.org/v1.0.0/index.html#temporal-layer; spec: AV2; type: dfn;
     text: temporal layer
 
-url: https://av2.aomedia.org/v1.0.0/index.html#annex_f; spec: AV2; type: dfn;
+url: https://av2.aomedia.org/v1.0.0/index.html#annex_f_multistream_decoder; spec: AV2; type: dfn;
     text: Full bitstream decoding
+
+url: https://av2.aomedia.org/v1.0.0/index.html#annex_g_interoperability; spec: AV2; type: dfn;
+    text: Interoperability considerations
 
 url: https://av2.aomedia.org/v1.0.0/index.html#sample; spec: AV2; type: dfn;
     text: sample
@@ -595,6 +598,9 @@ NOTE: The <code>target_id</code> field of the <code>LayerPropertyAssociationBox<
 
 In an [=AV2 sample=], the following applies to all [=extended layers=] and [=embedded layers=] associated with a 'pixi' box:
 - The channel at index <code>i</code> in the 'pixi' box corresponds to the (<code>i</code>+1)th channel among the channels of the extended and embedded layers associated with the 'pixi' box as if concatenated in the order specified in [[#layer-order]].
+
+    NOTE: [=Interoperability considerations=] in [[!AV2]] suggest encoders ensure extended layer 0, embedded layer 0 contains playable base content, so decoders may assume the first one or three channels described by a direct sample entry child 'pixi' box represent the base content.
+
 - <assert>If the 'pixi' box describes a channel, the corresponding channel in the [=AV2 sample=] SHALL be present.</assert>
 - <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the corresponding channel in the [=AV2 sample=] SHALL be a color channel: if signalled, the <code>lcr_layer_type</code> field of its associated [=Layer Configuration Record OBU=] SHALL be set to 0 (<code>TEXTURE_LAYER</code>).</assert>
 - <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the [=layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL be described by a 'colr' box.</assert>
