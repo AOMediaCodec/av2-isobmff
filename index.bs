@@ -986,38 +986,6 @@ The examples below present 'pixi' mappings for the usages from Annex G of [[!AV2
                 <td>3rd</td>
                 <td>4: V</td>
             </tr>
-            <tr>
-                <td rowspan=3>1</td>
-                <td rowspan=3><code>CHROMA_FORMAT_420</code></td>
-                <td rowspan=3>0</td>
-                <td rowspan=3><code>TEXTURE_LAYER</code></td>
-                <td>4th</td>
-                <td>2: Y</td>
-            </tr>
-            <tr>
-                <td>5th</td>
-                <td>3: U</td>
-            </tr>
-            <tr>
-                <td>6th</td>
-                <td>4: V</td>
-            </tr>
-            <tr>
-                <td rowspan=3>2</td>
-                <td rowspan=3><code>CHROMA_FORMAT_420</code></td>
-                <td rowspan=3>0</td>
-                <td rowspan=3><code>TEXTURE_LAYER</code></td>
-                <td>7th</td>
-                <td>2: Y</td>
-            </tr>
-            <tr>
-                <td>8th</td>
-                <td>3: U</td>
-            </tr>
-            <tr>
-                <td>9th</td>
-                <td>4: V</td>
-            </tr>
         </tbody>
     </table>
 
