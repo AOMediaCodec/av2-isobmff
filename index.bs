@@ -897,11 +897,11 @@ The examples below present 'pixi' mappings for the usages from Annex G of [[!AV2
         </tbody>
     </table>
 
-    In the example above, only the extended layer 0 is described by the 'pixi' box. The atlas composition informs the decoder that the other extended layers have the same embedded layer layout as the extended layer 0, so there is no need to also describe them in the 'pixi' box. For extra description, the 'pixi' box could repeat the scheme above for each extended layer, describing each of the 81 channels.
+    In this example, only the extended layer 0 is described by the 'pixi' box. The atlas composition informs the decoder that the other extended layers have the same embedded layer layout as the extended layer 0, so there is no need to also describe them in the 'pixi' box.
 
-    Alternatively, the direct sample entry child 'pixi' box could only describe YUV of the first embedded layer of the first extended layer, and the <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition maps that 'pixi' box to an operating point containing the first embedded layer of each extended layer. Another 'pixi' box is mapped to another operating point containing the second embedded layer of each extended layer (alpha). The pattern can be repeated for depth.
+    Alternatively, a valid approach would be a direct sample entry child 'pixi' box only describing the colour channels of the first embedded layer of the first extended layer, and the <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition maps that 'pixi' box to an operating point containing the first embedded layer of each extended layer. Another 'pixi' box is mapped to another operating point containing the second embedded layer of each extended layer (alpha). The pattern can be repeated for depth.
 
-    The chroma channels of the alpha and depth layers are tagged as "Unused". The <code>lcr_chroma_format_idc</code> field is set at the extended layer level, so the alpha and depth embedded layers cannot be 4:0:0.
+    The chroma channels of the alpha and depth layers are tagged as "Unused". The <code>lcr_chroma_format_idc</code> field is set at the extended layer level, so the alpha and depth embedded layers cannot be 4:0:0 unless the colour layers are.
 </div>
 
 <div class="example" id="av2-annex-g3-pixi-example"><a class="self-link" href="#av2-annex-g3-pixi-example"></a>
@@ -973,7 +973,9 @@ The examples below present 'pixi' mappings for the usages from Annex G of [[!AV2
         </tbody>
     </table>
 
-    In the example above, each extended layer is described by the 'pixi' box. Alternatively, only the first one could be described.
+    In this example, only the extended layer 0 is described by the 'pixi' box. The atlas composition informs the decoder that the other extended layers have the same channel layout as the extended layer 0, so there is no need to also describe them in the 'pixi' box.
+
+    The <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition may map that 'pixi' box to each other extended layer.
 </div>
 
 <div boilerplate="conformance"></div>
