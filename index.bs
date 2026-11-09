@@ -361,9 +361,9 @@ class InBandAV2SampleEntry extends AV2SampleEntry('av2e') {
 
 <p><assert>An [=AV2SampleEntry=] SHALL contain exactly one [=AV2CodecConfigurationBox=] describing all [=extended layers=], [=embedded layers=], and [=temporal layers=] in the [=AV2SampleEntry=]. That [=AV2CodecConfigurationBox=] SHALL be a direct child box of the [=AV2SampleEntry=].</assert>
 
-<p><assert>Unless explicitly stated otherwise in the definition of a box, the direct child boxes of an [=AV2SampleEntry=] describe all [=extended layers=], [=embedded layers=], and [=temporal layers=] that can be output from the associated [=AV2 bitstream=] as specified in the [=Singlestream=] and [=Multistream=] [=Full bitstream decoding=] process from Annex F of [[!AV2]].</assert></p>
+<p><assert>Unless explicitly stated otherwise in the definition of a box, the direct child boxes of an [=AV2SampleEntry=] describe the extended layer 0, embedded layer 0 in the associated [=AV2 bitstream=] ([=obu_mlayer_id=] and [=obu_xlayer_id=] set to 0).</assert> <assert>Extended layer 0, embedded layer 0 in the associated [=AV2 bitstream=] SHALL be output as specified in the [=Singlestream=] and [=Multistream=] [=Full bitstream decoding=] process from Annex F of [[!AV2]].</assert> <assert>Extended layer 0, embedded layer 0 in the associated [=AV2 bitstream=] SHOULD contain playable base content as specified in Annex G of [[!AV2]].</assert></p>
 
-<p><assert>An [=AV2SampleEntry=] SHALL contain at least one 'colr' box with the 'nclx' 'colour_type'.</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by at most one 'colr' box with the 'nclx' 'colour_type'.</assert></p>
+<p><assert>An [=AV2SampleEntry=] SHALL contain exactly one direct sample entry child 'colr' box with the 'nclx' 'colour_type'.</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by at most one 'colr' box with the 'nclx' 'colour_type'.</assert></p>
 
 Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, and <code>matrix_coefficients</code> carried in a 'colr' box with the 'nclx' 'colour_type', for the [=layers=] it applies to:
 - <assert>SHALL equal the corresponding effective value carried by the associated [=AV2 bitstream=] as described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>, unless that value is equal to 2 (<code>Unspecified</code>)</assert>;
@@ -371,13 +371,11 @@ Each value among <code>colour_primaries</code>, <code>transfer_characteristics</
 
 <p><assert>The value of <code>full_range_flag</code> carried in a 'colr' box with the 'nclx' 'colour_type', for the [=layers=] it applies to, SHALL equal the corresponding effective value carried by the associated [=AV2 bitstream=] as described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert></p>
 
-<p><assert>Decoders MAY ignore the associations between a 'colr' box and [=layers=] which do not carry colour information, such as alpha or depth.</assert></p>
-
-<p><assert>An [=AV2SampleEntry=] SHALL contain at least one 'pixi' box.</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by at most one 'pixi' box.</assert> <assert>'pixi' boxes in an [=AV2SampleEntry=] SHALL have the least significant bit of 'px_flags' enabled.</assert> The constraints described in [[#layers]] apply to that [=AV2SampleEntry=].</p>
+<p><assert>An [=AV2SampleEntry=] SHALL contain exactly one direct sample entry child 'pixi' box with the least significant bit of 'px_flags' enabled.</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by at most one 'pixi' box.</assert> The constraints described in [[#channels]] apply to that [=AV2SampleEntry=].</p>
 
 NOTE: An [=AV2SampleEntry=] may contain additional direct child boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'colr' with a 'colour_type' value other than 'nclx', 'pasp', 'clli', 'mdcv' or 'btrt'. They may be located before and/or after the [=AV2CodecConfigurationBox=].
 
-NOTE: An [=AV2SampleEntry=] may contain indirect child boxes, for example 'colr' when carried by the <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition to describe the colour properties of the base track and the different colour properties of the gain map track.
+NOTE: The <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition allows for associating other extended layers or other embedded layers with direct or indirect sample entry child boxes.
 
 ### AV2 Codec Configuration Box ### {#av2c}
 
@@ -573,9 +571,9 @@ NOTE: In AV2, CICP information can also be carried by a [=Content Interpretation
 
 NOTE: In ISOBMFF terms, sync samples are signalled using the SyncSampleBox ('stss') in unfragmented tracks, or by setting <code>sample_is_non_sync_sample</code> equal to 0 in fragmented tracks. When every sample in a track is a sync sample, the SyncSampleBox is omitted in unfragmented tracks (per [[!ISOBMFF]]), and in fragmented tracks this is expressed through the default sample flags of the MovieExtendsBox ('trex') or TrackFragmentHeaderBox ('tfhd') with no per-sample override.
 
-### Layers ### {#layers}
+### Layers
 
-#### Ordering and identification #### {#layer-order}
+#### Ordering and identification
 
 <p>Codec-agnostic boxes in an [=AV2SampleEntry=] may refer to layers by their positions or through single-integer identifiers. Codec-agnostic boxes in an [=AV2SampleEntry=] may also refer to reconstruction points through single-integer identifiers. This section defines how this is mapped to [[!AV2]] [=layers=] and operating points.</p>
 
@@ -595,148 +593,18 @@ NOTE: The <code>target_id</code> field of the <code>LayerPropertyAssociationBox<
 
 <p>When <code>layer_id_method_idc</code> is set to 1, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies a single layer as defined above. When <code>layer_id_method_idc</code> is set to 2, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies a set of layers as defined above. When <code>layer_id_method_idc</code> is set to 3, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies a reconstruction point as defined above.</p>
 
-#### Channels
+#### Channels #### {#channels}
 
-In an [=AV2 sample=], the following applies to all [=extended layers=] and [=embedded layers=] associated with a 'pixi' box:
-- The channel at index <code>i</code> in the 'pixi' box corresponds to the (<code>i</code>+1)th channel among the channels of the extended and embedded layers associated with the 'pixi' box as if concatenated in the order specified in [[#layer-order]].
+In an [=AV2 sample=], the following applies to each [=layer=] associated with a 'pixi' box:
+- <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the corresponding [=layer=] in the [=AV2 sample=] SHALL contain color information: if signalled, the <code>lcr_layer_type</code> field of its associated [=Layer Configuration Record OBU=] SHALL be set to 0 (<code>TEXTURE_LAYER</code>).</assert>
+- <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the corresponding [=layer=] in the [=AV2 sample=] SHOULD be described by a 'colr' box.</assert>
+- <assert>If the 'pixi' box describes a channel to be an alpha channel (<code>channel_idc</code> 5), respectively depth channel (<code>channel_idc</code> 6), the corresponding [=layer=] in the [=AV2 sample=] SHALL contain alpha information, respectively depth information, signalled by at least one of the means described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert>
+- <assert>If the 'pixi' box describes a channel with <code>subsampling_flag</code> set to 1, the corresponding [=layer=] in the [=AV2 sample=] SHALL have the same subsampling pattern, signalled by at least one of the means described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert>
+- <assert>If the 'pixi' box describes a channel, the corresponding [=layer=] in the [=AV2 sample=] SHALL have the value of the <code>BitDepth</code> variable computed from its associated [=Sequence Header OBU=] equal to the value of the 'pixi' box's channel's <code>bits_per_channel</code> value.</assert>
 
-    NOTE: [=Interoperability considerations=] in [[!AV2]] suggest encoders ensure extended layer 0, embedded layer 0 contains playable base content, so decoders may assume the first one or three channels described by a direct sample entry child 'pixi' box represent the base content.
-
-- <assert>If the 'pixi' box describes a channel, the corresponding channel in the [=AV2 sample=] SHALL be present.</assert>
-- <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the corresponding channel in the [=AV2 sample=] SHALL be a color channel: if signalled, the <code>lcr_layer_type</code> field of its associated [=Layer Configuration Record OBU=] SHALL be set to 0 (<code>TEXTURE_LAYER</code>).</assert>
-- <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the [=layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL be described by a 'colr' box.</assert>
-- <assert>If the 'pixi' box describes a channel to be an alpha channel (<code>channel_idc</code> 5), the [=layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL be signalled as alpha by at least one of the means described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert>
-- <assert>If the 'pixi' box describes a channel to be an depth channel (<code>channel_idc</code> 6), the [=layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL be signalled as depth by at least one of the means described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert>
-- <assert>If the 'pixi' box describes a channel as used and specified (<code>channel_idc</code> values other than 0 and 1) with <code>subsampling_flag</code> set to 1, the corresponding channel in the [=AV2 sample=] SHALL have the value of the <code>chroma_format_idc</code> field of its associated [=Sequence Header OBU=] correspond to the same meaning as the value of the 'pixi' box's corresponding channel's <code>subsampling_type</code> value.</assert>
-- <assert>If the 'pixi' box describes a channel, the corresponding channel in the [=AV2 sample=] SHALL have the value of the <code>BitDepth</code> variable computed from its associated [=Sequence Header OBU=] equal to the value of the 'pixi' box's channel's <code>bits_per_channel</code> value.</assert>
-
-    NOTE: Channels of different types of [=layers=], such as texture and alpha, may have different bit depths.
+    NOTE: Channels of different types of [=layers=], such as texture and alpha, may have different bit depths, but all channels in a single 'pixi' box shall have the same <code>bits_per_channel</code> value.
 
 - <assert>The <code>component_format</code> of every channel in the 'pixi' box SHALL indicate an unsigned integer format.</assert>
-
-<div class="example" id="sample-channel-simple-example"><a class="self-link" href="#sample-channel-simple-example"></a>
-    Simple example with an embedded layer containing YUV 4:2:0 colour channels and an embedded layer containing the gain map.
-    <table class="complex data" style="line-height: 1;">
-        <thead>
-            <tr>
-                <th colspan=4>[=AV2 sample=] layer</th>
-                <th colspan=2>'pixi'</th>
-            </tr>
-            <tr style="font-size: 0.8rem;">
-                <th><code>xlayer_id</code></th>
-                <th><code>lcr_chroma_format_idc</code></th>
-                <th><code>mlayer_id</code></th>
-                <th><code>lcr_layer_type</code>, <code>lcr_auxiliary_type</code></th>
-                <th>(<code>i</code>+1)th channel</th>
-                <th><code>channel_idc</code>: Meaning</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td rowspan=6>0</td>
-                <td rowspan=6><code>CHROMA_FORMAT_420</code></td>
-                <td rowspan=3>0</td>
-                <td rowspan=3><code>TEXTURE_LAYER</code></td>
-                <td>1st</td>
-                <td>2: First colour channel (e.g. monochrome, <b>Y</b>, R, C)</td>
-            </tr>
-            <tr>
-                <td>2nd</td>
-                <td>3: Second colour channel (e.g. <b>U</b>, Cb, G, M)</td>
-            </tr>
-            <tr>
-                <td>3rd</td>
-                <td>4: Third colour channel (e.g. <b>V</b>, Cr, B, Y)</td>
-            </tr>
-            <tr>
-                <td rowspan=3>1</td>
-                <td rowspan=3><code>AUX_LAYER</code>, <code>GAIN_MAP_AUX</code></td>
-                <td>4th</td>
-                <td>1: Unspecified</td>
-            </tr>
-            <tr>
-                <td>5th</td>
-                <td>1: Unspecified</td>
-            </tr>
-            <tr>
-                <td>6th</td>
-                <td>1: Unspecified</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="example" id="sample-channel-complex-example"><a class="self-link" href="#sample-channel-complex-example"></a>
-    Complex example with an extended layer containing CMYK channels (each channel as an embedded layer), an extended layer containing alpha, and an extended layer containing segmentation and depth data.
-    <table class="complex data" style="line-height: 1;">
-        <thead>
-            <tr>
-                <th colspan=4>[=AV2 sample=] layer</th>
-                <th colspan=2>'pixi'</th>
-            </tr>
-            <tr style="font-size: 0.8rem;">
-                <th><code>xlayer_id</code></th>
-                <th><code>lcr_chroma_format_idc</code></th>
-                <th><code>mlayer_id</code></th>
-                <th><code>lcr_layer_type</code>, <code>lcr_auxiliary_type</code></th>
-                <th>(<code>i</code>+1)th channel</th>
-                <th><code>channel_idc</code>: Meaning</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td rowspan=4>0</td>
-                <td rowspan=4><code>CHROMA_FORMAT_400</code></td>
-                <td>0</td>
-                <td><code>TEXTURE_LAYER</code></td>
-                <td>1st</td>
-                <td>2: First colour channel (e.g. monochrome, Y, R, <b>C</b>)</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td><code>TEXTURE_LAYER</code></td>
-                <td>2nd</td>
-                <td>3: Second colour channel (e.g. U, Cb, G, <b>M</b>)</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td><code>TEXTURE_LAYER</code></td>
-                <td>3rd</td>
-                <td>4: Third colour channel (e.g. V, Cr, B, <b>Y</b>)</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td><code>TEXTURE_LAYER</code></td>
-                <td>4th</td>
-                <td>7: Fourth colour channel (e.g. <b>K</b>)</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td><code>CHROMA_FORMAT_400</code></td>
-                <td>0</td>
-                <td><code>AUX_LAYER</code>, <code>ALPHA_AUX</code></td>
-                <td>5th</td>
-                <td>5: Alpha</td>
-            </tr>
-            <tr>
-                <td rowspan=2>2</td>
-                <td rowspan=2><code>CHROMA_FORMAT_400</code></td>
-                <td>0</td>
-                <td><code>AUX_LAYER</code>, <code>SEGMENTATION_AUX</code></td>
-                <td>6th</td>
-                <td>1: Unspecified</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td><code>AUX_LAYER</code>, <code>DEPTH_AUX</code></td>
-                <td>7th</td>
-                <td>6: Depth</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-Other examples may be found in [[#annex-a]].
 
 <p class="issue">Editor's note: 'pixi' semantics follow the FDIS of [[!ISOBMFF]] 9th edition (Tables 8 and 9) and need re-checking against the published text. Open issues: the <code>component_format</code> value for unsigned integer (ISO/IEC 23001-17); <code>channel_idc</code> for channels with no defined meaning (segmentation, gain map).</p>
 
@@ -833,124 +701,5 @@ DASH and other applications require defined values for the 'Codecs' parameter sp
 </div>
 
 <p><assert>All parameters are mandatory fields.</assert> <assert>If any of these fields is empty, or not within its allowed range, the processing device SHOULD treat it as an error.</assert></p>
-
-Annex: Layer composition examples (informative) {#annex-a}
-==========================================================
-
-The examples below present 'pixi' mappings for the usages from Annex G of [[!AV2]].
-
-<div class="example" id="av2-annex-g2-pixi-example"><a class="self-link" href="#av2-annex-g2-pixi-example"></a>
-    <a href="https://av2.aomedia.org/v1.0.0/index.html#annex_g_360_viewport_example">360-degree viewport-dependent streaming with subpictures</a>
-    <table class="complex data" style="line-height: 1;">
-        <thead>
-            <tr>
-                <th colspan=4>[=AV2 sample=] layer</th>
-                <th colspan=2>'pixi'</th>
-            </tr>
-            <tr style="font-size: 0.8rem;">
-                <th><code>xlayer_id</code></th>
-                <th><code>lcr_chroma_format_idc</code></th>
-                <th><code>mlayer_id</code></th>
-                <th><code>lcr_layer_type</code>, <code>lcr_auxiliary_type</code></th>
-                <th>(<code>i</code>+1)th channel</th>
-                <th><code>channel_idc</code>: Meaning</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td rowspan=9>0</td>
-                <td rowspan=9><code>CHROMA_FORMAT_420</code></td>
-                <td rowspan=3>0</td>
-                <td rowspan=3><code>TEXTURE_LAYER</code></td>
-                <td>1st</td>
-                <td>2: Y</td>
-            </tr>
-            <tr>
-                <td>2nd</td>
-                <td>3: U</td>
-            </tr>
-            <tr>
-                <td>3rd</td>
-                <td>4: V</td>
-            </tr>
-            <tr>
-                <td rowspan=3>1</td>
-                <td rowspan=3><code>AUX_LAYER</code>, <code>ALPHA_AUX</code></td>
-                <td>4th</td>
-                <td>5: Alpha</td>
-            </tr>
-            <tr>
-                <td>5th</td>
-                <td>0: Unused</td>
-            </tr>
-            <tr>
-                <td>6th</td>
-                <td>0: Unused</td>
-            </tr>
-            <tr>
-                <td rowspan=3>2</td>
-                <td rowspan=3><code>AUX_LAYER</code>, <code>DEPTH_AUX</code></td>
-                <td>7th</td>
-                <td>6: Depth</td>
-            </tr>
-            <tr>
-                <td>8th</td>
-                <td>0: Unused</td>
-            </tr>
-            <tr>
-                <td>9th</td>
-                <td>0: Unused</td>
-            </tr>
-        </tbody>
-    </table>
-
-    In this example, only the extended layer 0 is described by the 'pixi' box. The atlas composition informs the decoder that the other extended layers have the same embedded layer layout as the extended layer 0, so there is no need to also describe them in the 'pixi' box.
-
-    Alternatively, a valid approach would be a direct sample entry child 'pixi' box only describing the colour channels of the first embedded layer of the first extended layer, and the <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition maps that 'pixi' box to an operating point containing the first embedded layer of each extended layer. Another 'pixi' box is mapped to another operating point containing the second embedded layer of each extended layer (alpha). The pattern can be repeated for depth.
-
-    The chroma channels of the alpha and depth layers are tagged as "Unused". The <code>lcr_chroma_format_idc</code> field is set at the extended layer level, so the alpha and depth embedded layers cannot be 4:0:0 unless the colour layers are.
-</div>
-
-<div class="example" id="av2-annex-g3-pixi-example"><a class="self-link" href="#av2-annex-g3-pixi-example"></a>
-    <a href="https://av2.aomedia.org/v1.0.0/index.html#annex_g_subpicture_example">Subpicture composition example</a>
-    <table class="complex data" style="line-height: 1;">
-        <thead>
-            <tr>
-                <th colspan=4>[=AV2 sample=] layer</th>
-                <th colspan=2>'pixi'</th>
-            </tr>
-            <tr style="font-size: 0.8rem;">
-                <th><code>xlayer_id</code></th>
-                <th><code>lcr_chroma_format_idc</code></th>
-                <th><code>mlayer_id</code></th>
-                <th><code>lcr_layer_type</code>, <code>lcr_auxiliary_type</code></th>
-                <th>(<code>i</code>+1)th channel</th>
-                <th><code>channel_idc</code>: Meaning</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td rowspan=3>0</td>
-                <td rowspan=3><code>CHROMA_FORMAT_420</code></td>
-                <td rowspan=3>0</td>
-                <td rowspan=3><code>TEXTURE_LAYER</code></td>
-                <td>1st</td>
-                <td>2: Y</td>
-            </tr>
-            <tr>
-                <td>2nd</td>
-                <td>3: U</td>
-            </tr>
-            <tr>
-                <td>3rd</td>
-                <td>4: V</td>
-            </tr>
-        </tbody>
-    </table>
-
-    In this example, only the extended layer 0 is described by the 'pixi' box. The atlas composition informs the decoder that the other extended layers have the same channel layout as the extended layer 0, so there is no need to also describe them in the 'pixi' box.
-
-    The <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition may map that 'pixi' box to each other extended layer.
-</div>
 
 <div boilerplate="conformance"></div>
