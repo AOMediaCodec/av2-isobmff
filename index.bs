@@ -820,16 +820,16 @@ DASH and other applications require defined values for the 'Codecs' parameter sp
 
 <p><assert>The <code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code> parameters have the same semantics as described in [[#av2c-semantics]], and the associated [=AV2 bitstream=] SHALL respect the same constraints.</assert></p>
 
-- The <code>max_profile_idc</code> parameter value is represented by a single digit ranging from `0` to `9` for the values between 0 and 9 inclusive, and ranging from `A` to `L` for the values between 10 and 31 inclusive.
-- The <code>max_level_idx</code> parameter value is represented by a single digit ranging from `0` to `9` for the values between 0 and 9 inclusive, and ranging from `A` to `L` for the values between 10 and 31 inclusive.
+- The <code>max_profile_idc</code> parameter value is represented by a single digit ranging from `0` to `9` for the values between 0 and 9 inclusive, and ranging from `A` to `V` for the values between 10 and 31 inclusive.
+- The <code>max_level_idx</code> parameter value is represented by a single digit ranging from `0` to `9` for the values between 0 and 9 inclusive, and ranging from `A` to `V` for the values between 10 and 31 inclusive.
 - The <code>max_tier</code> parameter value is represented by a single digit `M` for the value 0, and `H` for the value 1.
 
 <div class="example" id="codec-string-example"><a class="self-link" href="#codec-string-example"></a>
-<code>codecs="av02.00M"</code> represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 2.0, Main tier.
+<code>codecs="av2e.00M"</code> represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 2.0, Main tier.
 </div>
 
 <div class="example" id="codec-string-example"><a class="self-link" href="#codec-string-example2"></a>
-<code>codecs="av02.4AH"</code> represents [[!AV2]] <code>Main_444_10_IP1</code> profile at Interoperability Point 2, level 6.0, High tier.
+<code>codecs="av2e.4AH"</code> represents [[!AV2]] <code>Main_444_10_IP1</code> profile at Interoperability Point 2, level 6.0, High tier.
 </div>
 
 <p><assert>All parameters are mandatory fields.</assert> <assert>If any of these fields is empty, or not within its allowed range, the processing device SHOULD treat it as an error.</assert></p>
