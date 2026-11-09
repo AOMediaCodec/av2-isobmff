@@ -413,11 +413,11 @@ aligned(8) class OutOfBandAV2CodecConfigurationBox extends AV2CodecConfiguration
 
 aligned(8) class InBandAV2CodecConfigurationBox extends AV2CodecConfigurationBox('av2c')
 {
-  unsigned int(3) reserved1 = 0;
   unsigned int(2) max_num_streams_minus1;
   unsigned int(5) max_profile_idc;
   unsigned int(5) max_level_idx;
   unsigned int(1) max_tier;
+  unsigned int(3) max_bit_depth_idc;
 }
 ```
 
@@ -457,6 +457,12 @@ NOTE: It is a requirement of bitstream conformance that <code>num_streams_minus_
 - <assert>There SHOULD be at least one [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_tier</code> has the same value as <code>max_tier</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_tier</code> has the same value as <code>max_tier</code>.</assert>
 
 <p class="issue">Editor's note: for a [=Multistream=] bitstream, the [=AV2CodecConfigurationBox=] contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation. Also how profile / level is signalled to decoder API for layers. etc.</p>
+
+<p><code>max_bit_depth_idc</code> specifies the index of the maximum bit depth of any channel in the coded video sequence. <assert>There SHALL NOT be any [=Sequence Header OBU=] (respectively [=Layer Configuration Record OBU=]) in the associated [=AV2 samples=] whose <code>bit_depth_idc</code> (respectively <code>lcr_bit_depth_idc</code>) leads to a higher bit depth than the one indicated by <code>max_bit_depth_idc</code>.</assert> <assert>For any given [=AV2 samples=], the value of <code>max_bit_depth_idc</code> SHOULD be as low as possibly valid.</assert></p>
+
+<div class="example" id="max-bitdepth-example"><a class="self-link" href="#max-bitdepth-example"></a>
+A [=Sequence Header OBU=] with <code>bit_depth_idc</code> set to 0 (meaning a precision of 10 bits per channel) and a [=Layer Configuration Record OBU=] with <code>lcr_bit_depth_idc</code> set to 1 (meaning a precision of 8 bits per channel) require a <code>max_bit_depth_idc</code> of 0 (10-bit) to be conformant with this document.
+</div>
 
 ## AV2 Sample Format ## {#sample-format}
 
@@ -815,21 +821,22 @@ Within protected samples, the following constraints apply:
 
 DASH and other applications require defined values for the 'Codecs' parameter specified in [[!RFC6381]] for ISO Media tracks. The codecs parameter string for the AOM AV2 codec is as follows:
 ```
-<sample_entry_4cc>.<max_profile_idc><max_level_idx><max_tier>
+<sample_entry_4cc>.<max_profile_idc><max_level_idx><max_tier><max_bit_depth_idc>
 ```
 
-<p><assert>The <code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code> parameters have the same semantics as described in [[#av2c-semantics]], and the associated [=AV2 bitstream=] SHALL respect the same constraints.</assert></p>
+<p><assert>The <code>max_profile_idc</code>, <code>max_level_idx</code>, <code>max_tier</code>, and <code>max_bit_depth_idc</code> parameters have the same semantics as described in [[#av2c-semantics]], and the associated [=AV2 bitstream=] SHALL respect the same constraints.</assert></p>
 
 - The <code>max_profile_idc</code> parameter value is represented by a single digit ranging from `0` to `9` for the values between 0 and 9 inclusive, and ranging from `A` to `V` for the values between 10 and 31 inclusive.
 - The <code>max_level_idx</code> parameter value is represented by a single digit ranging from `0` to `9` for the values between 0 and 9 inclusive, and ranging from `A` to `V` for the values between 10 and 31 inclusive.
 - The <code>max_tier</code> parameter value is represented by a single digit `M` for the value 0, and `H` for the value 1.
+- The <code>max_bit_depth_idc</code> parameter value is represented by a single digit ranging from `0` to `1`.
 
 <div class="example" id="codec-string-example"><a class="self-link" href="#codec-string-example"></a>
-<code>codecs="av2e.00M"</code> represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 2.0, Main tier.
+<code>codecs="av2e.00M0"</code> represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 2.0, Main tier, 10 bits per channel.
 </div>
 
 <div class="example" id="codec-string-example"><a class="self-link" href="#codec-string-example2"></a>
-<code>codecs="av2e.4AH"</code> represents [[!AV2]] <code>Main_444_10_IP1</code> profile at Interoperability Point 2, level 6.0, High tier.
+<code>codecs="av2e.4AH1"</code> represents [[!AV2]] <code>Main_444_10_IP1</code> profile at Interoperability Point 2, level 6.0, High tier, 8 bits per channel.
 </div>
 
 <p><assert>All parameters are mandatory fields.</assert> <assert>If any of these fields is empty, or not within its allowed range, the processing device SHOULD treat it as an error.</assert></p>
