@@ -371,6 +371,8 @@ Each value among <code>colour_primaries</code>, <code>transfer_characteristics</
 
 <p><assert>The value of <code>full_range_flag</code> carried in a 'colr' box with the 'nclx' 'colour_type', for the [=layers=] it applies to, SHALL equal the corresponding effective value carried by the associated [=AV2 bitstream=] as described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert></p>
 
+<p><assert>Decoders MAY ignore the associations between a 'colr' box and [=layers=] which do not carry colour information, such as alpha or depth.</assert></p>
+
 <p><assert>An [=AV2SampleEntry=] SHALL contain at least one 'pixi' box.</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by at most one 'pixi' box.</assert> <assert>'pixi' boxes in an [=AV2SampleEntry=] SHALL have the least significant bit of 'px_flags' enabled.</assert> The constraints described in [[#layers]] apply to that [=AV2SampleEntry=].</p>
 
 NOTE: An [=AV2SampleEntry=] may contain additional direct child boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'colr' with a 'colour_type' value other than 'nclx', 'pasp', 'clli', 'mdcv' or 'btrt'. They may be located before and/or after the [=AV2CodecConfigurationBox=].
