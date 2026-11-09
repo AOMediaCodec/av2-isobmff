@@ -432,28 +432,27 @@ aligned(8) class InBandAV2CodecConfigurationBox extends AV2CodecConfigurationBox
 <code>config_obu</code> is a byte array. <assert>Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128()</code> <code>num_bytes_in_obu</code> value giving the byte length of that OBU, as specified in the [=Length delimited bitstream format=] from Annex B of [[!AV2]].</assert>
 
 <code>max_num_streams_minus1</code> specifies the maximum number of independent streams in the bitstream.
-- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the corresponding [=AV2 sample=] whose <code>num_streams_minus_2</code> value is greater than or equal to <code>max_num_streams_minus1</code>.</assert>
-- <assert>If <code>max_num_streams_minus1</code> is not zero, there SHOULD be at least one [=Multi Stream Decoder Operation OBU=] in the corresponding [=AV2 sample=].</assert>
+- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>num_streams_minus_2</code> value is greater than or equal to <code>max_num_streams_minus1</code>.</assert>
+- <assert>If <code>max_num_streams_minus1</code> is not zero, there SHOULD be at least one [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=].</assert>
 
 NOTE: The above means there shall be no [=Multi Stream Decoder Operation OBU=] if <code>max_num_streams_minus1</code> is set to 0.
 
 NOTE: It is a requirement of bitstream conformance that <code>num_streams_minus_2</code> is not greater than 2 in [[!AV2]], so <code>max_num_streams_minus1</code> fits in two bits. <code>reserved1</code> can be repurposed once <code>num_streams_minus_2</code> uses its three allocated bits in a future version of [[!AV2]].
 
 <code>max_profile_idc</code> specifies the maximum profile for the coded video sequence.
-- <assert>There SHALL NOT be any [=Sequence Header OBU=] in the corresponding [=AV2 sample=] whose <code>seq_profile_idc</code> value is greater than <code>max_profile_idc</code>.</assert>
-- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the corresponding [=AV2 sample=] whose <code>multistream_profile_idc</code> value is greater than <code>max_profile_idc</code>.</assert>
-- <assert>There SHOULD be at least one [=Sequence Header OBU=] in the corresponding [=AV2 sample=] whose <code>seq_profile_idc</code> has the same value as <code>max_profile_idc</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the corresponding [=AV2 sample=] whose <code>multistream_profile_idc</code> has the same value as <code>max_profile_idc</code>.</assert>
+- <assert>There SHALL NOT be any [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_profile_idc</code> value is greater than <code>max_profile_idc</code>.</assert>
+- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_profile_idc</code> value is greater than <code>max_profile_idc</code>.</assert>
+- <assert>There SHOULD be at least one [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_profile_idc</code> has the same value as <code>max_profile_idc</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_profile_idc</code> has the same value as <code>max_profile_idc</code>.</assert>
 
 <code>max_level_idx</code> specifies the maximum level that the coded video sequence conforms to.
-- <assert>There SHALL NOT be any [=Sequence Header OBU=] in the corresponding [=AV2 sample=] whose <code>seq_level_idx</code> value is greater than <code>max_level_idx</code>.</assert>
-- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the corresponding [=AV2 sample=] whose <code>multistream_level_idx</code> value is greater than <code>max_level_idx</code>.</assert>
-- <assert>There SHOULD be at least one [=Sequence Header OBU=] in the corresponding [=AV2 sample=] whose <code>seq_level_idx</code> has the same value as <code>max_level_idx</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the corresponding [=AV2 sample=] whose <code>multistream_level_idx</code> has the same value as <code>max_level_idx</code>.</assert>
+- <assert>There SHALL NOT be any [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_level_idx</code> value is greater than <code>max_level_idx</code>.</assert>
+- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_level_idx</code> value is greater than <code>max_level_idx</code>.</assert>
+- <assert>There SHOULD be at least one [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_level_idx</code> has the same value as <code>max_level_idx</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_level_idx</code> has the same value as <code>max_level_idx</code>.</assert>
 
 <code>max_tier</code> specifies the maximum tier that the coded video sequence conforms to.
-- <assert>There SHALL NOT be any [=Sequence Header OBU=] in the corresponding [=AV2 sample=] whose <code>seq_tier</code> value is greater than <code>max_tier</code>.</assert>
-- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the corresponding [=AV2 sample=] whose <code>multistream_tier</code> value is greater than <code>max_tier</code>.</assert>
-- <assert>There SHOULD be at least one [=Sequence Header OBU=] in the corresponding [=AV2 sample=] whose <code>seq_tier</code> has the same value as <code>max_tier</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the corresponding [=AV2 sample=] whose <code>multistream_tier</code> has the same value as <code>max_tier</code>.</assert>
-
+- <assert>There SHALL NOT be any [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_tier</code> value is greater than <code>max_tier</code>.</assert>
+- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_tier</code> value is greater than <code>max_tier</code>.</assert>
+- <assert>There SHOULD be at least one [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_tier</code> has the same value as <code>max_tier</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_tier</code> has the same value as <code>max_tier</code>.</assert>
 
 <p class="issue">Editor's note: for a [=Multistream=] bitstream, the [=AV2CodecConfigurationBox=] contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation. Also how profile / level is signalled to decoder API for layers. etc.</p>
 
