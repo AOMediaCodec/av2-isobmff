@@ -828,7 +828,7 @@ DASH and other applications require defined values for the 'Codecs' parameter sp
 <code>codecs="av2e.00M"</code> represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 2.0, Main tier.
 </div>
 
-<div class="example" id="codec-string-example"><a class="self-link" href="#codec-string-example2"></a>
+<div class="example" id="codec-string-example2"><a class="self-link" href="#codec-string-example2"></a>
 <code>codecs="av2e.4AH"</code> represents [[!AV2]] <code>Main_444_10_IP1</code> profile at Interoperability Point 2, level 6.0, High tier.
 </div>
 
