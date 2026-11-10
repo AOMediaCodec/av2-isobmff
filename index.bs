@@ -589,7 +589,7 @@ NOTE: The <code>target_id</code> field of the <code>LayerPropertyAssociationBox<
 
 <p>A single integer identifying a set of layers is considered to contain a bit set, where the Nth least significant bit set to 1 means the Nth [=layer=] in the order specified above is included in the set, and where that bit set to 0 means that [=layer=] is excluded from the set.</p>
 
-<p>A single integer identifying a reconstruction point is considered to contain the 0-based index <code>i</code> of the [=operating point=] in the three least significant bits, the <code>ops_id</code> in the next four least significant bits, and the <code>obu_xlayer_id</code> in the next five least significant bits. <assert>The three least significant bits SHALL NOT be all zeros.</assert></p>
+<p>A single integer identifying a reconstruction point is considered to contain the 0-based index <code>i</code> of the [=operating point=] in the three least significant bits, the <code>ops_id</code> in the next four least significant bits, and the <code>obu_xlayer_id</code> in the next five least significant bits. <assert>The three least significant bits SHALL NOT be all ones.</assert></p>
 
 NOTE: The <code>target_id</code> field of the <code>LayerPropertyAssociationBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition is a single integer identifying a reconstruction point when the <code>target_type</code> flag is set to 1.
 
