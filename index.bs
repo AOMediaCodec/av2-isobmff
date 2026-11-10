@@ -335,6 +335,7 @@ A file conformant to this specification satisfies the following:
 - <assert>It SHOULD indicate a structural ISOBMFF brand among the compatible brands array of the FileTypeBox, such as 'iso6'</assert>
 - <assert>It SHALL contain at least one [=AV2 sample=]</assert>
 - <assert>Each [=AV2 sample=] it contains SHALL form exactly one [[!AV2]] [=Temporal Unit=] if reconstructed as described in [[#av2-sample-reconstruction]]</assert>
+- <assert>All [=AV2 samples=] associated with a single [=AV2SampleEntry=] it contains SHALL form exactly one [=AV2 bitstream=] if reconstructed as described in [[#av2-bitstream-reconstruction]]</assert>
 
 ## AV2 Sample Entry and Configuration ## {#sample-entry-and-config}
 
@@ -387,9 +388,33 @@ An [=AV2CodecConfigurationBox=] that is the direct child box of an [=AV2SampleEn
 
 #### Description
 
-<p><assert>An [=OutOfBandAV2CodecConfigurationBox=] MAY carry [=OBUs=] of the following types: <code>OBU_MSDO</code>, <code>OBU_LAYER_CONFIGURATION_RECORD</code>, <code>OBU_OPERATING_POINT_SET</code>, <code>OBU_ATLAS_SEGMENT</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id</code> equal to <code>GLOBAL_XLAYER_ID</code> and <code>metadata_is_suffix</code> equal to 0, <code>OBU_METADATA_GROUP</code> with <code>obu_xlayer_id</code> equal to <code>GLOBAL_XLAYER_ID</code> and <code>metadata_is_suffix</code> equal to 0, and <code>OBU_SEQUENCE_HEADER</code>.</assert></p>
+A <dfn>Possibly out-of-band OBU</dfn> is an [=OBU=] of any of the following types:
+- <code>OBU_MSDO</code>
+- <code>OBU_LAYER_CONFIGURATION_RECORD</code>
+- <code>OBU_OPERATING_POINT_SET</code>
+- <code>OBU_ATLAS_SEGMENT</code>
+- <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id</code> equal to <code>GLOBAL_XLAYER_ID</code> and <code>metadata_is_suffix</code> equal to 0
+- <code>OBU_METADATA_GROUP</code> with <code>obu_xlayer_id</code> equal to <code>GLOBAL_XLAYER_ID</code> and <code>metadata_is_suffix</code> equal to 0
+- <code>OBU_SEQUENCE_HEADER</code>
 
-<p><assert>An [=OutOfBandAV2CodecConfigurationBox=] SHALL NOT carry [=OBUs=] of the following types: <code>OBU_TEMPORAL_DELIMITER</code>, <code>OBU_CONTENT_INTERPRETATION</code>, <code>OBU_MULTI_FRAME_HEADER</code>, <code>OBU_BUFFER_REMOVAL_TIMING</code>, <code>OBU_QUANTIZATION_MATRIX</code>, <code>OBU_FILM_GRAIN</code>, <code>OBU_CLOSED_LOOP_KEY</code>, <code>OBU_OPEN_LOOP_KEY</code>, <code>OBU_LEADING_TILE_GROUP</code>, <code>OBU_REGULAR_TILE_GROUP</code>, <code>OBU_SWITCH</code>, <code>OBU_LEADING_TIP</code>, <code>OBU_REGULAR_TIP</code>, <code>OBU_BRIDGE_FRAME</code>, <code>OBU_RAS_FRAME</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1, <code>OBU_METADATA_GROUP</code> with <code>obu_xlayer_id</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1, and <code>OBU_PADDING</code>.</assert></p>
+An <dfn>In-band OBU</dfn> is an [=OBU=] of any of the following types:
+- <code>OBU_MULTI_FRAME_HEADER</code>
+- <code>OBU_BUFFER_REMOVAL_TIMING</code>
+- <code>OBU_QUANTIZATION_MATRIX</code>
+- <code>OBU_FILM_GRAIN</code>
+- <code>OBU_CLOSED_LOOP_KEY</code>
+- <code>OBU_OPEN_LOOP_KEY</code>
+- <code>OBU_LEADING_TILE_GROUP</code>
+- <code>OBU_REGULAR_TILE_GROUP</code>
+- <code>OBU_SWITCH</code>
+- <code>OBU_LEADING_TIP</code>
+- <code>OBU_REGULAR_TIP</code>
+- <code>OBU_BRIDGE_FRAME</code>
+- <code>OBU_RAS_FRAME</code>
+- <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1
+- <code>OBU_METADATA_GROUP</code> with <code>obu_xlayer_id</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1
+
+<p><assert>An [=OutOfBandAV2CodecConfigurationBox=] MAY carry [=Possibly out-of-band OBUs=].</assert> <assert>An [=OutOfBandAV2CodecConfigurationBox=] SHALL NOT carry [=In-band OBUs=], [=Temporal Delimiter OBUs=], [=Content Interpretation OBUs=], or [=Padding OBUs=].</assert></p>
 
 <p><assert>There SHOULD NOT be any [=Metadata OBU=] carried by an [=OutOfBandAV2CodecConfigurationBox=] if a codec-agnostic carriage solution exists for that metadata.</assert></p>
 
@@ -475,20 +500,19 @@ The [=AV2 sample=] boundary delimits the temporal unit.
 
 The following applies to a <l spec=ISOBMFF>[=sample=]</l> associated with an [=AV2SampleEntry=]:
 - <assert>The [=OBUs=] carried by a <l spec=ISOBMFF>[=sample=]</l> SHALL appear in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]].</assert>
-- <assert>The <l spec=ISOBMFF>[=sample=]</l> SHALL NOT carry an [=OBU=] of a type among <code>OBU_TEMPORAL_DELIMITER</code>, <code>OBU_CONTENT_INTERPRETATION</code> and <code>OBU_PADDING</code>.</assert>
+- <assert>The <l spec=ISOBMFF>[=sample=]</l> MAY carry [=Possibly out-of-band OBUs=].</assert>
+- <assert>The <l spec=ISOBMFF>[=sample=]</l> MAY carry [=In-band OBUs=].</assert>
+- <assert>The <l spec=ISOBMFF>[=sample=]</l> SHALL NOT carry [=Temporal Delimiter OBUs=], [=Content Interpretation OBUs=], or [=Padding OBUs=].</assert>
 
     NOTE: The [=AV2 sample=] boundary already delimits the temporal unit, and byte-level padding within a track is achieved using ISOBMFF mechanisms, e.g. 'free'/'skip' boxes or <l spec=ISOBMFF>[=sample=]</l> size signalling.
 
 - <assert>There SHOULD NOT be any [=Metadata OBU=] carried by a <l spec=ISOBMFF>[=sample=]</l> if a container-level carriage solution exists for that metadata.</assert>
 
-The following applies to a <l spec=ISOBMFF>[=sample=]</l> associated with an [=AV2SampleEntry=] containing an [=OutOfBandAV2CodecConfigurationBox=]:
-- <assert>The <l spec=ISOBMFF>[=sample=]</l> SHALL NOT carry an [=OBU=] of a type among the types allowed to be carried in an [=OutOfBandAV2CodecConfigurationBox=] as listed in [[#av2c]], unless there is a bit-exact copy of that [=OBU=] (type and content) in the associated [=OutOfBandAV2CodecConfigurationBox=].</assert>
+The following applies to a <l spec=ISOBMFF>[=sample=]</l> associated with an [=OutOfBandAV2SampleEntry=]:
+- <assert>The <l spec=ISOBMFF>[=sample=]</l> SHOULD NOT carry [=Possibly out-of-band OBUs=].</assert>
+- <assert>The <l spec=ISOBMFF>[=sample=]</l> SHALL NOT carry a [=Possibly out-of-band OBU=], unless there is a bit-exact copy of that [=OBU=] (type and content) in the associated [=OutOfBandAV2CodecConfigurationBox=].</assert>
 - <assert>The [=OBUs=] present in both the <l spec=ISOBMFF>[=sample=]</l> and the associated [=OutOfBandAV2CodecConfigurationBox=], identified by the same type and content, SHALL be present in the same order.</assert>
-- <assert>A decoder implementation MAY skip, in the <l spec=ISOBMFF>[=sample=]</l>, any [=OBU=] of a type among the types of the [=OBUs=] carried in the associated [=OutOfBandAV2CodecConfigurationBox=].</assert>
-
-    <p class="issue">Editor's note: Double-check that OBU skipping leads to the same output in all cases. Otherwise another assertion would be needed: "The sample SHALL contain all necessary OBUs so that any OBU skipped this way by a decoder implementation leads to the same output as if the OBU was not skipped".</p>
-
-- <assert>The <l spec=ISOBMFF>[=sample=]</l> SHOULD NOT carry an [=OBU=] of a type among the types allowed to be carried in an [=OutOfBandAV2CodecConfigurationBox=].</assert>
+- <assert>A decoder implementation MAY skip, in the <l spec=ISOBMFF>[=sample=]</l>, any [=Possibly out-of-band OBU=].</assert>
 
 ### Content Interpretation OBU
 
@@ -740,14 +764,30 @@ Other examples may be found in [[#annex-a]].
 
 <p class="issue">Editor's note: 'pixi' semantics follow the FDIS of [[!ISOBMFF]] 9th edition (Tables 8 and 9) and need re-checking against the published text. Open issues: the <code>component_format</code> value for unsigned integer (ISO/IEC 23001-17); <code>channel_idc</code> for channels with no defined meaning (segmentation, gain map).</p>
 
-### AV2 sample reconstruction ### {#av2-sample-reconstruction}
+### AV2 extraction
+
+#### AV2 sample reconstruction #### {#av2-sample-reconstruction}
 
 A byte sequence containing a conformant [[!AV2]] [=Temporal Unit=] using the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]] MAY be reconstructed from the [=OBUs=] of an [=AV2 sample=] by applying the following steps:
 1. Write a [=Temporal Delimiter OBU=], preceded by its <code>leb128()</code> length prefix.
-2. Write the [=OBUs=] carried in the [=OutOfBandAV2CodecConfigurationBox=], if any, of the corresponding [=AV2SampleEntry=], in the same order as present in the [=OutOfBandAV2CodecConfigurationBox=], each preceded by its <code>leb128()</code> length prefix as present in the [=OutOfBandAV2CodecConfigurationBox=].
-3. Write the [=OBUs=] carried in the <l spec=ISOBMFF>[=sample=]</l>, in the same order as present in the <l spec=ISOBMFF>[=sample=]</l>, each preceded by its <code>leb128()</code> length prefix as present in the <l spec=ISOBMFF>[=sample=]</l>.
+2. If there is an [=OutOfBandAV2CodecConfigurationBox=] in the corresponding [=AV2SampleEntry=], write the [=Possibly out-of-band OBUs=] it carries, in the same order as present in the [=OutOfBandAV2CodecConfigurationBox=], each preceded by its <code>leb128()</code> length prefix as present in the [=OutOfBandAV2CodecConfigurationBox=].
 
-Note: AV2-ISOBMFF reader implementations do not have to reconstruct the contiguous byte sequence containing a conformant [=AV2 bitstream=] or [=Temporal Unit=] in memory upon decoding.
+    NOTE: Prepending High-Level Syntax OBUs to each sample corresponds to OBU "availability through external means" as described in the [[!AV2]] specification. It may be unnecessary for non-random-access samples.
+
+3. If there is an [=OutOfBandAV2CodecConfigurationBox=] in the corresponding [=AV2SampleEntry=], discard all [=Possibly out-of-band OBUs=] carried in the <l spec=ISOBMFF>[=sample=]</l>.
+
+    NOTE: As described in [[#sample-obus]], decoders may skip such [=Possibly out-of-band OBUs=] in a sample if they are already available through external means (out-of-band). To guarantee the [=ordering of OBUs in a temporal unit=] in [[!AV2]], they are always skipped when reconstructing a sample.
+
+4. Write the remaining [=OBUs=] carried in the <l spec=ISOBMFF>[=sample=]</l>, in the same order as present in the <l spec=ISOBMFF>[=sample=]</l>, each preceded by its <code>leb128()</code> length prefix as present in the <l spec=ISOBMFF>[=sample=]</l>.
+5. Optionally insert [=Content Interpretation OBUs=] reflecting information signalled at the container level as described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>, each preceded by its <code>leb128()</code> length prefix, at positions in the resulting byte sequence respecting the [=ordering of OBUs in a temporal unit=] in [[!AV2]].
+
+#### AV2 bitstream reconstruction #### {#av2-bitstream-reconstruction}
+
+A byte sequence containing a conformant [=AV2 bitstream=] using the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]] MAY be reconstructed, from all [=AV2 samples=] associated with a single [=AV2SampleEntry=], by applying the steps described in [[#av2-sample-reconstruction]] for each [=AV2 sample=].
+
+<p class="issue">Editor's note: Is there a specific AV2 sample order to mention here?</p>
+
+<assert>A file conformant to this document SHALL lead to the same output whether AV2-ISOBMFF reader implementations reconstruct the contiguous byte sequence containing a conformant [=AV2 bitstream=] or [=Temporal Unit=] in memory or not upon decoding.</assert>
 
 # CMAF AV2 track format # {#cmaf}
 
