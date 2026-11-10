@@ -361,9 +361,9 @@ class InBandAV2SampleEntry extends AV2SampleEntry('av2e') {
 
 <p><assert>An [=AV2SampleEntry=] SHALL contain exactly one [=AV2CodecConfigurationBox=] describing all [=extended layers=], [=embedded layers=], and [=temporal layers=] in the [=AV2SampleEntry=]. That [=AV2CodecConfigurationBox=] SHALL be a direct child box of the [=AV2SampleEntry=].</assert>
 
-<p><assert>Unless explicitly stated otherwise in the definition of a box, the direct child boxes of an [=AV2SampleEntry=] describe all [=extended layers=], [=embedded layers=], and [=temporal layers=] that can be output from the associated [=AV2 bitstream=] as specified in the [=Singlestream=] and [=Multistream=] [=Full bitstream decoding=] process from Annex F of [[!AV2]].</assert></p>
+<p><assert>Unless explicitly stated otherwise in the definition of a box, the direct child boxes of an [=AV2SampleEntry=] describe the extended layer 0 in the associated [=AV2 bitstream=] ([=obu_xlayer_id=] set to 0).</assert> <assert>Extended layer 0 in the associated [=AV2 bitstream=] SHALL be output as specified in the [=Singlestream=] and [=Multistream=] [=Full bitstream decoding=] process from Annex F of [[!AV2]].</assert> <assert>Extended layer 0 in the associated [=AV2 bitstream=] SHOULD contain playable base content as specified in Annex G of [[!AV2]].</assert></p>
 
-<p><assert>An [=AV2SampleEntry=] SHALL contain at least one 'colr' box with the 'nclx' 'colour_type'.</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by at most one 'colr' box with the 'nclx' 'colour_type'.</assert></p>
+<p><assert>An [=AV2SampleEntry=] SHALL contain exactly one direct sample entry child 'colr' box with the 'nclx' 'colour_type'.</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by at most one 'colr' box with the 'nclx' 'colour_type'.</assert></p>
 
 Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, and <code>matrix_coefficients</code> carried in a 'colr' box with the 'nclx' 'colour_type', for the [=layers=] it applies to:
 - <assert>SHALL equal the corresponding effective value carried by the associated [=AV2 bitstream=] as described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>, unless that value is equal to 2 (<code>Unspecified</code>)</assert>;
@@ -373,11 +373,11 @@ Each value among <code>colour_primaries</code>, <code>transfer_characteristics</
 
 <p><assert>Decoders MAY ignore the associations between a 'colr' box and [=layers=] which do not carry colour information, such as alpha or depth.</assert></p>
 
-<p><assert>An [=AV2SampleEntry=] SHALL contain at least one 'pixi' box.</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by at most one 'pixi' box.</assert> <assert>'pixi' boxes in an [=AV2SampleEntry=] SHALL have the least significant bit of 'px_flags' enabled.</assert> The constraints described in [[#layers]] apply to that [=AV2SampleEntry=].</p>
+<p><assert>An [=AV2SampleEntry=] SHALL contain exactly one direct sample entry child 'pixi' box with the least significant bit of 'px_flags' enabled.</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by at most one 'pixi' box.</assert> The constraints described in [[#channels]] apply to that [=AV2SampleEntry=].</p>
 
 NOTE: An [=AV2SampleEntry=] may contain additional direct child boxes permitted by [[!ISOBMFF]] for a [=VisualSampleEntry=], such as 'colr' with a 'colour_type' value other than 'nclx', 'pasp', 'clli', 'mdcv' or 'btrt'. They may be located before and/or after the [=AV2CodecConfigurationBox=].
 
-NOTE: An [=AV2SampleEntry=] may contain indirect child boxes, for example 'colr' when carried by the <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition to describe the colour properties of the base track and the different colour properties of the gain map track.
+NOTE: The <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition allows for associating other extended layers with direct or indirect sample entry child boxes.
 
 ### AV2 Codec Configuration Box ### {#av2c}
 
@@ -387,7 +387,7 @@ An [=AV2CodecConfigurationBox=] that is the direct child box of an [=AV2SampleEn
 
 #### Description
 
-<p><assert>An [=OutOfBandAV2CodecConfigurationBox=] MAY carry [=OBUs=] of the following types: <code>OBU_MSDO</code>, <code>OBU_LAYER_CONFIGURATION_RECORD</code>, <code>OBU_OPERATING_POINT_SET</code>, <code>OBU_ATLAS_SEGMENT</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id</code> equal to <code>GLOBAL_XLAYER_ID</code> and <code>metadata_is_suffix</code> equal to 0, <code>OBU_METADATA_GROUP</code> with <code>metadata_is_suffix</code>=0, and <code>OBU_SEQUENCE_HEADER</code>.</assert></p>
+<p><assert>An [=OutOfBandAV2CodecConfigurationBox=] MAY carry [=OBUs=] of the following types: <code>OBU_MSDO</code>, <code>OBU_LAYER_CONFIGURATION_RECORD</code>, <code>OBU_OPERATING_POINT_SET</code>, <code>OBU_ATLAS_SEGMENT</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id</code> equal to <code>GLOBAL_XLAYER_ID</code> and <code>metadata_is_suffix</code> equal to 0, <code>OBU_METADATA_GROUP</code> with <code>obu_xlayer_id</code> equal to <code>GLOBAL_XLAYER_ID</code> and <code>metadata_is_suffix</code> equal to 0, and <code>OBU_SEQUENCE_HEADER</code>.</assert></p>
 
 <p><assert>An [=OutOfBandAV2CodecConfigurationBox=] SHALL NOT carry [=OBUs=] of the following types: <code>OBU_TEMPORAL_DELIMITER</code>, <code>OBU_CONTENT_INTERPRETATION</code>, <code>OBU_MULTI_FRAME_HEADER</code>, <code>OBU_BUFFER_REMOVAL_TIMING</code>, <code>OBU_QUANTIZATION_MATRIX</code>, <code>OBU_FILM_GRAIN</code>, <code>OBU_CLOSED_LOOP_KEY</code>, <code>OBU_OPEN_LOOP_KEY</code>, <code>OBU_LEADING_TILE_GROUP</code>, <code>OBU_REGULAR_TILE_GROUP</code>, <code>OBU_SWITCH</code>, <code>OBU_LEADING_TIP</code>, <code>OBU_REGULAR_TIP</code>, <code>OBU_BRIDGE_FRAME</code>, <code>OBU_RAS_FRAME</code>, <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1, <code>OBU_METADATA_GROUP</code> with <code>obu_xlayer_id</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1, and <code>OBU_PADDING</code>.</assert></p>
 
@@ -413,11 +413,11 @@ aligned(8) class OutOfBandAV2CodecConfigurationBox extends AV2CodecConfiguration
 
 aligned(8) class InBandAV2CodecConfigurationBox extends AV2CodecConfigurationBox('av2c')
 {
-  unsigned int(3) reserved1 = 0;
   unsigned int(2) max_num_streams_minus1;
   unsigned int(5) max_profile_idc;
   unsigned int(5) max_level_idx;
   unsigned int(1) max_tier;
+  unsigned int(3) max_bit_depth_idc;
 }
 ```
 
@@ -441,22 +441,19 @@ NOTE: The above means there shall be no [=Multi Stream Decoder Operation OBU=] i
 
 NOTE: It is a requirement of bitstream conformance that <code>num_streams_minus_2</code> is not greater than 2 in [[!AV2]], so <code>max_num_streams_minus1</code> fits in two bits. <code>reserved1</code> can be repurposed once <code>num_streams_minus_2</code> uses its three allocated bits in a future version of [[!AV2]].
 
-<code>max_profile_idc</code> specifies the maximum profile for the coded video sequence.
-- <assert>There SHALL NOT be any [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_profile_idc</code> value is greater than <code>max_profile_idc</code>.</assert>
-- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_profile_idc</code> value is greater than <code>max_profile_idc</code>.</assert>
-- <assert>There SHOULD be at least one [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_profile_idc</code> has the same value as <code>max_profile_idc</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_profile_idc</code> has the same value as <code>max_profile_idc</code>.</assert>
+<p><code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code> specify the maximum profile, level, and tier for the coded video sequence. <assert>There SHALL NOT be any [=Sequence Header OBU=] (respectively [=Multi Stream Decoder Operation OBU=]) in the associated [=AV2 samples=] whose <code>seq_profile_idc</code>, <code>seq_level_idx</code>, and <code>seq_tier</code> (respectively <code>multistream_profile_idc</code>, <code>multistream_level_idx</code>, and <code>multistream_tier</code>) allow for [[!AV2]] features that are not allowed by <code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code>.</assert> <assert>For any given [=AV2 samples=], the values of <code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code> SHOULD be as low as possibly valid.</assert></p>
 
-<code>max_level_idx</code> specifies the maximum level that the coded video sequence conforms to.
-- <assert>There SHALL NOT be any [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_level_idx</code> value is greater than <code>max_level_idx</code>.</assert>
-- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_level_idx</code> value is greater than <code>max_level_idx</code>.</assert>
-- <assert>There SHOULD be at least one [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_level_idx</code> has the same value as <code>max_level_idx</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_level_idx</code> has the same value as <code>max_level_idx</code>.</assert>
-
-<code>max_tier</code> specifies the maximum tier that the coded video sequence conforms to.
-- <assert>There SHALL NOT be any [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_tier</code> value is greater than <code>max_tier</code>.</assert>
-- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_tier</code> value is greater than <code>max_tier</code>.</assert>
-- <assert>There SHOULD be at least one [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_tier</code> has the same value as <code>max_tier</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_tier</code> has the same value as <code>max_tier</code>.</assert>
+<div class="example" id="max-ptl-example"><a class="self-link" href="#max-ptl-example"></a>
+A [=Sequence Header OBU=] with <code>seq_profile_idc</code> set to 3 (<code>Main_422_10_IP1</code>) and a [=Multi Stream Decoder Operation OBU=] with <code>multistream_profile_idc</code> set to 4 (<code>Main_444_10_IP1</code>) require a <code>max_profile_idc</code> strictly greater than 4 to be conformant, because the profiles 0, 1, 2 and 3 do not support the 4:4:4 chroma format, and the profile 4 does not support the 4:2:2 chroma format.
+</div>
 
 <p class="issue">Editor's note: for a [=Multistream=] bitstream, the [=AV2CodecConfigurationBox=] contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation. Also how profile / level is signalled to decoder API for layers. etc.</p>
+
+<p><code>max_bit_depth_idc</code> specifies the index of the maximum bit depth of any channel in the coded video sequence. <assert>There SHALL NOT be any [=Sequence Header OBU=] (respectively [=Layer Configuration Record OBU=]) in the associated [=AV2 samples=] whose <code>bit_depth_idc</code> (respectively <code>lcr_bit_depth_idc</code>) leads to a higher bit depth than the one indicated by <code>max_bit_depth_idc</code>.</assert> <assert>For any given [=AV2 samples=], the value of <code>max_bit_depth_idc</code> SHOULD be as low as possibly valid.</assert></p>
+
+<div class="example" id="max-bitdepth-example"><a class="self-link" href="#max-bitdepth-example"></a>
+A [=Sequence Header OBU=] with <code>bit_depth_idc</code> set to 0 (meaning a precision of 10 bits per channel) and a [=Layer Configuration Record OBU=] with <code>lcr_bit_depth_idc</code> set to 1 (meaning a precision of 8 bits per channel) require a <code>max_bit_depth_idc</code> of 0 (10-bit) to be conformant with this document.
+</div>
 
 ## AV2 Sample Format ## {#sample-format}
 
@@ -589,28 +586,27 @@ NOTE: The <code>target_id</code> field of the <code>LayerPropertyAssociationBox<
 
 <p>A single integer identifying a set of layers is considered to contain a bit set, where the Nth least significant bit set to 1 means the Nth [=layer=] in the order specified above is included in the set, and where that bit set to 0 means that [=layer=] is excluded from the set.</p>
 
-<p>A single integer identifying a reconstruction point is considered to contain the 0-based index <code>i</code> of the [=operating point=] in the three least significant bits, the <code>ops_id</code> in the next four least significant bits, and the <code>obu_xlayer_id</code> in the next five least significant bits. <assert>The three least significant bits SHALL NOT be all zeros.</assert></p>
+<p>A single integer identifying a reconstruction point is considered to contain the 0-based index <code>i</code> of the [=operating point=] in the three least significant bits, the <code>ops_id</code> in the next four least significant bits, and the <code>obu_xlayer_id</code> in the next five least significant bits. <assert>The three least significant bits SHALL NOT be all ones.</assert></p>
 
 NOTE: The <code>target_id</code> field of the <code>LayerPropertyAssociationBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition is a single integer identifying a reconstruction point when the <code>target_type</code> flag is set to 1.
 
 <p>When <code>layer_id_method_idc</code> is set to 1, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies a single layer as defined above. When <code>layer_id_method_idc</code> is set to 2, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies a set of layers as defined above. When <code>layer_id_method_idc</code> is set to 3, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies a reconstruction point as defined above.</p>
 
-#### Channels
+#### Channels #### {#channels}
 
-In an [=AV2 sample=], the following applies to all [=extended layers=] and [=embedded layers=] associated with a 'pixi' box:
-- The channel at index <code>i</code> in the 'pixi' box corresponds to the (<code>i</code>+1)th channel among the channels of the extended and embedded layers associated with the 'pixi' box as if concatenated in the order specified in [[#layer-order]].
+In an [=AV2 sample=], the following applies to each [=extended layer=] associated with a 'pixi' box:
+- The channel at index <code>i</code> in the 'pixi' box corresponds to the (<code>i</code>+1)th channel among the channels of the [=embedded layers=] in that [=extended layer=] as if concatenated in increasing <code>mlayer_id</code> order.
 
     NOTE: [=Interoperability considerations=] in [[!AV2]] suggest encoders ensure extended layer 0, embedded layer 0 contains playable base content, so decoders may assume the first one or three channels described by a direct sample entry child 'pixi' box represent the base content.
 
 - <assert>If the 'pixi' box describes a channel, the corresponding channel in the [=AV2 sample=] SHALL be present.</assert>
-- <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the corresponding channel in the [=AV2 sample=] SHALL be a color channel: if signalled, the <code>lcr_layer_type</code> field of its associated [=Layer Configuration Record OBU=] SHALL be set to 0 (<code>TEXTURE_LAYER</code>).</assert>
-- <assert>If the 'pixi' box describes a channel to be a color channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the [=layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL be described by a 'colr' box.</assert>
-- <assert>If the 'pixi' box describes a channel to be an alpha channel (<code>channel_idc</code> 5), the [=layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL be signalled as alpha by at least one of the means described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert>
-- <assert>If the 'pixi' box describes a channel to be an depth channel (<code>channel_idc</code> 6), the [=layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL be signalled as depth by at least one of the means described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert>
-- <assert>If the 'pixi' box describes a channel as used and specified (<code>channel_idc</code> values other than 0 and 1) with <code>subsampling_flag</code> set to 1, the corresponding channel in the [=AV2 sample=] SHALL have the value of the <code>chroma_format_idc</code> field of its associated [=Sequence Header OBU=] correspond to the same meaning as the value of the 'pixi' box's corresponding channel's <code>subsampling_type</code> value.</assert>
-- <assert>If the 'pixi' box describes a channel, the corresponding channel in the [=AV2 sample=] SHALL have the value of the <code>BitDepth</code> variable computed from its associated [=Sequence Header OBU=] equal to the value of the 'pixi' box's channel's <code>bits_per_channel</code> value.</assert>
+- <assert>If the 'pixi' box describes a channel to be a colour channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the [=embedded layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL carry colour information: if signalled, the <code>lcr_layer_type</code> field of its associated [=Layer Configuration Record OBU=] SHALL be set to 0 (<code>TEXTURE_LAYER</code>).</assert>
+- <assert>If the 'pixi' box describes a channel to be a colour channel (<code>channel_idc</code> values such as 2, 3, 4, and 7), the [=layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL be described by a 'colr' box.</assert>
+- <assert>If the 'pixi' box describes a channel to be an alpha channel (<code>channel_idc</code> 5), respectively depth channel (<code>channel_idc</code> 6), the [=embedded layer=] carrying the corresponding channel in the [=AV2 sample=] SHALL carry alpha information, respectively depth information, as signalled by at least one of the means described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert>
+- <assert>If the 'pixi' box describes a channel with <code>subsampling_flag</code> set to 1, the corresponding [=layer=] in the [=AV2 sample=] SHALL have the same subsampling pattern, signalled by at least one of the means described in <a class="figure-ref" href="#figure-redundant-information">Figure</a>.</assert>
+- <assert>If the 'pixi' box describes a channel, the corresponding [=layer=] in the [=AV2 sample=] SHALL have the value of the <code>BitDepth</code> variable computed from its associated [=Sequence Header OBU=] equal to the value of the 'pixi' box's channel's <code>bits_per_channel</code> value.</assert>
 
-    NOTE: Channels of different types of [=layers=], such as texture and alpha, may have different bit depths.
+    NOTE: Channels of different types of [=layers=], such as texture and alpha, may have different bit depths, but all channels in a single 'pixi' box shall have the same <code>bits_per_channel</code> value, because all [=embedded layers=] in a single [=extended layer=] share the same <code>BitDepth</code>.
 
 - <assert>The <code>component_format</code> of every channel in the 'pixi' box SHALL indicate an unsigned integer format.</assert>
 
@@ -667,7 +663,7 @@ In an [=AV2 sample=], the following applies to all [=extended layers=] and [=emb
 </div>
 
 <div class="example" id="sample-channel-complex-example"><a class="self-link" href="#sample-channel-complex-example"></a>
-    Complex example with an extended layer containing CMYK channels (each channel as an embedded layer), an extended layer containing alpha, and an extended layer containing segmentation and depth data.
+    Complex example with an extended layer containing CMYKA channels (each channel as an embedded layer), and an extended layer containing segmentation and gain map data.
     <table class="complex data" style="line-height: 1;">
         <thead>
             <tr>
@@ -685,8 +681,8 @@ In an [=AV2 sample=], the following applies to all [=extended layers=] and [=emb
         </thead>
         <tbody>
             <tr>
-                <td rowspan=4>0</td>
-                <td rowspan=4><code>CHROMA_FORMAT_400</code></td>
+                <td rowspan=5>0</td>
+                <td rowspan=5><code>CHROMA_FORMAT_400</code></td>
                 <td>0</td>
                 <td><code>TEXTURE_LAYER</code></td>
                 <td>1st</td>
@@ -711,26 +707,21 @@ In an [=AV2 sample=], the following applies to all [=extended layers=] and [=emb
                 <td>7: Fourth colour channel (e.g. <b>K</b>)</td>
             </tr>
             <tr>
-                <td>1</td>
-                <td><code>CHROMA_FORMAT_400</code></td>
-                <td>0</td>
+                <td>4</td>
                 <td><code>AUX_LAYER</code>, <code>ALPHA_AUX</code></td>
                 <td>5th</td>
                 <td>5: Alpha</td>
             </tr>
             <tr>
-                <td rowspan=2>2</td>
+                <td rowspan=2>1</td>
                 <td rowspan=2><code>CHROMA_FORMAT_400</code></td>
                 <td>0</td>
                 <td><code>AUX_LAYER</code>, <code>SEGMENTATION_AUX</code></td>
-                <td>6th</td>
-                <td>1: Unspecified</td>
+                <td colspan=2 rowspan=2>(no associated 'pixi')</td>
             </tr>
             <tr>
                 <td>1</td>
-                <td><code>AUX_LAYER</code>, <code>DEPTH_AUX</code></td>
-                <td>7th</td>
-                <td>6: Depth</td>
+                <td><code>AUX_LAYER</code>, <code>GAIN_MAP_AUX</code></td>
             </tr>
         </tbody>
     </table>
@@ -744,8 +735,9 @@ Other examples may be found in [[#annex-a]].
 
 A byte sequence containing a conformant [[!AV2]] [=Temporal Unit=] using the [=Length delimited bitstream format=] specified in Annex B of [[!AV2]] MAY be reconstructed from the [=OBUs=] of an [=AV2 sample=] by applying the following steps:
 1. Write a [=Temporal Delimiter OBU=], preceded by its <code>leb128()</code> length prefix.
-2. Write the [=OBUs=] carried in the [=OutOfBandAV2CodecConfigurationBox=], if any, of the corresponding [=AV2SampleEntry=], in the same order as present in the [=OutOfBandAV2CodecConfigurationBox=], each preceded by its <code>leb128()</code> length prefix as present in the [=OutOfBandAV2CodecConfigurationBox=].
-3. Write the [=OBUs=] carried in the <l spec=ISOBMFF>[=sample=]</l>, in the same order as present in the <l spec=ISOBMFF>[=sample=]</l>, each preceded by its <code>leb128()</code> length prefix as present in the <l spec=ISOBMFF>[=sample=]</l>.
+2. Combine the [=OBUs=] carried in the [=OutOfBandAV2CodecConfigurationBox=], if any, of the corresponding [=AV2SampleEntry=] (omitting any [=OBU=] that is already present in the <l spec=ISOBMFF>[=sample=]</l>) and the [=OBUs=] carried in the <l spec=ISOBMFF>[=sample=]</l> in the order specified by the [=ordering of OBUs in a temporal unit=] in [[!AV2]] (preserving their relative order within the [=OutOfBandAV2CodecConfigurationBox=] and within the <l spec=ISOBMFF>[=sample=]</l>), and write each [=OBU=] preceded by its <code>leb128()</code> length prefix.
+
+Note: When reconstructing a contiguous [[!AV2]] bitstream from a sequence of [=AV2 samples=], the [=OBUs=] carried in the [=OutOfBandAV2CodecConfigurationBox=] only need to be included in [=AV2 samples=] that are random access points (where the [=availability of HLS OBUs=] in [[!AV2]] requires high-level syntax [=OBUs=] to be present in the [=Temporal Unit=]) or where the active [=AV2SampleEntry=] changes, rather than in every non-random-access [=AV2 sample=].
 
 Note: AV2-ISOBMFF reader implementations do not have to reconstruct the contiguous byte sequence containing a conformant [=AV2 bitstream=] or [=Temporal Unit=] in memory upon decoding.
 
@@ -815,21 +807,22 @@ Within protected samples, the following constraints apply:
 
 DASH and other applications require defined values for the 'Codecs' parameter specified in [[!RFC6381]] for ISO Media tracks. The codecs parameter string for the AOM AV2 codec is as follows:
 ```
-<sample_entry_4cc>.<max_profile_idc><max_level_idx><max_tier>
+<sample_entry_4cc>.<max_profile_idc><max_level_idx><max_tier><max_bit_depth_idc>
 ```
 
-<p><assert>The <code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code> parameters have the same semantics as described in [[#av2c-semantics]], and the associated [=AV2 bitstream=] SHALL respect the same constraints.</assert></p>
+<p><assert>The <code>max_profile_idc</code>, <code>max_level_idx</code>, <code>max_tier</code>, and <code>max_bit_depth_idc</code> parameters have the same semantics as described in [[#av2c-semantics]], and the associated [=AV2 bitstream=] SHALL respect the same constraints.</assert></p>
 
 - The <code>max_profile_idc</code> parameter value is represented by a single digit ranging from `0` to `9` for the values between 0 and 9 inclusive, and ranging from `A` to `V` for the values between 10 and 31 inclusive.
 - The <code>max_level_idx</code> parameter value is represented by a single digit ranging from `0` to `9` for the values between 0 and 9 inclusive, and ranging from `A` to `V` for the values between 10 and 31 inclusive.
 - The <code>max_tier</code> parameter value is represented by a single digit `M` for the value 0, and `H` for the value 1.
+- The <code>max_bit_depth_idc</code> parameter value is represented by a single digit ranging from `0` to `2`.
 
 <div class="example" id="codec-string-example"><a class="self-link" href="#codec-string-example"></a>
-<code>codecs="av2e.00M"</code> represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 2.0, Main tier.
+<code>codecs="av2e.00M0"</code> represents [[!AV2]] <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 2.0, Main tier, 10 bits per channel.
 </div>
 
 <div class="example" id="codec-string-example2"><a class="self-link" href="#codec-string-example2"></a>
-<code>codecs="av2e.4AH"</code> represents [[!AV2]] <code>Main_444_10_IP1</code> profile at Interoperability Point 2, level 6.0, High tier.
+<code>codecs="av2e.4AH1"</code> represents [[!AV2]] <code>Main_444_10_IP1</code> profile at Interoperability Point 2, level 6.0, High tier, 8 bits per channel.
 </div>
 
 <p><assert>All parameters are mandatory fields.</assert> <assert>If any of these fields is empty, or not within its allowed range, the processing device SHOULD treat it as an error.</assert></p>
@@ -905,8 +898,6 @@ The examples below present 'pixi' mappings for the usages from Annex G of [[!AV2
     </table>
 
     In this example, only the extended layer 0 is described by the 'pixi' box. The atlas composition informs the decoder that the other extended layers have the same embedded layer layout as the extended layer 0, so there is no need to also describe them in the 'pixi' box.
-
-    Alternatively, a valid approach would be a direct sample entry child 'pixi' box only describing the colour channels of the first embedded layer of the first extended layer, and the <code>LayerPropertyContainerBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition maps that 'pixi' box to an operating point containing the first embedded layer of each extended layer. Another 'pixi' box is mapped to another operating point containing the second embedded layer of each extended layer (alpha). The pattern can be repeated for depth.
 
     The chroma channels of the alpha and depth layers are tagged as "Unused". The <code>lcr_chroma_format_idc</code> field is set at the extended layer level, so the alpha and depth embedded layers cannot be 4:0:0 unless the colour layers are.
 </div>
