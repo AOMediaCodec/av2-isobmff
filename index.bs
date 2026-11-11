@@ -441,20 +441,11 @@ NOTE: The above means there shall be no [=Multi Stream Decoder Operation OBU=] i
 
 NOTE: It is a requirement of bitstream conformance that <code>num_streams_minus_2</code> is not greater than 2 in [[!AV2]], so <code>max_num_streams_minus1</code> fits in two bits. <code>reserved1</code> can be repurposed once <code>num_streams_minus_2</code> uses its three allocated bits in a future version of [[!AV2]].
 
-<code>max_profile_idc</code> specifies the maximum profile for the coded video sequence.
-- <assert>There SHALL NOT be any [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_profile_idc</code> value is greater than <code>max_profile_idc</code>.</assert>
-- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_profile_idc</code> value is greater than <code>max_profile_idc</code>.</assert>
-- <assert>There SHOULD be at least one [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_profile_idc</code> has the same value as <code>max_profile_idc</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_profile_idc</code> has the same value as <code>max_profile_idc</code>.</assert>
+<p><code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code> specify the maximum profile, level, and tier for the coded video sequence. <assert>There SHALL NOT be any [=Sequence Header OBU=] (respectively [=Multi Stream Decoder Operation OBU=]) in the associated [=AV2 samples=] whose <code>seq_profile_idc</code>, <code>seq_level_idx</code>, and <code>seq_tier</code> (respectively <code>multistream_profile_idc</code>, <code>multistream_level_idx</code>, and <code>multistream_tier</code>) allow for [[!AV2]] features that are not allowed by <code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code>.</assert> <assert>For any given [=AV2 samples=], the values of <code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code> SHOULD be as low as possibly valid.</assert></p>
 
-<code>max_level_idx</code> specifies the maximum level that the coded video sequence conforms to.
-- <assert>There SHALL NOT be any [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_level_idx</code> value is greater than <code>max_level_idx</code>.</assert>
-- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_level_idx</code> value is greater than <code>max_level_idx</code>.</assert>
-- <assert>There SHOULD be at least one [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_level_idx</code> has the same value as <code>max_level_idx</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_level_idx</code> has the same value as <code>max_level_idx</code>.</assert>
-
-<code>max_tier</code> specifies the maximum tier that the coded video sequence conforms to.
-- <assert>There SHALL NOT be any [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_tier</code> value is greater than <code>max_tier</code>.</assert>
-- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_tier</code> value is greater than <code>max_tier</code>.</assert>
-- <assert>There SHOULD be at least one [=Sequence Header OBU=] in the associated [=AV2 samples=] whose <code>seq_tier</code> has the same value as <code>max_tier</code>, or at least one [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>multistream_tier</code> has the same value as <code>max_tier</code>.</assert>
+<div class="example" id="max-ptl-example"><a class="self-link" href="#max-ptl-example"></a>
+A [=Sequence Header OBU=] with <code>seq_profile_idc</code> set to 3 (<code>Main_422_10_IP1</code>) and a [=Multi Stream Decoder Operation OBU=] with <code>multistream_profile_idc</code> set to 4 (<code>Main_444_10_IP1</code>) require a <code>max_profile_idc</code> strictly greater than 4 to be conformant, because the profiles 0, 1, 2 and 3 do not support the 4:4:4 chroma format, and the profile 4 does not support the 4:2:2 chroma format.
+</div>
 
 <p class="issue">Editor's note: for a [=Multistream=] bitstream, the [=AV2CodecConfigurationBox=] contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation. Also how profile / level is signalled to decoder API for layers. etc.</p>
 
