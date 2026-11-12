@@ -575,30 +575,35 @@ NOTE: In ISOBMFF terms, sync samples are signalled using the SyncSampleBox ('sts
 
 ### Layers ### {#layers}
 
-#### Ordering and identification #### {#layer-order}
+#### Layer identification
 
-<p>Codec-agnostic boxes in an [=AV2SampleEntry=] may refer to layers by their positions or through single-integer identifiers. Codec-agnostic boxes in an [=AV2SampleEntry=] may also refer to reconstruction points through single-integer identifiers. This section defines how this is mapped to [[!AV2]] [=layers=] and operating points.</p>
+<p>Codec-agnostic boxes in an [=AV2SampleEntry=] may refer to layers or reconstruction points through single-integer identifiers. This section defines how this is mapped to [[!AV2]] [=layers=] and operating points.</p>
 
-<p>[=Layers=] are considered to be ordered in increasing <code>xlayer_id</code> order, and in increasing <code>mlayer_id</code> order within each extended layer. [=Temporal layers=] are out of the scope of this ordering.</p>
+A layer-identifying integer is considered to contain:
+- in the eight least significant bits, the 0-based <code>mlayer_id</code> of the identified [=embedded layer=], or the value 255 to identify all embedded layers in the identified extended layer(s); and
+- in the next five least significant bits, the 0-based <code>xlayer_id</code> of the identified [=extended layer=], or the value 31 (<code>GLOBAL_XLAYER_ID</code>) to identify all extended layers.
 
-<p>A single integer identifying one layer is considered to contain the 0-based position of that [=layer=] in the order specified above.</p>
+<p>[=Temporal layers=] are out of the scope of this mapping.</p>
 
 NOTE: The <code>layer_id</code> field of the <code>LayerSelectorProperty</code> as defined in ISO/IEC 23008-12 (HEIF) is a single integer identifying a layer.
 
 NOTE: The <code>target_id</code> field of the <code>LayerPropertyAssociationBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition is a single integer identifying a layer when the <code>target_type</code> flag is set to 0.
 
-<p>A single integer identifying a set of layers is considered to contain a bit set, where the Nth least significant bit set to 1 means the Nth [=layer=] in the order specified above is included in the set, and where that bit set to 0 means that [=layer=] is excluded from the set.</p>
-
-<p>A single integer identifying a reconstruction point is considered to contain the 0-based index <code>i</code> of the [=operating point=] in the three least significant bits, the <code>ops_id</code> in the next four least significant bits, and the <code>obu_xlayer_id</code> in the next five least significant bits. <assert>The three least significant bits SHALL NOT be all ones.</assert></p>
+A reconstruction point-identifying integer is considered to contain:
+- in the three least significant bits, the 0-based index <code>i</code> of the identified [=operating point=], or the value 7 to identify all [=operating points=] in the identified operating point set;
+- in the next four least significant bits, the 0-based <code>ops_id</code> of the identified operating point set; and
+- in the next five least significant bits, the 0-based <code>xlayer_id</code> of the identified [=extended layer=], or the value 31 (<code>GLOBAL_XLAYER_ID</code>) to identify all extended layers.
 
 NOTE: The <code>target_id</code> field of the <code>LayerPropertyAssociationBox</code> as defined in the draft of ISOBMFF 14496-12 10th Edition is a single integer identifying a reconstruction point when the <code>target_type</code> flag is set to 1.
 
-<p>When <code>layer_id_method_idc</code> is set to 1, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies a single layer as defined above. When <code>layer_id_method_idc</code> is set to 2, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies a set of layers as defined above. When <code>layer_id_method_idc</code> is set to 3, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies a reconstruction point as defined above.</p>
+<p>When <code>layer_id_method_idc</code> is set to 1, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies layers as defined above. When <code>layer_id_method_idc</code> is set to 2, the <code>target_layers</code> field of the Stream access point sample group as defined in the draft of ISOBMFF 14496-12 9th Edition identifies operating points as defined above.</p>
+
+<p>In [[!AV2]], layer and operating point presence may change over time. <assert>Signalled [=layer=] and reconstruction point identifiers SHALL identify non-empty sets for each sample in the associated track.</assert></p>
 
 #### Channels
 
 In an [=AV2 sample=], the following applies to all [=extended layers=] and [=embedded layers=] associated with a 'pixi' box:
-- The channel at index <code>i</code> in the 'pixi' box corresponds to the (<code>i</code>+1)th channel among the channels of the extended and embedded layers associated with the 'pixi' box as if concatenated in the order specified in [[#layer-order]].
+- The channel at index <code>i</code> in the 'pixi' box corresponds to the (<code>i</code>+1)th channel among the channels of the extended and embedded layers associated with the 'pixi' box as if concatenated in increasing <code>xlayer_id</code> order, and in increasing <code>mlayer_id</code> order for a given <code>xlayer_id</code> value.
 
     NOTE: [=Interoperability considerations=] in [[!AV2]] suggest encoders ensure extended layer 0, embedded layer 0 contains playable base content, so decoders may assume the first one or three channels described by a direct sample entry child 'pixi' box represent the base content.
 
