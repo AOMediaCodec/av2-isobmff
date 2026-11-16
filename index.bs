@@ -512,7 +512,7 @@ The following applies to a <l spec=ISOBMFF>[=sample=]</l> associated with an [=O
 - <assert>The <l spec=ISOBMFF>[=sample=]</l> SHOULD NOT carry [=Possibly out-of-band OBUs=].</assert>
 - <assert>The <l spec=ISOBMFF>[=sample=]</l> SHALL NOT carry a [=Possibly out-of-band OBU=], unless there is a bit-exact copy of that [=OBU=] (type and content) in the associated [=OutOfBandAV2CodecConfigurationBox=].</assert>
 - <assert>The [=OBUs=] present in both the <l spec=ISOBMFF>[=sample=]</l> and the associated [=OutOfBandAV2CodecConfigurationBox=], identified by the same type and content, SHALL be present in the same order.</assert>
-- <assert>A decoder implementation MAY skip, in the <l spec=ISOBMFF>[=sample=]</l>, any [=Possibly out-of-band OBU=].</assert>
+- <assert>A decoder implementation MAY skip any [=Possibly out-of-band OBU=] in the <l spec=ISOBMFF>[=sample=]</l>.</assert>
 
 ### Content Interpretation OBU
 
