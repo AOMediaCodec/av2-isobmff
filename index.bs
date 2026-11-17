@@ -268,8 +268,7 @@ url: https://www.iso.org/standard/84637.html#; spec: CENC; type: dfn;
 }
 </pre>
 
-Terminology {#terminology}
-==========================
+# Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [[!RFC2119]] [[!RFC8174]] when, and only when, they appear in all capitals, as shown here.
 
@@ -283,8 +282,7 @@ Informative notes begin with the word "Note" and are set apart from the normativ
 
 NOTE: This is an example of an informative note.
 
-Bitstream features overview {#bitstream-overview}
-=================================================
+# Bitstream features overview
 
 An [=AV2 bitstream=] is composed of a sequence of [=OBUs=] (Open Bitstream Units), grouped into [=Temporal Units=]. A Temporal Unit consists of a [=Temporal Delimiter OBU=] and all following OBUs up to, but not including, the next Temporal Delimiter OBU. Each Temporal Unit is associated with a single presentation time.
 
@@ -870,8 +868,7 @@ DASH and other applications require defined values for the 'Codecs' parameter sp
 
 <p><assert>All parameters are mandatory fields.</assert> <assert>If any of these fields is empty, or not within its allowed range, the processing device SHOULD treat it as an error.</assert></p>
 
-Annex: Layer composition examples (informative) {#annex-a}
-==========================================================
+# Annex: Layer composition examples (informative) # {#annex-a}
 
 The examples below present 'pixi' mappings for the usages from Annex G of [[!AV2]].
 
