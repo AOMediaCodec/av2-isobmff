@@ -230,7 +230,7 @@ url: https://www.iso.org/standard/84637.html#; spec: CENC; type: dfn;
         "publisher": "AOM"
     },
     "ISOBMFF": {
-        "title": "Information technology — Coding of audio-visual objects — Part 12: ISO base media file format (9th edition)",
+        "title": "Information technology — Coding of audio-visual objects — Part 12: ISO base media file format",
         "status": "Standard",
         "publisher": "ISO",
         "href": "https://www.iso.org/standard/95141.html"
@@ -817,14 +817,20 @@ If a [=CMAF Video Track=] uses the brand <code>[=av02=]</code>, it is called a <
 
 <p><assert>Version 1 and version 2 of the 'saiz' box as defined in [[!ISOBMFF]] SHALL be supported</assert>.</p>
 
-<p><assert>AV2 tracks SHALL use subsample encryption</assert> as the relaxation that [[!CENC]] allows derived specifications for encrypted tracks not using NAL structured video, for both <code>[=cenc=]</code> and <code>[=cbcs=]</code>.</p>
+<p><assert>AV2 tracks SHALL use subsample encryption</assert> as [[!CENC]] allows derived specifications for encrypted
+tracks not using NAL structured video, for both <code>[=cenc=]</code> and <code>[=cbcs=]</code>.</p>
 
-NOTE: Prepending the [=Temporal Delimiter OBU=] and out-of-band config OBUs, or discarding in-sample config OBUs, per [[#av2-sample-reconstruction]] changes the clear byte counts. Readers adjust the subsample information accordingly before decryption.
+NOTE: Prefixing the [=Temporal Delimiter OBU=] and out-of-band config OBUs, or discarding in-sample config OBUs, per [[#av2-sample-reconstruction]]
+changes the clear byte counts. Readers adjust the subsample information accordingly before decryption.
 
-<p class="issue">Editor's note: Multi-key support (<code>multi_key_flag</code>, SAI <code>aux_info_type_parameter</code>, key-to-layer policy) is to be specified.</p>
-<p class="issue">Editor's note: Which <code>senc</code> versions SHALL be supported (e.g. version 1 for <code>multi_subindex</code>) is to be specified.</p>
-<p class="issue">Editor's note: Whether both <code>cenc</code> and <code>cbcs</code> are allowed, or only <code>cbcs</code>, is to be decided.</p>
-<p class="issue">Editor's note: Filtering of layers or OBUs from protected samples and its effect on subsample information is to be studied.</p>
+<p class="issue">Multi-key support (<code>multi_key_flag</code>, SAI <code>aux_info_type_parameter</code>,
+key-to-layer policy) is to be specified.</p>
+<p class="issue">Which <code>senc</code> versions SHALL be supported (e.g. version 1 for
+<code>multi_subindex</code>) is to be specified.</p>
+<p class="issue">Whether both <code>cenc</code> and <code>cbcs</code> are allowed, or only
+<code>cbcs</code>, is to be decided.</p>
+<p class="issue">Filtering of layers or OBUs from protected samples and its effect on subsample
+information is to be studied.</p>
 
 General Subsample Encryption constraints {#subsample-encryption}
 --------------------------------------
@@ -836,7 +842,10 @@ Within protected samples, the following constraints apply:
 
 - <assert>All [=num_bytes_in_obu=] fields and [=OBU Headers=] SHALL be unprotected</assert>.
 
-- <assert>[=Tile Group OBUs=] SHALL be protected as specified below</assert>. These are the OBUs with <code>obu_type</code> equal to <code>OBU_LEADING_TILE_GROUP</code>, <code>OBU_REGULAR_TILE_GROUP</code>, <code>OBU_CLOSED_LOOP_KEY</code>, <code>OBU_OPEN_LOOP_KEY</code>, <code>OBU_SWITCH</code> or <code>OBU_RAS_FRAME</code>, i.e. those for which the <code>is_tile_group()</code> helper function of [[!AV2]] returns 1. <assert>All other OBU types SHALL be unprotected</assert>.
+- <assert>[=Tile Group OBUs=] SHALL be protected as specified below</assert>. These are the OBUs with <code>obu_type</code>
+equal to <code>OBU_LEADING_TILE_GROUP</code>, <code>OBU_REGULAR_TILE_GROUP</code>, <code>OBU_CLOSED_LOOP_KEY</code>,
+<code>OBU_OPEN_LOOP_KEY</code>, <code>OBU_SWITCH</code> or <code>OBU_RAS_FRAME</code>, i.e. those for which the
+<code>is_tile_group()</code> helper function of [[!AV2]] returns 1. <assert>All other OBU types SHALL be unprotected</assert>.
 
     NOTE: Show existing frame, TIP and bridge frame OBUs carry no tile data and are therefore unprotected.
 
