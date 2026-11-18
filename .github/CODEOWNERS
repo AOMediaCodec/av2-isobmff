@@ -1,0 +1,6 @@
+# All changes need review from the STF team
+* @AOMediaCodec/stf
+
+# Workflows, the spec build pipeline and this file need a software coordinator
+/.github/ @AOMediaCodec/stf-software-coordinator
+/tools/ @AOMediaCodec/stf-software-coordinator
