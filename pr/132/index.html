@@ -1491,7 +1491,7 @@ Possible extra rowspan handling
 </style>
 <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator"/>
 <link href="https://aomediacodec.github.io/av2-isobmff/v1.0.0.html" rel="canonical"/>
-<meta content="92bc57b014ada4f2cfc003b9a7c92577e1387247" name="revision"/>
+<meta content="38349af9b20bcab7013d07cbf610c6f613dee93d" name="revision"/>
 <meta content="dark light" name="color-scheme"/>
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2939,7 +2939,7 @@ figcaption.has-figure-number::before { content: none !important; }
 </p>
 <h1 class="no-ref p-name" id="title">AV2 Codec ISO Media File Format Binding</h1>
 <h2 class="heading no-num no-ref no-toc settled" id="profile-and-date"><span class="content">Working Group Draft,
-    <time class="dt-updated" datetime="2026-11-18">18 November 2026</time></span></h2>
+    <time class="dt-updated" datetime="2026-11-20">20 November 2026</time></span></h2>
 <div data-fill-with="spec-metadata">
 <dl>
 <dt>This version:
@@ -3083,15 +3083,16 @@ figcaption.has-figure-number::before { content: none !important; }
 <pre class="highlight language-cpp"><c- n="">abstract</c-> <c- k="">class</c-> <c- nc="">AV2SampleEntry</c-><c- p="">(</c-><c- b="">int</c-> <c- n="">codingname</c-><c- p="">)</c-> <c- n="">extends</c-> <c- n="">VisualSampleEntry</c-><c- p="">(</c-><c- n="">codingname</c-><c- p="">)</c-> <c- p="">{</c->
 <c- p="">}</c->
 
-<c- k="">class</c-> <c- nc="">OutOfBandAV2SampleEntry</c-> <c- n="">extends</c-> <c- n="">AV2SampleEntry</c-><c- p="">(</c->'<c- n="">av2o</c->'<c- p="">)</c-> <c- p="">{</c->
+<c- k="">class</c-> <c- nc="">OutOfBandAV2SampleEntry</c-> <c- n="">extends</c-> <c- n="">AV2SampleEntry</c-><c- p="">(</c->'<c- n="">av02</c->'<c- p="">)</c-> <c- p="">{</c->
     <c- n="">OutOfBandAV2CodecConfigurationBox</c-> <c- n="">config</c-><c- p="">;</c->
 <c- p="">}</c->
 
-<c- k="">class</c-> <c- nc="">InBandAV2SampleEntry</c-> <c- n="">extends</c-> <c- n="">AV2SampleEntry</c-><c- p="">(</c->'<c- n="">av2i</c->'<c- p="">)</c-> <c- p="">{</c->
+<c- k="">class</c-> <c- nc="">InBandAV2SampleEntry</c-> <c- n="">extends</c-> <c- n="">AV2SampleEntry</c-><c- p="">(</c->'<c- n="">avI2</c->'<c- p="">)</c-> <c- p="">{</c->
     <c- n="">InBandAV2CodecConfigurationBox</c-> <c- n="">config</c-><c- p="">;</c->
 <c- p="">}</c->
 </pre>
-<p>An <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport="" id="outofbandav2sampleentry">OutOfBandAV2SampleEntry</dfn> contains an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport="" id="outofbandav2codecconfigurationbox">OutOfBandAV2CodecConfigurationBox</dfn> and an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport="" id="inbandav2sampleentry">InBandAV2SampleEntry</dfn> contains an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport="" id="inbandav2codecconfigurationbox">InBandAV2CodecConfigurationBox</dfn>.</p>
+<p class="note" role="note"><span class="marker">Note:</span> The third character in the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport="" id="outofbandav2sampleentry">OutOfBandAV2SampleEntry</dfn> four-character code is an ASCII zero (0x30).</p>
+<p>An <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport="" id="outofbandav2sampleentry①">OutOfBandAV2SampleEntry</dfn> contains an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport="" id="outofbandav2codecconfigurationbox">OutOfBandAV2CodecConfigurationBox</dfn> and an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport="" id="inbandav2sampleentry">InBandAV2SampleEntry</dfn> contains an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport="" id="inbandav2codecconfigurationbox">InBandAV2CodecConfigurationBox</dfn>.</p>
 <p><span id="assert-2c1335f6">An <a data-link-type="dfn" href="#inbandav2sampleentry" id="ref-for-inbandav2sampleentry">InBandAV2SampleEntry</a> MAY be used instead of an <a data-link-type="dfn" href="#outofbandav2sampleentry" id="ref-for-outofbandav2sampleentry">OutOfBandAV2SampleEntry</a>, if the content of an <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#obu" id="ref-for-obu⑦">OBU</a> of a type that may be carried by an <a data-link-type="dfn" href="#outofbandav2codecconfigurationbox" id="ref-for-outofbandav2codecconfigurationbox①">OutOfBandAV2CodecConfigurationBox</a> changes during the sequence, and if that sequence cannot be split into multiple <a data-link-type="dfn" href="#outofbandav2sampleentry" id="ref-for-outofbandav2sampleentry①">OutOfBandAV2SampleEntries</a>. Otherwise, an <a data-link-type="dfn" href="#outofbandav2sampleentry" id="ref-for-outofbandav2sampleentry②">OutOfBandAV2SampleEntry</a> SHOULD be used.</span></p>
 <p><span id="assert-453fa25c">An <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry⑤">AV2SampleEntry</a> SHALL contain exactly one <a data-link-type="dfn" href="#av2codecconfigurationbox" id="ref-for-av2codecconfigurationbox①">AV2CodecConfigurationBox</a> describing all <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#extended-layer" id="ref-for-extended-layer">extended layers</a>, <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#embedded-layer" id="ref-for-embedded-layer">embedded layers</a>, and <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#temporal-layer" id="ref-for-temporal-layer">temporal layers</a> in the <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry⑥">AV2SampleEntry</a>. That <a data-link-type="dfn" href="#av2codecconfigurationbox" id="ref-for-av2codecconfigurationbox②">AV2CodecConfigurationBox</a> SHALL be a direct child box of the <a data-link-type="dfn" href="#av2sampleentry" id="ref-for-av2sampleentry⑦">AV2SampleEntry</a>.</span>
 </p>
@@ -3576,10 +3577,10 @@ A <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#genera
 <p>The <code>max_tier</code> parameter value is represented by a single digit `M` for the value 0, and `H` for the value 1.</p>
 </li></ul>
 <div class="example" id="codec-string-example"><a class="self-link" href="#codec-string-example"></a><a class="self-link" href="#codec-string-example"></a>
-<code>codecs="av2i.00M"</code> represents <a data-link-type="biblio" href="#biblio-av2" title="AV2 Bitstream &amp; Decoding Process Specification">[AV2]</a> <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 2.0, Main tier.
+<code>codecs="avI2.00M"</code> represents <a data-link-type="biblio" href="#biblio-av2" title="AV2 Bitstream &amp; Decoding Process Specification">[AV2]</a> <code>Main_420_10_IP0</code> profile at Interoperability Point 0, level 2.0, Main tier.
 </div>
 <div class="example" id="codec-string-example2"><a class="self-link" href="#codec-string-example2"></a><a class="self-link" href="#codec-string-example2"></a>
-<code>codecs="av2i.4AH"</code> represents <a data-link-type="biblio" href="#biblio-av2" title="AV2 Bitstream &amp; Decoding Process Specification">[AV2]</a> <code>Main_444_10_IP1</code> profile at Interoperability Point 2, level 6.0, High tier.
+<code>codecs="avI2.4AH"</code> represents <a data-link-type="biblio" href="#biblio-av2" title="AV2 Bitstream &amp; Decoding Process Specification">[AV2]</a> <code>Main_444_10_IP1</code> profile at Interoperability Point 2, level 6.0, High tier.
 </div>
 <p><span id="assert-959b3048">All parameters are mandatory fields.</span> <span id="assert-0901b125">If any of these fields is empty, or not within its allowed range, the processing device SHOULD treat it as an error.</span></p>
 <p class="back-to-toc-wrapper"><a class="back-to-toc" href="#toc">↑ Back to Table of Contents</a></p><h2 class="heading settled" data-level="7" id="annex-a"><span class="secno">Annex A. </span><span class="content">Layer composition examples (informative)</span><a class="self-link" href="#annex-a"></a></h2>
@@ -3817,7 +3818,12 @@ A <a data-link-type="dfn" href="https://av2.aomedia.org/v1.0.0/index.html#genera
 </li><li><a href="#inbandav2sampleentry">InBandAV2SampleEntry</a><span>, in § 3.2.1</span>
 </li><li><a href="#in-band-obu">In-band OBU</a><span>, in § 3.2.2.1</span>
 </li><li><a href="#outofbandav2codecconfigurationbox">OutOfBandAV2CodecConfigurationBox</a><span>, in § 3.2.1</span>
-</li><li><a href="#outofbandav2sampleentry">OutOfBandAV2SampleEntry</a><span>, in § 3.2.1</span>
+</li><li>
+    OutOfBandAV2SampleEntry
+    <ul>
+<li><a href="#outofbandav2sampleentry">definition of</a><span>, in § 3.2.1</span>
+</li><li><a href="#outofbandav2sampleentry①">definition of</a><span>, in § 3.2.1</span>
+</li></ul>
 </li><li><a href="#possibly-out-of-band-obu">Possibly out-of-band OBU</a><span>, in § 3.2.2.1</span>
 </li><li><a href="#sync-av2-sample">sync AV2 sample</a><span>, in § 3.3.5</span>
 </li></ul>
@@ -4234,6 +4240,7 @@ let dfnPanelData = {
 "inbandav2sampleentry": {"dfnID":"inbandav2sampleentry","dfnText":"InBandAV2SampleEntry","external":false,"refSections":[{"refs":[{"id":"ref-for-inbandav2sampleentry"}],"title":"3.2.1. AV2 Sample Entry"}],"url":"#inbandav2sampleentry"},
 "outofbandav2codecconfigurationbox": {"dfnID":"outofbandav2codecconfigurationbox","dfnText":"OutOfBandAV2CodecConfigurationBox","external":false,"refSections":[{"refs":[{"id":"ref-for-outofbandav2codecconfigurationbox"}],"title":"3. Basic Encapsulation Scheme"},{"refs":[{"id":"ref-for-outofbandav2codecconfigurationbox\u2460"}],"title":"3.2.1. AV2 Sample Entry"},{"refs":[{"id":"ref-for-outofbandav2codecconfigurationbox\u2461"},{"id":"ref-for-outofbandav2codecconfigurationbox\u2462"},{"id":"ref-for-outofbandav2codecconfigurationbox\u2463"},{"id":"ref-for-outofbandav2codecconfigurationbox\u2464"}],"title":"3.2.2.1. Description"},{"refs":[{"id":"ref-for-outofbandav2codecconfigurationbox\u2465"},{"id":"ref-for-outofbandav2codecconfigurationbox\u2466"}],"title":"3.3.2. OBUs in samples"},{"refs":[{"id":"ref-for-outofbandav2codecconfigurationbox\u2467"},{"id":"ref-for-outofbandav2codecconfigurationbox\u2468"},{"id":"ref-for-outofbandav2codecconfigurationbox\u2460\u24ea"},{"id":"ref-for-outofbandav2codecconfigurationbox\u2460\u2460"}],"title":"3.3.7.1. AV2 sample reconstruction"}],"url":"#outofbandav2codecconfigurationbox"},
 "outofbandav2sampleentry": {"dfnID":"outofbandav2sampleentry","dfnText":"OutOfBandAV2SampleEntry","external":false,"refSections":[{"refs":[{"id":"ref-for-outofbandav2sampleentry"},{"id":"ref-for-outofbandav2sampleentry\u2460"},{"id":"ref-for-outofbandav2sampleentry\u2461"}],"title":"3.2.1. AV2 Sample Entry"},{"refs":[{"id":"ref-for-outofbandav2sampleentry\u2462"}],"title":"3.3.2. OBUs in samples"}],"url":"#outofbandav2sampleentry"},
+"outofbandav2sampleentry①": {"dfnID":"outofbandav2sampleentry\u2460","dfnText":"OutOfBandAV2SampleEntry","external":false,"refSections":[],"url":"#outofbandav2sampleentry\u2460"},
 "possibly-out-of-band-obu": {"dfnID":"possibly-out-of-band-obu","dfnText":"Possibly out-of-band OBU","external":false,"refSections":[{"refs":[{"id":"ref-for-possibly-out-of-band-obu"}],"title":"3.2.2.1. Description"},{"refs":[{"id":"ref-for-possibly-out-of-band-obu\u2460"},{"id":"ref-for-possibly-out-of-band-obu\u2461"},{"id":"ref-for-possibly-out-of-band-obu\u2462"},{"id":"ref-for-possibly-out-of-band-obu\u2463"}],"title":"3.3.2. OBUs in samples"},{"refs":[{"id":"ref-for-possibly-out-of-band-obu\u2464"},{"id":"ref-for-possibly-out-of-band-obu\u2465"},{"id":"ref-for-possibly-out-of-band-obu\u2466"}],"title":"3.3.7.1. AV2 sample reconstruction"}],"url":"#possibly-out-of-band-obu"},
 "sync-av2-sample": {"dfnID":"sync-av2-sample","dfnText":"sync AV2 sample","external":false,"refSections":[{"refs":[{"id":"ref-for-sync-av2-sample"},{"id":"ref-for-sync-av2-sample\u2460"}],"title":"3.3.5. Sync sample"}],"url":"#sync-av2-sample"},
 "valdef-isobmff-brand-av02": {"dfnID":"valdef-isobmff-brand-av02","dfnText":"av02","external":false,"refSections":[],"url":"#valdef-isobmff-brand-av02"},
