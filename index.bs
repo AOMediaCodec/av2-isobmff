@@ -362,6 +362,8 @@ class InBandAV2SampleEntry extends AV2SampleEntry('av2e') {
 
 <p><assert>Unless explicitly stated otherwise in the definition of a box, the direct child boxes of an [=AV2SampleEntry=] describe all [=extended layers=], [=embedded layers=], and [=temporal layers=] that can be output from the associated [=AV2 bitstream=] as specified in the [=Singlestream=] and [=Multistream=] [=Full bitstream decoding=] process from Annex F of [[!AV2]].</assert></p>
 
+<p><assert>All [=Sequence Header OBUs=] carried in the [=AV2CodecConfigurationBox=] of an [=AV2SampleEntry=], or in a <l spec=ISOBMFF>[=sample=]</l> associated with it, SHALL have the same value of <code>monotonic_output_order_flag</code> (as inferred by [[!AV2]] when not present).</assert> <assert>When that value is equal to 1, the composition time of each <l spec=ISOBMFF>[=sample=]</l> associated with the [=AV2SampleEntry=] SHALL be equal to its decoding time.</assert></p>
+
 <p><assert>An [=AV2SampleEntry=] SHALL contain at least one 'colr' box with the 'nclx' 'colour_type'.</assert> <assert>Each [=layer=] in an [=AV2SampleEntry=] SHALL be described by at most one 'colr' box with the 'nclx' 'colour_type'.</assert></p>
 
 Each value among <code>colour_primaries</code>, <code>transfer_characteristics</code>, and <code>matrix_coefficients</code> carried in a 'colr' box with the 'nclx' 'colour_type', for the [=layers=] it applies to:
@@ -407,6 +409,8 @@ An <dfn>In-band OBU</dfn> is an [=OBU=] of any of the following types:
 - <code>OBU_SWITCH</code>
 - <code>OBU_LEADING_TIP</code>
 - <code>OBU_REGULAR_TIP</code>
+- <code>OBU_LEADING_SEF</code>
+- <code>OBU_REGULAR_SEF</code>
 - <code>OBU_BRIDGE_FRAME</code>
 - <code>OBU_RAS_FRAME</code>
 - <code>OBU_METADATA_SHORT</code> with <code>obu_xlayer_id</code> not equal to <code>GLOBAL_XLAYER_ID</code> or <code>metadata_is_suffix</code> equal to 1
@@ -457,12 +461,12 @@ aligned(8) class InBandAV2CodecConfigurationBox extends AV2CodecConfigurationBox
 <code>config_obu</code> is a byte array. <assert>Each <code>config_obu</code> SHALL carry a single OBU preceded by a <code>leb128()</code> <code>num_bytes_in_obu</code> value giving the byte length of that OBU, as specified in the [=Length delimited bitstream format=] from Annex B of [[!AV2]].</assert>
 
 <code>max_num_streams_minus1</code> specifies the maximum number of independent streams in the bitstream.
-- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>num_streams_minus_2</code> value is greater than or equal to <code>max_num_streams_minus1</code>.</assert>
+- <assert>There SHALL NOT be any [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=] whose <code>num_streams_minus2</code> value is greater than or equal to <code>max_num_streams_minus1</code>.</assert>
 - <assert>If <code>max_num_streams_minus1</code> is not zero, there SHOULD be at least one [=Multi Stream Decoder Operation OBU=] in the associated [=AV2 samples=].</assert>
 
 NOTE: The above means there shall be no [=Multi Stream Decoder Operation OBU=] if <code>max_num_streams_minus1</code> is set to 0.
 
-NOTE: It is a requirement of bitstream conformance that <code>num_streams_minus_2</code> is not greater than 2 in [[!AV2]], so <code>max_num_streams_minus1</code> fits in two bits. <code>reserved1</code> can be repurposed once <code>num_streams_minus_2</code> uses its three allocated bits in a future version of [[!AV2]].
+NOTE: It is a requirement of bitstream conformance that <code>num_streams_minus2</code> is not greater than 2 in [[!AV2]], so <code>max_num_streams_minus1</code> fits in two bits. <code>reserved1</code> can be repurposed once <code>num_streams_minus2</code> uses its three allocated bits in a future version of [[!AV2]].
 
 <p><code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code> specify the maximum profile, level, and tier, respectively, for the coded video sequence. <assert>There SHALL NOT be any [=Sequence Header OBU=] (respectively [=Multi Stream Decoder Operation OBU=]) in the associated [=AV2 samples=] whose <code>seq_profile_idc</code>, <code>seq_level_idx</code>, and <code>seq_tier</code> (respectively <code>multistream_profile_idc</code>, <code>multistream_level_idx</code>, and <code>multistream_tier</code>) allow for [[!AV2]] features that are not allowed by <code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code>.</assert> <assert>For any given [=AV2 samples=], the values of <code>max_profile_idc</code>, <code>max_level_idx</code>, and <code>max_tier</code> SHOULD be as low as possibly valid.</assert></p>
 
@@ -793,7 +797,7 @@ NOTE: It is important to note that while the <code>[=cmf2=]</code> brand does no
 
 If a [=CMAF Video Track=] uses the brand <code>[=av02=]</code>, it is called a <dfn>CMAF AV2 Track</dfn> and the following constraints, defining the <dfn>CMAF Media Profile for AV2</dfn>, apply:
 - <assert>it SHALL use an [=AV2SampleEntry=], possibly transformed by encryption as specified in [[#CommonEncryption]]</assert>;
-- <assert>it MAY use multiple sample entries, and in that case the following values SHALL not change in the track</assert>:
+- <assert>it MAY use multiple sample entries, and in that case the following values SHALL NOT change in the track</assert>:
     - <code>seq_profile_idc</code>
     - <code>single_picture_header_flag</code>
     - <code>seq_level_idx</code>
@@ -801,6 +805,7 @@ If a [=CMAF Video Track=] uses the brand <code>[=av02=]</code>, it is called a <
     - <code>chroma_format_idc</code>
     - <code>bit_depth_idc</code>
     - <code>seq_initial_display_delay_minus_1</code>
+    - <code>monotonic_output_order_flag</code>
 
 <p><assert>When protected, [=CMAF AV2 Tracks=] SHALL use the signaling defined in [[!CMAF]], which in turn relies on [[!CENC]], with the provisions specified in [[#CommonEncryption]].</assert></p>
 
@@ -863,7 +868,7 @@ DASH and other applications require defined values for the 'Codecs' parameter sp
 </div>
 
 <div class="example" id="codec-string-example2"><a class="self-link" href="#codec-string-example2"></a>
-<code>codecs="av2e.4AH"</code> represents [[!AV2]] <code>Main_444_10_IP1</code> profile at Interoperability Point 2, level 6.0, High tier.
+<code>codecs="av2e.4AH"</code> represents [[!AV2]] <code>Main_444_10_IP1</code> profile, level 6.0, High tier.
 </div>
 
 <p><assert>All parameters are mandatory fields.</assert> <assert>If any of these fields is empty, or not within its allowed range, the processing device SHOULD treat it as an error.</assert></p>

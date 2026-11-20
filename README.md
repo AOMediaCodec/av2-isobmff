@@ -2,6 +2,10 @@
 
 This repository hosts the specification work for encapsulating AV2 bitstreams in ISO Base Media File Format (ISOBMFF).
 
+## Status
+
+This specification is a draft. It is under active development and changes quickly. To contribute or to follow the work, attend the AOMedia Storage & Transport Formats (STF) Working Group calls.
+
 ## Related repositories
 
 - [av2-tools](https://github.com/AOMediaCodec/av2-tools) - reference software implementing this specification (AV2 OBU parsing/analysis and MP4/ISOBMFF muxing & demuxing).
