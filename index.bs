@@ -354,7 +354,7 @@ class InBandAV2SampleEntry extends AV2SampleEntry('avI2') {
 }
 ```
 
-NOTE: The third character in the <dfn>OutOfBandAV2SampleEntry</dfn> four-character code is an ASCII zero (0x30). The third character in the <dfn>InBandAV2SampleEntry</dfn> four-character code is an ASCII uppercase 'i' (0x49).
+NOTE: The third character in the <dfn>OutOfBandAV2SampleEntry</dfn> four-character code is an ASCII zero (0x30). The third character in the <dfn>InBandAV2SampleEntry</dfn> four-character code is an ASCII uppercase "i" (0x49).
 
 <p>An <dfn>OutOfBandAV2SampleEntry</dfn> contains an <dfn>OutOfBandAV2CodecConfigurationBox</dfn> and an <dfn>InBandAV2SampleEntry</dfn> contains an <dfn>InBandAV2CodecConfigurationBox</dfn>.</p>
 
