@@ -819,6 +819,21 @@ If a [=CMAF Video Track=] uses the brand <code>[=av02=]</code>, it is called a <
 
 <p><assert>Version 1 and version 2 of the 'saiz' box as defined in [[!ISOBMFF]] SHALL be supported</assert>.</p>
 
+<p><assert>AV2 tracks SHALL use subsample encryption</assert> as [[!CENC]] allows derived specifications for encrypted
+tracks not using NAL structured video, for both <code>[=cenc=]</code> and <code>[=cbcs=]</code>.</p>
+
+NOTE: Prefixing the [=Temporal Delimiter OBU=] and out-of-band config OBUs, or discarding in-sample config OBUs, per [[#av2-sample-reconstruction]]
+changes the clear byte counts. Readers adjust the subsample information accordingly before decryption.
+
+<p class="issue">Multi-key support (<code>multi_key_flag</code>, SAI <code>aux_info_type_parameter</code>,
+key-to-layer policy) is to be specified.</p>
+<p class="issue">Which <code>senc</code> versions SHALL be supported (e.g. version 1 for
+<code>multi_subindex</code>) is to be specified.</p>
+<p class="issue">Whether both <code>cenc</code> and <code>cbcs</code> are allowed, or only
+<code>cbcs</code>, is to be decided.</p>
+<p class="issue">Filtering of layers or OBUs from protected samples and its effect on subsample
+information is to be studied.</p>
+
 General Subsample Encryption constraints {#subsample-encryption}
 --------------------------------------
 
@@ -828,7 +843,18 @@ Within protected samples, the following constraints apply:
 	- <assert>A large unprotected OBU whose data size is larger than the maximum size of a single [=BytesOfClearData=] field MAY be spanned by multiple subsamples with zero size [=BytesOfProtectedData=]</assert>.
 
 - <assert>All [=num_bytes_in_obu=] fields and [=OBU Headers=] SHALL be unprotected</assert>.
-- <assert>[=Tile Group OBUs=] (the collection of OBU types identified by the <code>is_tile_group()</code> helper function) SHALL be protected as specified below</assert>. <assert>All other OBU types SHALL be unprotected</assert>.
+
+- <assert>[=Tile Group OBUs=] SHALL be protected as specified below</assert>. These are the OBUs with <code>obu_type</code>
+equal to <code>OBU_LEADING_TILE_GROUP</code>, <code>OBU_REGULAR_TILE_GROUP</code>, <code>OBU_CLOSED_LOOP_KEY</code>,
+<code>OBU_OPEN_LOOP_KEY</code>, <code>OBU_SWITCH</code> or <code>OBU_RAS_FRAME</code>, i.e. those for which the
+<code>is_tile_group()</code> helper function of [[!AV2]] returns 1. <assert>All other OBU types SHALL be unprotected</assert>.
+
+    NOTE: Show existing frame, TIP and bridge frame OBUs carry no tile data and are therefore unprotected.
+
+- Within [=Tile Group OBUs=], the following always remain unprotected: the tile group header (including <code>frame_header()</code> or <code>frame_header_copy()</code>) and every <code>tile_size_minus_1</code> field.
+
+    NOTE: A [=Tile Group OBU=] with <code>bru_inactive</code> equal to 1 has no <code>decode_tile</code> structure, hence no protected range.
+
 - Within [=Tile Group OBUs=], the following applies:
 	- for the protected scheme <code>[=cbcs=]</code>:
 		- <assert>[=BytesOfProtectedData=] SHALL start on the first byte and end on the last byte of the <code>decode_tile</code> structure (including any trailing bits)</assert>.
