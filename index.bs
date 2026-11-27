@@ -347,10 +347,12 @@ abstract class AV2SampleEntry(int codingname) extends VisualSampleEntry(codingna
 
 class OutOfBandAV2SampleEntry extends AV2SampleEntry('av02') {
     OutOfBandAV2CodecConfigurationBox config;
+    AV2RequiredOBUTypesBox required_obu_types; // optional
 }
 
 class InBandAV2SampleEntry extends AV2SampleEntry('avI2') {
     InBandAV2CodecConfigurationBox config;
+    AV2RequiredOBUTypesBox required_obu_types; // optional
 }
 ```
 
@@ -361,6 +363,8 @@ NOTE: The third character in the <dfn>OutOfBandAV2SampleEntry</dfn> four-charact
 <p><assert>An [=InBandAV2SampleEntry=] MAY be used instead of an [=OutOfBandAV2SampleEntry=], if the content of an [=OBU=] of a type that may be carried by an [=OutOfBandAV2CodecConfigurationBox=] changes during the sequence, and if that sequence cannot be split into multiple [=OutOfBandAV2SampleEntries=]. Otherwise, an [=OutOfBandAV2SampleEntry=] SHOULD be used.</assert></p>
 
 <p><assert>An [=AV2SampleEntry=] SHALL contain exactly one [=AV2CodecConfigurationBox=] describing all [=extended layers=], [=embedded layers=], and [=temporal layers=] in the [=AV2SampleEntry=]. That [=AV2CodecConfigurationBox=] SHALL be a direct child box of the [=AV2SampleEntry=].</assert>
+
+<p><assert>An [=AV2SampleEntry=] MAY contain an [=AV2RequiredOBUTypesBox=], as specified in [[#av2r]].</assert></p>
 
 <p><assert>Unless explicitly stated otherwise in the definition of a box, the direct child boxes of an [=AV2SampleEntry=] describe all [=extended layers=], [=embedded layers=], and [=temporal layers=] that can be output from the associated [=AV2 bitstream=] as specified in the [=Singlestream=] and [=Multistream=] [=Full bitstream decoding=] process from Annex F of [[!AV2]].</assert></p>
 
@@ -473,6 +477,56 @@ A [=Sequence Header OBU=] with <code>seq_profile_idc</code> set to 3 (<code>Main
 </div>
 
 <p class="issue">Editor's note: for a [=Multistream=] bitstream, the [=AV2CodecConfigurationBox=] contains a [=Sequence Header OBU=] for each extended layer. The impact on multi-layer use cases — including how a reader determines the active decoder configuration per extended layer from multiple Sequence Header OBUs — needs investigation. Also how profile / level is signalled to decoder API for layers. etc.</p>
+
+### AV2 Required OBU Types Box ### {#av2r}
+
+#### Description #### {#av2r-description}
+
+The <dfn>AV2RequiredOBUTypesBox</dfn> lists the <code>obu_type</code> values of [=OBUs=] that a reader needs to support to correctly decode and present the [=AV2 samples=] associated with an [=AV2SampleEntry=].
+
+NOTE: [[!AV2]] reserves some <code>obu_type</code> values for future use and specifies that decoders should ignore an entire [=OBU=] whose <code>obu_type</code> they do not understand. This lets future versions or extensions of [[!AV2]] define new [=OBU=] types that existing decoders safely skip. For some new [=OBU=] types, skipping leads to incorrect output, for example an [=OBU=] signalling that an alpha channel is premultiplied. The [=AV2RequiredOBUTypesBox=] prevents readers that do not support such [=OBU=] types from decoding the [=AV2 samples=].
+
+<p><assert>An [=AV2SampleEntry=] SHALL NOT contain more than one [=AV2RequiredOBUTypesBox=].</assert> <assert>An [=AV2RequiredOBUTypesBox=] SHALL be a direct child box of an [=AV2SampleEntry=].</assert></p>
+
+<p><assert>A writer SHOULD list in the [=AV2RequiredOBUTypesBox=] of an [=AV2SampleEntry=] the <code>obu_type</code> value of each [=OBU=] that may be present in the associated [=AV2 samples=] or [=AV2CodecConfigurationBox=] and that would lead to incorrect decoding or presentation of these [=AV2 samples=] if ignored.</assert> <assert>A writer SHOULD NOT list an <code>obu_type</code> value if [=OBUs=] of that type are known not to be present in the associated [=AV2 samples=] and [=AV2CodecConfigurationBox=].</assert></p>
+
+NOTE: The intended use is to list <code>obu_type</code> values that are reserved in [[!AV2]] and defined by a later version or extension of [[!AV2]]. Decoders conforming to [[!AV2]] already process the [=OBU=] types it defines.
+
+A reader supports an <code>obu_type</code> value if the reader, together with the decoder and any processing it applies to the decoded output, processes [=OBUs=] of that type as specified by the version or extension of [[!AV2]] that defines that type, instead of ignoring them.
+
+<p><assert>A reader that does not support every <code>obu_type</code> value listed in the [=AV2RequiredOBUTypesBox=] of an [=AV2SampleEntry=] SHALL NOT decode the [=AV2 samples=] associated with that [=AV2SampleEntry=].</assert></p>
+
+NOTE: The above does not restrict processing that does not involve decoding, such as remuxing, editing, or encrypting the file.
+
+#### Syntax #### {#av2r-syntax}
+
+```cpp
+aligned(8) class AV2RequiredOBUTypesBox extends FullBox('av2r', version = 0, flags = 0)
+{
+  unsigned int(8) required_obu_type_count_minus1;
+  for (i = 0; i < required_obu_type_count_minus1 + 1; ++i) {
+    unsigned int(8) required_obu_type;
+  }
+}
+```
+
+#### Semantics #### {#av2r-semantics}
+
+<p><assert><code>version</code> SHALL be set to 0.</assert> <assert>A reader that does not recognize the <code>version</code> of an [=AV2RequiredOBUTypesBox=] SHALL NOT decode the [=AV2 samples=] associated with the containing [=AV2SampleEntry=].</assert></p>
+
+NOTE: Unlike most boxes, an [=AV2RequiredOBUTypesBox=] with an unrecognized <code>version</code> is not ignored, because ignoring it would defeat its purpose.
+
+<p><assert><code>flags</code> SHALL be set to 0. Readers SHALL ignore its value.</assert></p>
+
+<code>required_obu_type_count_minus1</code> plus 1 is the number of <code>required_obu_type</code> values.
+
+<code>required_obu_type</code> is an <code>obu_type</code> value, as carried in the [=OBU Header=], of [=OBUs=] that a reader needs to support. <assert>A given <code>required_obu_type</code> value SHALL NOT appear more than once in an [=AV2RequiredOBUTypesBox=].</assert>
+
+NOTE: <code>obu_type</code> is a 5-bit field in [[!AV2]]. <code>required_obu_type</code> uses 8 bits for byte alignment. A reader does not support a <code>required_obu_type</code> value it does not recognize.
+
+<p class="issue">Editor's note: The [=AV2RequiredOBUTypesBox=] is not reflected in the codecs parameter string defined in [[#codecsparam]], so a DASH or HLS client may select a track it cannot correctly decode before reading the sample entry. Whether to extend the codecs parameter string should be studied.</p>
+
+<p class="issue">Editor's note: Future extensions of [[!AV2]] may also use reserved <code>metadata_type</code> values in [=Metadata OBUs=], which decoders also ignore when not understood. Whether the [=AV2RequiredOBUTypesBox=] should also list required <code>metadata_type</code> values, for example in a new <code>version</code>, should be studied.</p>
 
 ## AV2 Sample Format ## {#sample-format}
 
